@@ -191,25 +191,29 @@
             </div>
           </div>
           <div class="mt-6 flex justify-end gap-3">
-            <button
-              @click="showAddModal = false"
-              class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition"
-            >
-              Batal
-            </button>
-            <button
-              @click="submitNew"
-              :disabled="submitting"
-              class="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition disabled:opacity-50 flex items-center gap-2"
-            >
-              <svg v-if="submitting" class="h-5 w-5 animate-spin" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-                <path class="opacity-75" fill="currentColor"
-                      d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16 8 8 0 018-8z"/>
-              </svg>
-              <span v-if="!submitting">Simpan</span>
-              <span v-else>Memproses…</span>
-            </button>
+           <button
+  type="button"
+  @click="showAddModal = false"
+  class="px-5 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-transform hover:scale-105"
+>
+  Batal
+</button>
+<button
+  type="button"
+  @click="submitNew"
+  :disabled="submitting"
+  class="flex items-center gap-2 px-5 py-3 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 disabled:opacity-50 transition-transform hover:scale-105"
+>
+  <svg v-if="submitting" class="h-5 w-5 animate-spin" viewBox="0 0 24 24">
+    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+    <path class="opacity-75" fill="currentColor"
+          d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16 8 8 0 018-8z"/>
+  </svg>
+  <span v-if="!submitting">Simpan</span>
+  <span v-else>Memproses…</span>
+</button>
+
+
           </div>
         </div>
       </div>
