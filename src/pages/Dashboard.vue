@@ -10,6 +10,7 @@ import {
   Bars3Icon,
   XMarkIcon,
   MoonIcon,
+  HomeIcon,
   SunIcon,
   ArrowLeftOnRectangleIcon,
 } from '@heroicons/vue/24/outline'
@@ -69,7 +70,7 @@ async function confirmLogout () {
 
 /* menu list --------------------------------------------------- */
 const navItems = [
-  { id: 'dashboard',  path: '/dashboard',            name: 'Dashboard',           desc:'Ringkasan',        icon: UsersIcon },
+  { id: 'dashboard',  path: '/dashboard',            name: 'Dashboard',           desc:'Ringkasan',        icon: HomeIcon },
   { id: 'employees',  path: '/dashboard/employees',  name: 'Management Karyawan', desc:'Data karyawan',    icon: UsersIcon },
   { id: 'requests',   path: '/dashboard/requests',   name: 'Management Request',  desc:'Permohonan & cuti',icon: ClipboardDocumentCheckIcon },
   { id: 'attendance', path: '/dashboard/attendance', name: 'Management Absensi',  desc:'Riwayat kehadiran',icon: CalendarDaysIcon },
