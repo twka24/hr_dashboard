@@ -229,13 +229,6 @@
         <!-- Header -->
         <header class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100">Edit Karyawan</h2>
-          <button
-            @click="showEditModal = false"
-            aria-label="Close"
-            class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 text-xl font-bold"
-          >
-            &times;
-          </button>
         </header>
 
         <!-- Form -->
