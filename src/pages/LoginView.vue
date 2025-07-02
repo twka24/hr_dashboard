@@ -137,11 +137,12 @@
         </div>
 
         <!-- Submit -->
-        <button
-          type="submit"
-          :disabled="loading"
-          class="relative w-full overflow-hidden rounded-lg bg-gradient-to-r from-[#0A1128] to-[#d90429] py-3 font-semibold tracking-wide text-white shadow-md transition hover:shadow-xl focus:ring-2 focus:ring-[#d90429] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
-        >
+       <button
+  type="button"
+  @click.prevent="handleSubmit"
+  :disabled="loading"
+  class="relative w-full overflow-hidden rounded-lg bg-gradient-to-r from-[#0A1128] to-[#d90429] py-3 font-semibold tracking-wide text-white shadow-md transition hover:shadow-xl focus:ring-2 focus:ring-[#d90429] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+>
           <span v-if="!loading">Login</span>
           <svg
             v-else
@@ -207,26 +208,42 @@ async function handleSubmit() {
   errorMsg.value   = ''
   successMsg.value = ''
   loading.value    = true
+ 
   try {
-    const { data } = await api.post('/login', {
-      email: email.value,
+    // 1) Panggil login
+    const response = await api.post('/login', {
+      email:    email.value,
       password: password.value,
     })
-    // simpan JWT
-    localStorage.setItem('token', data.token)
 
-    // tampilkan notifikasi berhasil
+    // 2) Ambil token dari payload (sesuaikan path jika di-backend-mu berbeda)
+    const token = response.data.data?.token || response.data.token
+    if (!token) throw new Error('Token tidak ditemukan di response')
+
+    // 3) Simpan & set default header untuk semua request berikutnya
+    localStorage.setItem('token', token)
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`
+
+    // 4) Tampilkan notifikasi sukses
     successMsg.value = 'Login berhasil! Mengalihkan…'
 
-    // beri 1,2 d untuk user melihat alert—baru animasi ke dashboard
-    setTimeout(() => router.push('/dashboard'), 1200)
+    // 5) Tunggu sebentar agar user sempat lihat pesan
+    await new Promise(resolve => setTimeout(resolve, 1200))
+
+    // 6) Navigasi ke dashboard
+     window.location.href = '/dashboard'
+
   } catch (err) {
+    // jika error dari server, tampilkan message-nya; kalau tidak, pakai fallback
     errorMsg.value =
-      err.response?.data?.message || 'Invalid credentials, please try again.'
+      err.response?.data?.message ||
+      err.message ||
+      'Login gagal — periksa kembali email dan password.'
   } finally {
     loading.value = false
   }
 }
+
 </script>
 
 <style scoped>
