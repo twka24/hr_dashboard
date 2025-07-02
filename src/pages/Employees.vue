@@ -45,23 +45,24 @@
                        text-gray-900 dark:text-gray-100 pl-10 pr-4 py-2 transition"
               />
             </div>
-            <div class="relative w-full md:w-1/3">
-              <select
-                v-model="filterPosition"
-                class="w-full rounded-lg bg-gray-100 dark:bg-gray-700
-                       focus:ring-2 focus:ring-indigo-500
-                       text-gray-900 dark:text-gray-100 pl-4 pr-10 py-2 transition"
-              >
-                <option value="">— Semua Jabatan —</option>
-                <option v-for="pos in positions" :key="pos" :value="pos">
-                  {{ pos }}
-                </option>
-              </select>
-              <ChevronDownIcon
-                class="absolute right-3 top-1/2 -translate-y-1/2
-                       text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
-              />
-            </div>
+           <div class="relative w-full md:w-1/3">
+  <select
+    v-model="filterPosition"
+    class="appearance-none w-full rounded-lg bg-gray-100 dark:bg-gray-700
+           focus:ring-2 focus:ring-indigo-500
+           text-gray-900 dark:text-gray-100 pl-4 pr-10 py-2 transition"
+  >
+    <option value="">— Semua Jabatan —</option>
+    <option v-for="pos in positions" :key="pos" :value="pos">
+      {{ pos }}
+    </option>
+  </select>
+  <ChevronDownIcon
+    class="absolute right-3 top-1/2 -translate-y-1/2
+           text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
+  />
+</div>
+
           </div>
           <div class="relative">
             <select
@@ -316,7 +317,7 @@
               class="flex items-center gap-2 px-5 py-3 bg-red-600 text-white rounded-full hover:bg-red-700 disabled:opacity-50 transition-transform hover:scale-105"
             >
               <TrashIcon class="h-5 w-5" />
-              <span v-if="!deleting">Hapus</span>
+              <span v-if="!deleting">Hapus data karyawan?</span>
               <span v-else>Memproses…</span>
             </button>
 
@@ -370,7 +371,9 @@ import { ref, onMounted, computed } from 'vue'
 import api from '@/services/api'
 import {
   PlusIcon,
+  MagnifyingGlassIcon,
   PencilSquareIcon,
+  ChevronDownIcon,
   TrashIcon,
 } from '@heroicons/vue/24/outline'
 
@@ -428,6 +431,7 @@ async function loadEmployees() {
     error.value = 'Gagal memuat data karyawan.'
   } finally { loading.value = false }
 }
+
 async function loadPositions() {
   try {
     const { data } = await api.get('/positions')

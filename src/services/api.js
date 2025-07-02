@@ -1,4 +1,4 @@
-// src/services/api.js – refined
+// src/services/api.js
 import axios from 'axios'
 
 const api = axios.create({
@@ -6,34 +6,46 @@ const api = axios.create({
   withCredentials: false,
 })
 
-/**
- * Attach JWT **except** when hitting public auth endpoints.
- * Prevents sending stale/invalid token on /login which often causes
- * the backend to ignore the credential body and fail.
- */
+// Daftar route publik (tanpa JWT)
+const publicRoutes = [
+  '/login',
+]
+
+// Attach JWT kecuali ke publicRoutes
 api.interceptors.request.use((config) => {
-  // regex covers /login or /auth/* etc – tweak to match your backend routes
-  const isAuthRoute = /\/login$/i.test(config.url)
+  const url = config.url || ''
+  const isAuthRoute = publicRoutes.some(route =>
+    // exact match atau dengan prefix API base
+    url.endsWith(route)
+  )
+
+  console.log(`[API] Request to ${url} — public? ${isAuthRoute}`)
+
   if (!isAuthRoute) {
     const token = localStorage.getItem('token')
     if (token) {
+      config.headers = config.headers || {}
       config.headers.Authorization = `Bearer ${token}`
     }
   }
+
   return config
+}, (error) => {
+  return Promise.reject(error)
 })
 
-// Auto-logout helper if server returns 401/419
+// Auto-logout + redirect jika server mengembalikan 401
 api.interceptors.response.use(
   (res) => res,
   (err) => {
     if (err.response?.status === 401) {
+      console.warn('[API] 401 Unauthorized — logging out')
       localStorage.removeItem('token')
-      // Optionally redirect to login:
-      // window.location.href = '/login'
+      // langsung ke halaman login
+      window.location.href = '/login'
     }
     return Promise.reject(err)
-  },
+  }
 )
 
 export default api

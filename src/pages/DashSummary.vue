@@ -80,16 +80,6 @@ async function loadSummary() {
       ? empRes.data.data.length
       : 0
 
-    // Pending requests
-    const reqRes = await api.get('/requests')
-    pendingRequests.value = Array.isArray(reqRes.data.data)
-      ? reqRes.data.data.filter(r => r.status === 'pending').length
-      : 0
-
-    // Kehadiran hari ini
-    const attRes = await api.get('/attendance/today')
-    presentToday.value = attRes.data.presentCount ?? 0
-    lateToday.value    = attRes.data.lateCount ?? 0
   } catch (e) {
     console.error('Ringkasan gagal dimuat', e)
   } finally {
