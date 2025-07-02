@@ -1,30 +1,24 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
+<script setup></script>
 
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+  <RouterView v-slot="{ Component, route }">
+    <transition name="page-slide" mode="out-in" appear>
+      <component :is="Component" :key="route.fullPath" />
+    </transition>
+  </RouterView>
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<style>
+.page-slide-enter-active,
+.page-slide-leave-active {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+.page-slide-enter-from {
+  opacity: 0;
+  transform: translateY(20px) scale(0.98);
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+.page-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-20px) scale(0.98);
 }
 </style>
