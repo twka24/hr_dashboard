@@ -1,7 +1,6 @@
 <!-- src/pages/Employees.vue -->
 <template>
   <div class="p-6 md:p-10">
-    <!-- horizontal margin of exactly 20px -->
     <div class="mx-[20px]">
       <!-- Card -->
       <div
@@ -17,7 +16,7 @@
             Management Karyawan
           </h1>
           <button
-            @click="onAdd"
+            @click="showAddModal = true"
             class="mt-4 sm:mt-0 inline-flex items-center gap-2
                    rounded-lg bg-indigo-600 px-4 py-2 text-white font-medium
                    shadow hover:bg-indigo-700 transform hover:scale-105 transition"
@@ -30,7 +29,6 @@
         <div class="flex flex-col md:flex-row items-center justify-between gap-4 p-6">
           <!-- Search + Filter -->
           <div class="flex flex-1 flex-col md:flex-row gap-4 w-full">
-            <!-- Search -->
             <div class="relative w-full md:w-1/2">
               <MagnifyingGlassIcon
                 class="absolute left-3 top-1/2 -translate-y-1/2
@@ -47,8 +45,6 @@
                        text-gray-900 dark:text-gray-100 pl-10 pr-4 py-2 transition"
               />
             </div>
-
-            <!-- Position Filter -->
             <div class="relative w-full md:w-1/3">
               <select
                 v-model="filterPosition"
@@ -67,28 +63,22 @@
               />
             </div>
           </div>
-
-          <!-- Rows / Columns / More -->
-          <div class="flex items-center gap-2">
-            <!-- Rows per page -->
-            <div class="relative">
-              <select
-                v-model.number="perPage"
-                @change="page = 1"
-                class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700
-                       focus:ring-2 focus:ring-indigo-500
-                       text-gray-900 dark:text-gray-100 pl-3 pr-8 py-2 transition"
-              >
-                <option v-for="n in [5,10,20,50]" :key="n" :value="n">
-                  Show {{ n }} rows
-                </option>
-              </select>
-              <ChevronDownIcon
-                class="absolute right-3 top-1/2 -translate-y-1/2
-                       text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
-              />
-            </div>
-            <!-- Manage Columns -->
+          <div class="relative">
+            <select
+              v-model.number="perPage"
+              @change="page = 1"
+              class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700
+                     focus:ring-2 focus:ring-indigo-500
+                     text-gray-900 dark:text-gray-100 pl-3 pr-8 py-2 transition"
+            >
+              <option v-for="n in [5,10,20,50]" :key="n" :value="n">
+                Show {{ n }} rows
+              </option>
+            </select>
+            <ChevronDownIcon
+              class="absolute right-3 top-1/2 -translate-y-1/2
+                     text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
+            />
           </div>
         </div>
 
@@ -159,6 +149,222 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal Tambah Karyawan -->
+    <transition name="fade">
+      <div
+        v-if="showAddModal"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+      >
+        <div class="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl">
+          <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Tambah Karyawan</h2>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm text-gray-700 dark:text-gray-300">Nama</label>
+              <input v-model="newEmp.name" type="text" placeholder="John Doe"
+                class="w-full mt-1 rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"/>
+            </div>
+            <div>
+              <label class="block text-sm text-gray-700 dark:text-gray-300">Jabatan</label>
+              <select v-model="newEmp.position_code"
+                class="w-full mt-1 rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500">
+                <option value="">— Pilih Jabatan —</option>
+                <option v-for="p in positionsList" :key="p.position_code" :value="p.position_code">
+                  {{ p.position_name }}
+                </option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm text-gray-700 dark:text-gray-300">Telepon</label>
+              <input v-model="newEmp.phone_number" type="text" placeholder="081234567890"
+                class="w-full mt-1 rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"/>
+            </div>
+            <div>
+              <label class="block text-sm text-gray-700 dark:text-gray-300">Email</label>
+              <input v-model="newEmp.email" type="email" placeholder="user@company.com"
+                class="w-full mt-1 rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"/>
+            </div>
+            <div>
+              <label class="block text-sm text-gray-700 dark:text-gray-300">Password</label>
+              <input v-model="newEmp.password" type="password" placeholder="******"
+                class="w-full mt-1 rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"/>
+            </div>
+          </div>
+          <div class="mt-6 flex justify-end gap-3">
+            <button
+              @click="showAddModal = false"
+              class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+            >
+              Batal
+            </button>
+            <button
+              @click="submitNew"
+              :disabled="submitting"
+              class="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition disabled:opacity-50 flex items-center gap-2"
+            >
+              <svg v-if="submitting" class="h-5 w-5 animate-spin" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                <path class="opacity-75" fill="currentColor"
+                      d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16 8 8 0 018-8z"/>
+              </svg>
+              <span v-if="!submitting">Simpan</span>
+              <span v-else>Memproses…</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </transition>
+
+    <!-- Modal Edit Karyawan -->
+    <transition name="fade">
+     <div
+      v-if="showEditModal"
+      class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50"
+    >
+      <div class="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl">
+        <!-- Header -->
+        <header class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100">Edit Karyawan</h2>
+          <button
+            @click="showEditModal = false"
+            aria-label="Close"
+            class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 text-xl font-bold"
+          >
+            &times;
+          </button>
+        </header>
+
+        <!-- Form -->
+        <form @submit.prevent="submitEdit" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Nama -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nama</label>
+            <input
+              v-model="editEmp.name"
+              type="text"
+              placeholder="Masukkan nama lengkap"
+              class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+
+          <!-- Jabatan -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Jabatan</label>
+            <select
+              v-model="editEmp.position_code"
+              class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+              <option value="">— Pilih Jabatan —</option>
+              <option
+                v-for="p in positionsList"
+                :key="p.position_code"
+                :value="p.position_code"
+              >
+                {{ p.position_name }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Telepon -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Telepon</label>
+            <input
+              v-model="editEmp.phone_number"
+              type="text"
+              placeholder="0812xxxxxxx"
+              class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+            <input
+              v-model="editEmp.email"
+              type="email"
+              placeholder="email@domain.com"
+              class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+
+          <!-- Password + Reset -->
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Password <span class="italic font-normal">(kosongkan jika tidak diubah)</span>
+            </label>
+            <div class="mt-1 flex items-center space-x-3">
+              <input
+                v-model="editEmp.password"
+                type="password"
+                placeholder="••••••••"
+                class="flex-1 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              <button
+                type="button"
+                @click="resetPassword"
+                :disabled="resetting || !editEmp.password.trim()"
+                class="px-4 py-2 bg-amber-500 text-white rounded-full hover:bg-amber-600 disabled:opacity-50 transition-transform hover:scale-105"
+              >
+                <span v-if="!resetting">Ubah Password</span>
+                <span v-else>Memproses…</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Footer Actions -->
+          <div class="md:col-span-2 flex items-center justify-between mt-6">
+            <button
+              @click="deleteEmployee"
+              :disabled="deleting"
+              class="flex items-center gap-2 px-5 py-3 bg-red-600 text-white rounded-full hover:bg-red-700 disabled:opacity-50 transition-transform hover:scale-105"
+            >
+              <TrashIcon class="h-5 w-5" />
+              <span v-if="!deleting">Hapus</span>
+              <span v-else>Memproses…</span>
+            </button>
+
+            <div class="flex gap-3">
+             <button type="button" @click="showEditModal = false"
+                class="px-5 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-transform hover:scale-105"
+              >
+                Batal
+              </button>
+              <button
+                @click="submitEdit"
+                :disabled="editing"
+                class="px-5 py-3 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 disabled:opacity-50 transition-transform hover:scale-105"
+              >
+                <span v-if="!editing">Perbarui</span>
+                <span v-else>Memproses…</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </transition>
+
+    <!-- Toast -->
+    <transition name="slide-fade">
+      <div
+        v-if="toastShow"
+        class="fixed top-6 right-6 z-50 flex items-center gap-3
+               rounded-lg px-4 py-3 shadow-lg text-sm text-white"
+        :class="toastOk ? 'bg-emerald-600' : 'bg-red-600'"
+      >
+        <svg v-if="toastOk" xmlns="http://www.w3.org/2000/svg"
+             class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <svg v-else xmlns="http://www.w3.org/2000/svg"
+             class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        <span>{{ toastMsg }}</span>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -168,25 +374,52 @@ import api from '@/services/api'
 import {
   PlusIcon,
   PencilSquareIcon,
-  ChevronDownIcon,
-  MagnifyingGlassIcon,
-  Squares2X2Icon,
-  FunnelIcon,
-  EllipsisVerticalIcon
+  TrashIcon,
 } from '@heroicons/vue/24/outline'
 
-// state
+/* ---------- state ---------- */
 const employees      = ref([])
 const loading        = ref(true)
 const error          = ref('')
 const searchQuery    = ref('')
 const filterPosition = ref('')
 
-// pagination
+/* ---------- pagination ---------- */
 const page    = ref(1)
 const perPage = ref(10)
 
-// fetch
+/* ---------- modal tambah ---------- */
+const showAddModal  = ref(false)
+const positionsList = ref([])
+const newEmp = ref({
+  name:'', position_code:'', phone_number:'', email:'', password:''
+})
+
+/* ---------- modal edit ---------- */
+const showEditModal = ref(false)
+
+const editEmp = ref({
+  employee_code:'', name:'', position_code:'', phone_number:'', email:'', password:''
+})
+
+/* ---------- loading states ---------- */
+const submitting = ref(false) // add
+const editing    = ref(false) // update data
+const resetting  = ref(false) // reset password
+const deleting   = ref(false) // delete employee
+
+/* ---------- toast ---------- */
+const toastShow = ref(false)
+const toastMsg  = ref('')
+const toastOk   = ref(true)
+function showToast(msg, ok = true) {
+  toastMsg.value = msg
+  toastOk.value  = ok
+  toastShow.value = true
+  setTimeout(() => (toastShow.value = false), 2500)
+}
+
+/* ---------- fetch data ---------- */
 async function loadEmployees() {
   loading.value = true
   error.value   = ''
@@ -196,13 +429,20 @@ async function loadEmployees() {
   } catch (e) {
     console.error(e)
     error.value = 'Gagal memuat data karyawan.'
-  } finally {
-    loading.value = false
-  }
+  } finally { loading.value = false }
 }
-onMounted(loadEmployees)
+async function loadPositions() {
+  try {
+    const { data } = await api.get('/positions')
+    positionsList.value = data.data
+  } catch (e) { console.error(e) }
+}
+onMounted(() => {
+  loadEmployees()
+  loadPositions()
+})
 
-// computed
+/* ---------- computed lists ---------- */
 const positions = computed(() =>
   Array.from(new Set(employees.value.map(e => e.position.position_name)))
 )
@@ -223,14 +463,90 @@ const paginated = computed(() =>
   filtered.value.slice((page.value - 1) * perPage.value, page.value * perPage.value)
 )
 
-// handlers
+/* ---------- pagination handlers ---------- */
 function prevPage() { if (page.value > 1) page.value-- }
 function nextPage() { if (page.value < totalPages.value) page.value++ }
-function onAdd() { alert('Buka form tambah karyawan') }
-function onEdit(emp) { alert(`Edit: ${emp.name}`) }
-function onManageColumns() { alert('Manage Columns') }
-function onFilter() { alert('Open Filters') }
-function onMore() { alert('More actions') }
+
+/* ---------- submit new employee ---------- */
+async function submitNew() {
+  if (submitting.value) return
+  submitting.value = true
+  try {
+    await api.post('/employees', newEmp.value)
+    showAddModal.value = false
+    await loadEmployees()
+    showToast('Karyawan berhasil ditambahkan', true)
+    Object.assign(newEmp.value, { name:'', position_code:'', phone_number:'', email:'', password:'' })
+  } catch (e) {
+    console.error(e)
+    showToast('Gagal menambahkan karyawan', false)
+  } finally { submitting.value = false }
+}
+
+/* ---------- open edit modal ---------- */
+function onEdit(emp) {
+  editEmp.value = {
+    employee_code : emp.employee_code,
+    name          : emp.name,
+    position_code : emp.position.position_code ?? '',
+    phone_number  : emp.phone_number,
+    email         : emp.email,
+    password      : ''
+  }
+  showEditModal.value = true
+}
+
+/* ---------- update data ---------- */
+async function submitEdit() {
+  if (editing.value) return
+  editing.value = true
+  try {
+    await api.put(`/employees/${editEmp.value.employee_code}`, {
+      name         : editEmp.value.name,
+      position_code: editEmp.value.position_code,
+      phone_number : editEmp.value.phone_number,
+      email        : editEmp.value.email
+    })
+    showToast('Data karyawan berhasil diperbarui', true)
+    showEditModal.value = false
+    await loadEmployees()
+  } catch (e) {
+    console.error(e)
+    showToast('Gagal memperbarui data', false)
+  } finally { editing.value = false }
+}
+
+/* ---------- reset password ---------- */
+async function resetPassword() {
+  if (resetting.value || !editEmp.value.password.trim()) return
+  resetting.value = true
+  try {
+    await api.post(`/employees/${editEmp.value.employee_code}/reset-password`, {
+      new_password: editEmp.value.password
+    })
+    showToast('Password berhasil diubah', true)
+    editEmp.value.password = ''
+  } catch (e) {
+    console.error(e)
+    showToast('Gagal mengubah password', false)
+  } finally { resetting.value = false }
+}
+
+/* ---------- delete employee ---------- */
+async function deleteEmployee() {
+  const ok = confirm(`Yakin ingin menghapus karyawan “${editEmp.value.name}”?`)
+  if (!ok) return
+  deleting.value = true
+  try {
+    await api.delete(`/employees/${editEmp.value.employee_code}`)
+    showToast('Karyawan berhasil dihapus', true)
+    showEditModal.value = false
+    await loadEmployees()
+  } catch (e) {
+    console.error(e)
+    showToast('Gagal menghapus karyawan', false)
+  } finally { deleting.value = false }
+}
 </script>
 
 <style scoped>
@@ -239,4 +555,10 @@ thead tr {
   top: 0;
   z-index: 10;
 }
+/* fade transition for modal */
+.fade-enter-active, .fade-leave-active { transition: opacity .25s }
+.fade-enter-from, .fade-leave-to { opacity: 0 }
+/* slide-fade for toast */
+.slide-fade-enter-active, .slide-fade-leave-active { transition: all .3s }
+.slide-fade-enter-from, .slide-fade-leave-to { transform: translateY(-10px); opacity: 0 }
 </style>
