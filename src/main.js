@@ -5,7 +5,6 @@ import { createPinia } from 'pinia'
 import { MotionPlugin } from '@vueuse/motion'
 import './assets/main.css'   // pastikan file ini ada
 
-
 const app = createApp(App)
 
 app.use(createPinia())  // ⬅️  daftar plugin setelah app dibuat

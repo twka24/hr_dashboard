@@ -111,6 +111,7 @@
 
           <!-- Delete (tetap seperti semula) -->
           <button
+            v-if="request && request.status === 'pending'"
             @click="openDelete()"
             class="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 disabled:opacity-50 transition-transform hover:scale-105 inline-flex items-center gap-2"
           >

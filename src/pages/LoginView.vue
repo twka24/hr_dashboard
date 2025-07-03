@@ -204,11 +204,26 @@ const loading = ref(false)
 const errorMsg = ref('')
 const successMsg = ref('')
 
+async function loadProfile() {
+  try {
+    const { data } = await api.get('/me')
+    const u = data.data || {}
+    return {
+      name: u.name,
+      email: u.email,
+      position_name: u.position?.position_name,
+    }
+  } catch (e) {
+    console.error(e)
+    throw new Error('Gagal mengambil profil')
+  }
+}
+
 async function handleSubmit() {
   errorMsg.value   = ''
   successMsg.value = ''
   loading.value    = true
- 
+
   try {
     // 1) Panggil login
     const response = await api.post('/login', {
@@ -216,33 +231,42 @@ async function handleSubmit() {
       password: password.value,
     })
 
-    // 2) Ambil token dari payload (sesuaikan path jika di-backend-mu berbeda)
+    // 2) Ambil token
     const token = response.data.data?.token || response.data.token
     if (!token) throw new Error('Token tidak ditemukan di response')
 
-    // 3) Simpan & set default header untuk semua request berikutnya
+    // 3) Simpan token & set header
     localStorage.setItem('token', token)
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
-    // 4) Tampilkan notifikasi sukses
+    // 4) Ambil profil untuk cek posisi
+    const profile = await loadProfile()
+
+    // 5) Validasi position_name
+    if (profile.position_name !== 'Human Resources') {
+      // clear token & header kalau bukan HR
+      localStorage.removeItem('token')
+      delete api.defaults.headers.common['Authorization']
+
+      throw new Error('Hanya Human Resources yang dapat login')
+    }
+
+    // 6) Berhasil: notifikasi & redirect
     successMsg.value = 'Login berhasil! Mengalihkan…'
-
-    // 5) Tunggu sebentar agar user sempat lihat pesan
     await new Promise(resolve => setTimeout(resolve, 1200))
-
-    // 6) Navigasi ke dashboard
-     window.location.href = '/dashboard'
+    window.location.href = '/dashboard'
 
   } catch (err) {
-    // jika error dari server, tampilkan message-nya; kalau tidak, pakai fallback
+    // pesan error
     errorMsg.value =
-      err.response?.data?.message ||
       err.message ||
+      err.response?.data?.message ||
       'Login gagal — periksa kembali email dan password.'
   } finally {
     loading.value = false
   }
 }
+
 
 </script>
 
