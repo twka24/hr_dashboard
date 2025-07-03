@@ -146,14 +146,11 @@
 
           <!-- Calendar View -->
           <FullCalendar
-  v-if="!loading && isCalendarView"
-  class="rounded-lg overflow-hidden"
-  :plugins="calendarPlugins"
-  :initialView="calendarInitialView"
-  :headerToolbar="calendarHeaderToolbar"
-  :events="calendarEvents"
-  
-/>
+              v-if="!loading && isCalendarView"
+              class="rounded-lg overflow-hidden"
+              :options="calendarOptions"
+              
+            />
 
           <!-- Table View -->
           <div v-if="!loading && !isCalendarView" class="overflow-x-auto">
@@ -391,6 +388,14 @@ const calendarEvents = computed(() => {
       }))
     : []
 })
+
+// Calendar Option
+const calendarOptions = computed(() => ({
+  plugins:       calendarPlugins,
+  initialView:   calendarInitialView,
+  headerToolbar: calendarHeaderToolbar,
+  events:        calendarEvents.value
+}))
 </script>
 
 <style scoped>
