@@ -1,4 +1,3 @@
-<!-- src/pages/Attendances.vue -->
 <template>
   <div class="p-6 md:p-10">
     <div class="mx-[20px]">
@@ -8,9 +7,23 @@
         <div
           class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-6 border-b border-gray-100 dark:border-gray-700"
         >
-          <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
-            Management Absensi
-          </h1>
+          <div>
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
+              Management Absensi
+            </h1>
+            <!-- Notifikasi -->
+            <div class="flex flex-wrap gap-4 mt-2 text-sm">
+              <div v-if="onLeave.length" class="px-3 py-1 bg-yellow-100 dark:bg-yellow-700 rounded-full">
+                Cuti/Ijin ({{ onLeave.length }}): {{ onLeave.map(a=>a.employee.name).join(', ') }}
+              </div>
+              <div v-if="absentList.length" class="px-3 py-1 bg-red-100 dark:bg-red-700 rounded-full">
+                Absen ({{ absentList.length }}): {{ absentList.map(a=>a.employee.name).join(', ') }}
+              </div>
+              <div v-if="noCheckOut.length" class="px-3 py-1 bg-indigo-100 dark:bg-indigo-700 rounded-full">
+                Belum Pulang ({{ noCheckOut.length }}): {{ noCheckOut.map(a=>a.employee.name).join(', ') }}
+              </div>
+            </div>
+          </div>
           <div class="mt-4 sm:mt-0 inline-flex rounded-lg bg-gray-100 dark:bg-gray-700">
             <button
               @click="isCalendarView = false"
@@ -32,32 +45,47 @@
         <!-- Toolbar Filters (Table View only) -->
         <div v-if="!isCalendarView" class="flex flex-col md:flex-row items-center justify-between gap-4 p-6">
           <div class="flex flex-1 flex-col md:flex-row gap-4 w-full">
-            <!-- Cari Kode Karyawan -->
+            <!-- Cari Nama Karyawan -->
             <div class="relative w-full md:w-1/4">
               <MagnifyingGlassIcon
                 class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5"
               />
               <input
-                v-model="employeeCode"
+                v-model="searchName"
                 type="text"
-                placeholder="Cari Kode karyawan..."
+                placeholder="Cari Nama karyawan..."
                 class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 focus:ring-2 focus:ring-indigo-500 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 pl-10 pr-4 py-2 transition"
               />
             </div>
-            <!-- Filter Tanggal -->
+            <!-- Filter Tanggal Dari -->
             <div class="w-full md:w-1/6">
               <input
-                v-model="date"
+                v-model="dateFrom"
                 type="date"
                 class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-3 pr-3 py-2 transition"
               />
             </div>
-            <!-- Filter Bulan-Tahun -->
+            <!-- Filter Tanggal Sampai -->
             <div class="w-full md:w-1/6">
               <input
-                v-model="monthYear"
-                type="month"
+                v-model="dateTo"
+                type="date"
                 class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-3 pr-3 py-2 transition"
+              />
+            </div>
+            <!-- Filter Jabatan -->
+            <div class="relative w-full md:w-1/4">
+              <select
+                v-model="filterPosition"
+                class="appearance-none w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-4 pr-10 py-2 transition"
+              >
+                <option value="">— Semua Jabatan —</option>
+                <option v-for="pos in positions" :key="pos" :value="pos">
+                  {{ pos }}
+                </option>
+              </select>
+              <ChevronDownIcon
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
               />
             </div>
             <!-- Status Filter -->
@@ -77,24 +105,33 @@
             </div>
           </div>
 
-          <!-- Rows per page -->
-          <div class="relative">
-            <select
-              v-model.number="perPage"
-              @change="page = 1"
-              class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-3 pr-8 py-2 transition"
+          <div class="flex items-center gap-2">
+            <!-- Clear Filters -->
+            <button
+              @click="clearFilters"
+              class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
             >
-              <option v-for="n in [5,10,20,50]" :key="n" :value="n">
-                Show {{ n }} rows
-              </option>
-            </select>
-            <ChevronDownIcon
-              class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
-            />
+              Hapus Filter
+            </button>
+            <!-- Rows per page -->
+            <div class="relative">
+              <select
+                v-model.number="perPage"
+                @change="page = 1"
+                class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-3 pr-8 py-2 transition"
+              >
+                <option v-for="n in [5,10,20,50]" :key="n" :value="n">
+                  Show {{ n }} rows
+                </option>
+              </select>
+              <ChevronDownIcon
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
+              />
+            </div>
           </div>
         </div>
 
-        <!-- Export Toolbar (Table View only) -->
+        <!-- Export Toolbar -->
         <div v-if="!isCalendarView" class="flex flex-col md:flex-row items-center justify-between gap-4 px-6 pb-2">
           <div class="flex items-center gap-3">
             <label class="text-sm font-medium text-gray-700 dark:text-gray-300 shrink-0">
@@ -102,15 +139,24 @@
             </label>
             <div class="relative">
               <select
-                v-model="exportCode"
-                class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-4 pr-10 py-2 transition"
+                v-model="exportFilterType"
+                class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-4 pr-8 py-2 transition"
               >
-                <option value="all">Tampilkan Semua</option>
-                <option
-                  v-for="opt in exportOptions"
-                  :key="opt.code"
-                  :value="opt.code"
-                >
+                <option value="all">Semua</option>
+                <option value="employee">Per Karyawan</option>
+                <option value="position">Per Jabatan</option>
+              </select>
+              <ChevronDownIcon
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
+              />
+            </div>
+            <div v-if="exportFilterType==='employee'" class="relative">
+              <select
+                v-model="exportCode"
+                class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-4 pr-8 py-2 transition"
+              >
+                <option value="all">— Pilih Karyawan —</option>
+                <option v-for="opt in exportOptions" :key="opt.code" :value="opt.code">
                   {{ opt.name }}
                 </option>
               </select>
@@ -118,7 +164,20 @@
                 class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
               />
             </div>
-
+            <div v-if="exportFilterType==='position'" class="relative">
+              <select
+                v-model="exportPosition"
+                class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-4 pr-8 py-2 transition"
+              >
+                <option value="all">— Pilih Jabatan —</option>
+                <option v-for="pos in positions" :key="pos" :value="pos">
+                  {{ pos }}
+                </option>
+              </select>
+              <ChevronDownIcon
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
+              />
+            </div>
             <button
               @click="downloadExcel"
               class="px-4 py-2 bg-emerald-500 text-white rounded-full hover:bg-emerald-600 transition-transform hover:scale-105"
@@ -130,35 +189,24 @@
 
         <!-- Content -->
         <div class="p-6 bg-white dark:bg-gray-800">
-          <!-- Loading spinner -->
           <div v-if="loading" class="flex justify-center py-20">
-            <svg
-              class="h-12 w-12 animate-spin text-indigo-600"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
+            <svg class="h-12 w-12 animate-spin text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-              <path class="opacity-75" fill="currentColor"
-                d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16 8 8 0 018-8z"/>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16 8 8 0 018-8z"/>
             </svg>
           </div>
-
-          <!-- Calendar View -->
           <FullCalendar
-              v-if="!loading && isCalendarView"
-              class="rounded-lg overflow-hidden"
-              :options="calendarOptions"
-              
-            />
-
-          <!-- Table View -->
+            v-if="!loading && isCalendarView"
+            class="rounded-lg overflow-hidden"
+            :options="calendarOptions"
+          />
           <div v-if="!loading && !isCalendarView" class="overflow-x-auto">
             <table class="w-full table-auto border-collapse">
               <thead class="bg-indigo-100 dark:bg-indigo-900">
                 <tr>
                   <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-200">Kode</th>
                   <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-200">Nama</th>
+                  <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-200">Jabatan</th>
                   <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-200">Tanggal</th>
                   <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-200">Jam Masuk</th>
                   <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-200">Jam Pulang</th>
@@ -174,20 +222,15 @@
                 >
                   <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ att.employee_code }}</td>
                   <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ att.employee.name }}</td>
-                  <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">
-                    {{ formatDate(att.attendance_date) }}
-                  </td>
-                  <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">
-                    {{ att.check_in ? formatTime(att.check_in) : '-' }}
-                  </td>
-                  <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">
-                    {{ att.check_out ? formatTime(att.check_out) : '-' }}
-                  </td>
+                  <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ att.employee.position.position_name }}</td>
+                  <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ formatDate(att.attendance_date) }}</td>
+                  <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ att.check_in ? formatTime(att.check_in) : '-' }}</td>
+                  <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ att.check_out ? formatTime(att.check_out) : '-' }}</td>
                   <td class="px-4 py-3 text-sm">
                     <span
                       :class="{
-                        'text-green-600': att.status==='present',
-                        'text-red-600':   att.status==='absent',
+                        'text-green-600': att.status==='hadir',
+                        'text-red-600':   att.status==='alpha',
                         'text-yellow-600': att.status==='late' || att.status==='cuti'
                       }"
                     >
@@ -195,46 +238,25 @@
                     </span>
                   </td>
                   <td class="px-4 py-3 text-center">
-                    <button
-                      @click="viewDetail(att)"
-                      class="inline-flex items-center p-2 rounded-full hover:bg-indigo-100 dark:hover:bg-gray-700 transition"
-                    >
+                    <button @click="viewDetail(att)" class="inline-flex items-center p-2 rounded-full hover:bg-indigo-100 dark:hover:bg-gray-700 transition">
                       <EyeIcon class="h-5 w-5 text-indigo-600 dark:text-indigo-300" />
                     </button>
                   </td>
                 </tr>
                 <tr v-if="!paginated.length">
-                  <td colspan="7" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">
+                  <td colspan="8" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">
                     Tidak ada data yang sesuai.
                   </td>
                 </tr>
               </tbody>
             </table>
-
-            <!-- Pagination -->
             <div class="flex justify-center items-center gap-2 py-6">
-              <button
-                @click="prevPage"
-                :disabled="page===1"
-                class="px-3 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
-              >
-                Prev
-              </button>
-              <span class="px-2 text-sm text-gray-600 dark:text-gray-300">
-                Halaman {{ page }} / {{ totalPages }}
-              </span>
-              <button
-                @click="nextPage"
-                :disabled="page===totalPages"
-                class="px-3 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
-              >
-                Next
-              </button>
+              <button @click="prevPage" :disabled="page===1" class="px-3 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50">Prev</button>
+              <span class="px-2 text-sm text-gray-600 dark:text-gray-300">Halaman {{ page }} / {{ totalPages }}</span>
+              <button @click="nextPage" :disabled="page===totalPages" class="px-3 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50">Next</button>
             </div>
           </div>
         </div>
-
-        <!-- Error -->
         <div v-if="error" class="p-6 text-center text-red-600">{{ error }}</div>
       </div>
     </div>
@@ -245,172 +267,181 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '@/services/api'
-import {
-  MagnifyingGlassIcon,
-  ChevronDownIcon,
-  EyeIcon
-} from '@heroicons/vue/24/outline'
+import { MagnifyingGlassIcon, ChevronDownIcon, EyeIcon } from '@heroicons/vue/24/outline'
 import * as XLSX from 'xlsx'
-
-// FullCalendar
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 
-const router       = useRouter()
-const attendances  = ref([])
-const loading      = ref(true)
-const error        = ref('')
-const employeeCode = ref('')
-const date         = ref('')
-const monthYear    = ref('')
-const filterStatus = ref('')
-const page         = ref(1)
-const perPage      = ref(10)
-const exportCode   = ref('all')
+const router         = useRouter()
+const attendances    = ref([])
+const loading        = ref(true)
+const error          = ref('')
+
+// Filters
+const searchName     = ref('')
+const dateFrom       = ref('')
+const dateTo         = ref('')
+const filterStatus   = ref('')
+const filterPosition = ref('')
+
+// Pagination & view
+const page           = ref(1)
+const perPage        = ref(10)
 const isCalendarView = ref(false)
 
-// FullCalendar config
+// Export
+const exportFilterType = ref('all')
+const exportCode       = ref('all')
+const exportPosition   = ref('all')
+
 const calendarPlugins       = [ dayGridPlugin ]
 const calendarInitialView   = 'dayGridMonth'
-const calendarHeaderToolbar = {
-  left: 'prev,next today',
-  center: 'title',
-  right: ''
-}
-
-// Export helpers
-const exportOptions = computed(() => {
-  const m = new Map()
-  attendances.value.forEach(a => {
-    if (!m.has(a.employee_code)) m.set(a.employee_code, a.employee.name)
-  })
-  return Array.from(m, ([code,name])=>({ code, name }))
-})
-const exportData = computed(()=> 
-  exportCode.value==='all'
-    ? attendances.value
-    : attendances.value.filter(a=>a.employee_code===exportCode.value)
-)
+const calendarHeaderToolbar = { left:'prev,next today', center:'title', right:'' }
 
 function formatDate(iso) {
   return new Date(iso).toLocaleDateString()
 }
 function formatTime(iso) {
-  return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  return new Date(iso).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' })
 }
 
-// Load data
+// load once
 async function loadAttendances() {
-  loading.value = true
-  error.value   = ''
+  loading.value = true; error.value = ''
   try {
-    const params = {}
-    if (employeeCode.value) params.employee_code = employeeCode.value
-    if (date.value)         params.date          = date.value
-    if (monthYear.value)    params.month_year    = monthYear.value
-    if (filterStatus.value) params.status        = filterStatus.value
-
-    const res = await api.get('/attendances', { params })
+    const res = await api.get('/attendances')
     attendances.value = res.data.data
-  } catch (e) {
-    console.error(e)
+  } catch {
     error.value = 'Gagal memuat data absensi.'
   } finally {
     loading.value = false
   }
 }
-
 onMounted(loadAttendances)
-watch([employeeCode, date, monthYear, filterStatus], () => {
-  page.value = 1
-  loadAttendances()
-})
 
-// Download Excel
-function downloadExcel() {
-  if (!exportData.value.length) return
-  const rows = exportData.value.map(a => ({
-    Kode: a.employee_code,
-    Nama: a.employee.name,
-    Tanggal: formatDate(a.attendance_date),
-    'Jam Masuk': a.check_in ? formatTime(a.check_in) : '-',
-    'Lokasi Masuk': a.check_in_location || '-',
-    'Jam Pulang': a.check_out ? formatTime(a.check_out) : '-',
-    'Lokasi Pulang': a.check_out_location || '-',
-    'Istirahat Mulai': a.break_start ? formatTime(a.break_start) : '-',
-    'Istirahat Selesai': a.break_end ? formatTime(a.break_end) : '-',
-    Status: a.status,
-    Notes: a.notes || '-'
-  }))
-  const ws = XLSX.utils.json_to_sheet(rows, { origin: 'A2' })
-  const title = exportCode.value==='all'
-    ? 'Daftar Semua Absensi'
-    : `Absensi • ${rows[0].Nama}`
-  XLSX.utils.sheet_add_aoa(ws, [[title]], { origin:'A1' })
-  ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:10}}]
-  ws['!cols']=Object.keys(rows[0]).map(()=>({wch:15}))
-  const wb = XLSX.utils.book_new()
-  XLSX.utils.book_append_sheet(wb, ws, 'Absensi')
-  const fn = exportCode.value==='all'
-    ? 'absensi_all.xlsx'
-    : `absensi_${exportCode.value}.xlsx`
-  XLSX.writeFile(wb, fn)
+// clear filters
+function clearFilters(){
+  searchName.value     = ''
+  dateFrom.value       = ''
+  dateTo.value         = ''
+  filterStatus.value   = ''
+  filterPosition.value = ''
+  exportFilterType.value = 'all'
+  exportCode.value       = 'all'
+  exportPosition.value   = 'all'
+  page.value = 1
 }
 
-// Pagination & detail
-const statuses   = computed(()=> Array.from(new Set(attendances.value.map(a=>a.status))) )
-const totalPages = computed(()=> Math.ceil(attendances.value.length/perPage.value) || 1 )
-const paginated  = computed(()=> attendances.value.slice((page.value-1)*perPage.value, page.value*perPage.value) )
+// computed lists
+const statuses = computed(() => Array.from(new Set(attendances.value.map(a=>a.status))))
+const positions = computed(() => Array.from(new Set(attendances.value.map(a=>a.employee.position.position_name))))
+const exportOptions = computed(()=>{
+  const m = new Map()
+  attendances.value.forEach(a=>{ if(!m.has(a.employee_code)) m.set(a.employee_code,a.employee.name) })
+  return Array.from(m, ([code,name])=>({code,name}))
+})
+
+// client-side filtering
+const filtered = computed(()=>{
+  let list = attendances.value
+  if(searchName.value)
+    list = list.filter(a=>a.employee.name.toLowerCase().includes(searchName.value.trim().toLowerCase()))
+  if(dateFrom.value){
+    const d0 = new Date(dateFrom.value)
+    list = list.filter(a=> new Date(a.attendance_date) >= d0 )
+  }
+  if(dateTo.value){
+    const d1 = new Date(dateTo.value)
+    list = list.filter(a=> new Date(a.attendance_date) <= d1 )
+  }
+  if(filterStatus.value)
+    list = list.filter(a=>a.status===filterStatus.value)
+  if(filterPosition.value)
+    list = list.filter(a=>a.employee.position.position_name===filterPosition.value)
+  return list
+})
+watch([searchName,dateFrom,dateTo,filterStatus,filterPosition], ()=> page.value = 1)
+
+const totalPages = computed(()=> Math.ceil(filtered.value.length/perPage.value)||1)
+const paginated  = computed(()=> filtered.value.slice((page.value-1)*perPage.value, page.value*perPage.value))
+
+// notifications on filtered
+const onLeave    = computed(()=> filtered.value.filter(a=>['cuti','izin'].includes(a.status)))
+const absentList = computed(()=> filtered.value.filter(a=>a.status==='absent'))
+const noCheckOut = computed(()=> filtered.value.filter(a=>a.check_in && !a.check_out))
+
+// pagination
 function prevPage(){ if(page.value>1) page.value-- }
 function nextPage(){ if(page.value<totalPages.value) page.value++ }
+
+// detail
 function viewDetail(a){
-  localStorage.setItem('selectedAttendance', JSON.stringify(a))
+  localStorage.setItem('selectedAttendance',JSON.stringify(a))
   router.push({ name:'AttendanceDetail', params:{ id: a.id } })
 }
 
-// Calendar events mapping
-const calendarEvents = computed(() => {
-  return Array.isArray(attendances.value)
-    ? attendances.value.map(a => ({
-        title: [
-          a.employee?.name || '-',
-          `(${a.status || '-'})`,
-          `Masuk: ${a.check_in ? new Date(a.check_in).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : '-'}`,
-          `Pulang: ${a.check_out? new Date(a.check_out).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : '-'}`
-        ].join('\n'),
-        start: a.attendance_date,
-        color: ({
-          present: '#3B82F6',
-          absent:  '#EF4444',
-          late:    '#F59E0B',
-          cuti:    '#F59E0B'
-        }[a.status] || '#6B7280')
-      }))
-    : []
+// exportData
+const exportData = computed(()=>{
+  let list = filtered.value
+  if(exportFilterType.value==='employee' && exportCode.value!=='all')
+    list = list.filter(a=>a.employee_code===exportCode.value)
+  if(exportFilterType.value==='position' && exportPosition.value!=='all')
+    list = list.filter(a=>a.employee.position.position_name===exportPosition.value)
+  return list
 })
 
-// Calendar Option
-const calendarOptions = computed(() => ({
-  plugins:       calendarPlugins,
-  initialView:   calendarInitialView,
-  headerToolbar: calendarHeaderToolbar,
-  events:        calendarEvents.value
+// downloadExcel
+function downloadExcel(){
+  if(!exportData.value.length) return
+  const rows = exportData.value.map(a=>({
+    Kode: a.employee_code,
+    Nama: a.employee.name,
+    Jabatan: a.employee.position.position_name,
+    Tanggal: formatDate(a.attendance_date),
+    'Jam Masuk': a.check_in?formatTime(a.check_in):'-',
+    'Jam Pulang': a.check_out?formatTime(a.check_out):'-',
+    Status: a.status
+  }))
+  const ws = XLSX.utils.json_to_sheet(rows,{origin:'A2'})
+  let title,fn
+  if(exportFilterType.value==='employee'&&exportCode.value!=='all'){
+    title=`Absensi • ${rows[0].Nama}`; fn=`absensi_${exportCode.value}.xlsx`
+  } else if(exportFilterType.value==='position'&&exportPosition.value!=='all'){
+    title=`Absensi • Jabatan ${exportPosition.value}`; fn=`absensi_jabatan_${exportPosition.value}.xlsx`
+  } else {
+    title='Daftar Semua Absensi'; fn='absensi_all.xlsx'
+  }
+  XLSX.utils.sheet_add_aoa(ws,[[title]],{origin:'A1'})
+  ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:4}}]
+  ws['!cols']=Object.keys(rows[0]).map(()=>({wch:15}))
+  const wb = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(wb,ws,'Absensi')
+  XLSX.writeFile(wb,fn)
+}
+
+// calendar
+const calendarEvents = computed(()=>filtered.value.map(a=>({
+  title: a.employee.name,
+  start: a.attendance_date,
+  extendedProps:{status:a.status,checkIn:a.check_in,checkOut:a.check_out},
+  color:({'hadir':'#00FF00','alpha':'#EF4444','late':'#F59E0B','cuti':'#F59E0B'}[a.status]||'#6B7280')
+})))
+const calendarOptions = computed(()=>({
+  plugins:calendarPlugins,
+  initialView:calendarInitialView,
+  headerToolbar:calendarHeaderToolbar,
+  events:calendarEvents.value,
+  eventDidMount:info=>{
+    const p=info.event.extendedProps
+    info.el.setAttribute('title',
+      `Karyawan: ${info.event.title}\nStatus: ${p.status}\nMasuk: ${p.checkIn?formatTime(p.checkIn):'-'}\nPulang: ${p.checkOut?formatTime(p.checkOut):'-'}`
+    )
+  }
 }))
 </script>
 
 <style scoped>
-thead tr {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-/* FullCalendar style tweaks */
-.fc .fc-toolbar-title {
-  font-weight: 600;
-  font-size: 1.25rem;
-}
-.fc .fc-daygrid-event {
-  font-size: 0.75rem;
-  border-radius: 0.375rem;
-}
+thead tr { position: sticky; top: 0; z-index: 10; }
+.fc .fc-toolbar-title { font-weight:600; font-size:1.25rem; }
+.fc .fc-daygrid-event { font-size:.75rem; border-radius:.375rem; }
 </style>

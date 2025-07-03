@@ -1,5 +1,4 @@
 <template>
-  
   <div class="flex min-h-screen text-slate-900 dark:text-slate-100
               bg-gradient-to-tr from-slate-50 via-slate-200 to-slate-300
               dark:from-[#061325] dark:via-[#0e1a2f] dark:to-black">
@@ -75,12 +74,54 @@
             class="relative z-10 h-5 w-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
             :class="active===item.id ? 'text-indigo-500' : ''"
           />
-          <span class="relative z-10 flex flex-col">
-            <span class="truncate">{{ item.name }}</span>
-            <span class="text-xs text-slate-500 dark:text-slate-400">{{ item.desc }}</span>
+          <span class="relative z-10 flex-1 flex items-center justify-between">
+            <div class="flex flex-col">
+              <span class="truncate">{{ item.name }}</span>
+              <span class="text-xs text-slate-500 dark:text-slate-400">{{ item.desc }}</span>
+            </div>
+            <!-- dot indicator for pending on Requests -->
+            <span
+              v-if="item.id==='requests' && pendingCount > 0"
+              class="ml-2 inline-flex items-center justify-center h-5 w-5 rounded-full bg-yellow-500 text-xs font-semibold text-white"
+            >
+              {{ pendingCount }}
+            </span>
           </span>
         </router-link>
       </nav>
+
+      <!-- Settings menu at bottom -->
+      <div class="mt-auto px-3 pb-6">
+        <router-link
+          to="/dashboard/settings"
+          class="group relative flex w-full items-start gap-3 overflow-hidden
+                 rounded-lg px-4 py-3 text-sm font-medium transition"
+          :class="active==='settings'
+                  ? 'text-indigo-800 dark:text-indigo-200'
+                  : 'text-slate-700 dark:text-slate-300'"
+        >
+          <span
+            class="absolute left-0 top-0 h-full w-1 rounded-r bg-indigo-500 transition-transform"
+            :class="[active==='settings' ? 'translate-x-0' : '-translate-x-full', 'group-hover:translate-x-0']"
+          />
+          <span
+            class="absolute inset-0 z-0 rounded-lg bg-indigo-100/50 dark:bg-white/10
+                   backdrop-blur-sm opacity-0 scale-95 transition-all duration-300"
+            :class="active==='settings'
+                    ? 'opacity-100 scale-100'
+                    : 'group-hover:opacity-100 group-hover:scale-100'"
+          />
+          <CogIcon
+            class="relative z-10 h-5 w-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
+            :class="active==='settings' ? 'text-indigo-500' : ''"
+          />
+          <span class="relative z-10 flex flex-col">
+            <span class="truncate">Settings</span>
+            <span class="text-xs text-slate-500 dark:text-slate-400">Pengaturan</span>
+          </span>
+        </router-link>
+      </div>
+
     </aside>
 
     <!-- Main -->
@@ -89,7 +130,6 @@
       <header class="sticky top-0 z-20 flex justify-between items-center
                      bg-white/60 dark:bg-[#0E1A2F]/80 backdrop-blur-md
                      px-4 md:px-8 py-3 shadow">
-        <!-- left: toggle + title -->
         <div class="flex items-center gap-4">
           <button class="md:hidden" @click="menuOpen = !menuOpen">
             <Bars3Icon v-if="!menuOpen" class="h-7 w-7"/>
@@ -99,15 +139,11 @@
             {{ active.replace('-', ' ') }}
           </h2>
         </div>
-
-        <!-- center: greeting + date/time -->
         <div class="text-center">
           <p class="text-sm font-medium">{{ greeting }}</p>
           <p class="text-sm">{{ currentDate }}</p>
           <p class="text-sm">{{ currentTime }}</p>
         </div>
-
-        <!-- right: dark mode toggle -->
         <button @click="toggleDark()"
                 class="flex items-center gap-2 rounded-full px-3 py-1 hover:bg-indigo-100 dark:hover:bg-white/10">
           <SunIcon v-if="isDark" class="h-5 w-5"/>
@@ -184,7 +220,7 @@
         </div>
       </transition>
 
-      <!-- Toast di pojok kanan atas -->
+      <!-- Toast -->
       <transition name="slide-fade">
         <div
           v-if="toastShow"
@@ -241,21 +277,22 @@ import {
   SunIcon,
   ArrowLeftOnRectangleIcon,
   PencilIcon,
+  CogIcon
 } from '@heroicons/vue/24/outline'
 
 // dark-mode
 const isDark     = useDark({ storageKey: 'color-scheme' })
 const toggleDark = useToggle(isDark)
 
-// router
-const router  = useRouter()
-const route   = useRoute()
-const active  = computed(() => (route.name ?? 'dashboard').toString().toLowerCase())
+// router & active route
+const router    = useRouter()
+const route     = useRoute()
+const active    = computed(() => (route.name ?? 'dashboard').toString().toLowerCase())
 
-// sidebar
+// sidebar state
 const menuOpen = ref(false)
 
-// profile
+// profile data
 const profile = ref({ name:'', email:'', position_name:'' })
 async function loadProfile() {
   try {
@@ -268,7 +305,6 @@ async function loadProfile() {
     }
   } catch (e) { console.error(e) }
 }
-onMounted(loadProfile)
 
 // edit profile
 const editProfileOpen = ref(false)
@@ -289,15 +325,14 @@ async function saveProfile() {
     profile.value.email = editEmail.value
     showToast('Profile diperbarui', true)
     editProfileOpen.value = false
-  } catch (e) {
-    console.error(e)
+  } catch {
     showToast('Gagal menyimpan profile', false)
   } finally {
     savingProfile.value = false
   }
 }
 
-// toast + modal
+// toast & logout modal
 const confirmOpen = ref(false)
 const toastShow   = ref(false)
 const toastMsg    = ref('')
@@ -308,8 +343,6 @@ function showToast(msg, ok=true) {
   toastShow.value = true
   setTimeout(()=> toastShow.value = false, 2500)
 }
-
-// logout
 async function confirmLogout() {
   confirmOpen.value = false
   try {
@@ -317,8 +350,7 @@ async function confirmLogout() {
     localStorage.removeItem('token')
     showToast('Logout berhasil!')
     setTimeout(()=> router.push('/login'), 1200)
-  } catch (e) {
-    console.error(e)
+  } catch {
     showToast('Gagal logout', false)
   }
 }
@@ -343,6 +375,23 @@ const greeting = computed(() => {
   if (h >= 15 && h < 18) return 'Selamat sore'
   return 'Selamat malam'
 })
+
+// pending count for Requests badge
+const pendingCount = ref(0)
+async function loadPendingCount() {
+  try {
+    const { data } = await api.get('/leave-requests/all')
+    pendingCount.value = data.data.filter(r => r.status==='pending').length
+  } catch (e) {
+    console.error('Gagal fetch pending count', e)
+  }
+}
+
+// on mounted
+onMounted(() => {
+  loadProfile()
+  loadPendingCount()
+})
 </script>
 
 <style scoped>
@@ -350,4 +399,10 @@ const greeting = computed(() => {
 .fade-enter-from,.fade-leave-to { opacity: 0 }
 .slide-fade-enter-active,.slide-fade-leave-active { transition: all .35s }
 .slide-fade-enter-from,.slide-fade-leave-to { opacity:0; transform:translateY(10px) }
+
+thead tr {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
 </style>
