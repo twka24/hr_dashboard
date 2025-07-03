@@ -219,7 +219,7 @@
 
       <!-- Watermark -->
       <div class="fixed bottom-2 left-1/2 -translate-x-1/2 text-xs text-gray-400 dark:text-gray-600 pointer-events-none">
-        Design by TWKA 2025 © | Licensed MIT | Irwan Setiawan
+        Design by TWKA 2025 © | Licensed MIT
       </div>
     </div>
   </div>
