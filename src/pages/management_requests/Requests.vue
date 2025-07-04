@@ -25,59 +25,92 @@
         </div>
 
         <!-- Toolbar -->
-        <div class="flex flex-col md:flex-row items-center justify-between gap-4 p-6">
-          <div class="flex flex-1 flex-col md:flex-row gap-4 w-full">
-            <!-- Search -->
-            <div class="relative w-full md:w-1/2">
-              <MagnifyingGlassIcon class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5" />
-              <input
-                v-model="searchQuery"
-                type="text"
-                placeholder="Cari berdasarkan nama karyawan..."
-                class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 focus:ring-2 focus:ring-indigo-500 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 pl-10 pr-4 py-2 transition"
-              />
-            </div>
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 p-6">
+  <!-- Filters -->
+  <div class="flex flex-1 flex-col md:flex-row gap-4 w-full">
+    <!-- Cari Karyawan -->
+    <div class="w-full md:w-1/4">
+      <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1">Cari Karyawan</label>
+      <div class="relative">
+        <MagnifyingGlassIcon
+          class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5"
+        />
+        <input
+          v-model="searchQuery"
+          type="text"
+          placeholder="Cari berdasarkan nama karyawan..."
+          class="w-full rounded-lg bg-gray-100 dark:bg-gray-700
+                 focus:bg-white dark:focus:bg-gray-600
+                 focus:ring-2 focus:ring-indigo-500
+                 placeholder-gray-500 dark:placeholder-gray-400
+                 text-gray-900 dark:text-gray-100 pl-10 pr-4 py-2 transition"
+        />
+      </div>
+    </div>
 
-            <!-- Status Filter -->
-            <div class="relative w-full md:w-1/3">
-              <select
-                v-model="filterStatus"
-                class="appearance-none w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-4 pr-10 py-2 transition"
-              >
-                <option value="">— Semua Status —</option>
-                <option v-for="st in statuses" :key="st" :value="st">
-                  {{ st }}
-                </option>
-              </select>
-              <ChevronDownIcon
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
-              />
-            </div>
-          </div>
+    <!-- Dari Tanggal -->
+    <div class="w-full md:w-1/6">
+      <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1">Dari Tanggal</label>
+      <input
+        v-model="dateFrom"
+        type="date"
+        class="w-full rounded-lg bg-gray-100 dark:bg-gray-700
+               focus:ring-2 focus:ring-indigo-500
+               text-gray-900 dark:text-gray-100 px-3 py-2 transition"
+      />
+    </div>
 
-          <!-- Rows per page -->
-          <div class="relative">
-            <select
-              v-model.number="perPage"
-              @change="page = 1"
-              class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-3 pr-8 py-2 transition"
-            >
-              <option v-for="n in [5,10,20,50]" :key="n" :value="n">
-                Show {{ n }} rows
-              </option>
-            </select>
-            <ChevronDownIcon class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none" />
-          </div>
-        </div>
+    <!-- Sampai Tanggal -->
+    <div class="w-full md:w-1/6">
+      <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1">Sampai Tanggal</label>
+      <input
+        v-model="dateTo"
+        type="date"
+        class="w-full rounded-lg bg-gray-100 dark:bg-gray-700
+               focus:ring-2 focus:ring-indigo-500
+               text-gray-900 dark:text-gray-100 px-3 py-2 transition"
+      />
+    </div>
 
-        <!-- Ekspor bar -->
+    <!-- Status -->
+    <div class="w-full md:w-1/4">
+      <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1">Status</label>
+      <div class="relative">
+        <select
+          v-model="filterStatus"
+          class="appearance-none w-full rounded-lg bg-gray-100 dark:bg-gray-700
+                 focus:ring-2 focus:ring-indigo-500
+                 text-gray-900 dark:text-gray-100 pl-4 pr-10 py-2 transition"
+        >
+          <option value="">— Semua Status —</option>
+          <option v-for="st in statuses" :key="st" :value="st">
+            {{ st }}
+          </option>
+        </select>
+        <ChevronDownIcon
+          class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- Hapus Filter -->
+  <button
+    @click="clearFilters"
+    class="self-center md:self-end px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+  >
+    Hapus Filter
+  </button>
+</div>
+
+
+        <!-- Ekspor bar + Summary -->
         <div class="flex flex-col md:flex-row items-center justify-between gap-4 px-6 pb-2">
+          <!-- Ekspor controls -->
           <div class="flex items-center gap-3">
             <label class="text-sm font-medium text-gray-700 dark:text-gray-300 shrink-0">
               Ekspor:
             </label>
-
-            <!-- Pilih tipe ekspor -->
             <div class="relative">
               <select
                 v-model="exportFilterType"
@@ -91,8 +124,6 @@
                 class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
               />
             </div>
-
-            <!-- Jika Per Karyawan -->
             <div v-if="exportFilterType==='employee'" class="relative">
               <select
                 v-model="exportCode"
@@ -107,8 +138,6 @@
                 class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
               />
             </div>
-
-            <!-- Jika Per Jabatan -->
             <div v-if="exportFilterType==='position'" class="relative">
               <select
                 v-model="exportPosition"
@@ -123,8 +152,6 @@
                 class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
               />
             </div>
-
-            <!-- Tombol Excel -->
             <button
               @click="downloadExcel"
               class="px-4 py-2 bg-emerald-500 text-white rounded-full hover:bg-emerald-600 transition-transform hover:scale-105"
@@ -132,6 +159,31 @@
               Excel
             </button>
           </div>
+          <div class="flex-1 flex flex-wrap justify-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+            <template v-if="isFiltered">
+              <span class="font-semibold">Total: {{ totalCount }}</span>
+              <template v-for="(info, pos) in positionSummary" :key="pos">
+                <span>| {{ pos }}: {{ info.total }}
+                  (Pending: {{ info.pending }}, Approved: {{ info.approved }}, Rejected: {{ info.rejected }})
+                </span>
+              </template>
+            </template>
+            <template v-else>
+              <span class="font-semibold">Total list keseluruhan: {{ requests.length }}</span>
+            </template>
+          </div>
+           <div class="relative">
+              <select
+                v-model.number="perPage"
+                @change="page = 1"
+                class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-3 pr-8 py-2 transition"
+              >
+                <option v-for="n in [5,10,20,50]" :key="n" :value="n">
+                  Show {{ n }} rows
+                </option>
+              </select>
+              <ChevronDownIcon class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none" />
+            </div>
         </div>
 
         <!-- Table / Spinner / Error -->
@@ -230,15 +282,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '@/services/api'
-
-// Heroicons
-import {
-  MagnifyingGlassIcon,
-  ChevronDownIcon,
-  EyeIcon
-} from '@heroicons/vue/24/outline'
-
-// Ekspor libraries
+import { MagnifyingGlassIcon, ChevronDownIcon, EyeIcon } from '@heroicons/vue/24/outline'
 import * as XLSX from 'xlsx'
 
 const router       = useRouter()
@@ -246,52 +290,54 @@ const requests     = ref([])
 const loading      = ref(true)
 const error        = ref('')
 
-const searchQuery     = ref('')
-const filterStatus    = ref('')
-const page            = ref(1)
-const perPage         = ref(10)
+const searchQuery  = ref('')
+const filterStatus = ref('')
+const dateFrom     = ref('')
+const dateTo       = ref('')
 
-// Export controls
-const exportFilterType = ref('all')   // "all" | "employee" | "position"
+const page         = ref(1)
+const perPage      = ref(10)
+
+const exportFilterType = ref('all')
 const exportCode       = ref('all')
 const exportPosition   = ref('all')
 
-// Load data
-async function loadRequests() {
+onMounted(async () => {
   loading.value = true
   error.value   = ''
   try {
     const { data } = await api.get('/leave-requests/all')
     requests.value = data.data
-  } catch (e) {
-    console.error(e)
+  } catch {
     error.value = 'Gagal memuat data requests.'
   } finally {
     loading.value = false
   }
-}
-onMounted(loadRequests)
+})
 
-// Computed lists
 const statuses = computed(() =>
   Array.from(new Set(requests.value.map(r => r.status)))
 )
+
 const filtered = computed(() =>
   requests.value
     .filter(r => r.employee.name.toLowerCase().includes(searchQuery.value.trim().toLowerCase()))
     .filter(r => !filterStatus.value || r.status === filterStatus.value)
+    .filter(r => !dateFrom.value   || new Date(r.start_date) >= new Date(dateFrom.value))
+    .filter(r => !dateTo.value     || new Date(r.start_date) <= new Date(dateTo.value))
 )
-const totalPages = computed(() => Math.ceil(filtered.value.length / perPage.value) || 1)
-const paginated  = computed(() =>
+
+const totalPages = computed(() =>
+  Math.ceil(filtered.value.length / perPage.value) || 1
+)
+const paginated = computed(() =>
   filtered.value.slice((page.value - 1) * perPage.value, page.value * perPage.value)
 )
 
-// Notification counts
-const pendingCount   = computed(() => requests.value.filter(r => r.status === 'pending').length)
-const approvedCount  = computed(() => requests.value.filter(r => r.status === 'approved').length)
-const rejectedCount  = computed(() => requests.value.filter(r => r.status === 'rejected').length)
+const pendingCount  = computed(() => requests.value.filter(r => r.status === 'pending').length)
+const approvedCount = computed(() => requests.value.filter(r => r.status === 'approved').length)
+const rejectedCount = computed(() => requests.value.filter(r => r.status === 'rejected').length)
 
-// Export options & data
 const exportOptions = computed(() => {
   const map = new Map()
   requests.value.forEach(r => {
@@ -299,9 +345,11 @@ const exportOptions = computed(() => {
   })
   return Array.from(map, ([code, name]) => ({ code, name }))
 })
+
 const positions = computed(() =>
   Array.from(new Set(requests.value.map(r => r.position_name)))
 )
+
 const exportData = computed(() => {
   let data = requests.value
   if (exportFilterType.value === 'employee' && exportCode.value !== 'all') {
@@ -313,47 +361,71 @@ const exportData = computed(() => {
   return data
 })
 
-// Pagination & detail
-function prevPage() { if (page.value > 1) page.value-- }
-function nextPage() { if (page.value < totalPages.value) page.value++ }
-function onView(req) {
-  localStorage.setItem('selectedRequest', JSON.stringify(req))
-  router.push({ name: 'RequestDetail', params: { id: req.id } })
+const isFiltered = computed(() =>
+  searchQuery.value !== '' ||
+  filterStatus.value !== '' ||
+  dateFrom.value    !== '' ||
+  dateTo.value      !== ''
+)
+
+const totalCount = computed(() => filtered.value.length)
+const positionSummary = computed(() => {
+  const m = {}
+  filtered.value.forEach(r => {
+    const pos = r.position_name
+    if (!m[pos]) m[pos] = { total: 0, pending: 0, approved: 0, rejected: 0 }
+    m[pos].total++
+    m[pos].pending  += r.status === 'pending'  ? 1 : 0
+    m[pos].approved += r.status === 'approved' ? 1 : 0
+    m[pos].rejected += r.status === 'rejected' ? 1 : 0
+  })
+  return m
+})
+
+function clearFilters() {
+  searchQuery.value  = ''
+  filterStatus.value = ''
+  dateFrom.value     = ''
+  dateTo.value       = ''
+  page.value         = 1
 }
 
-// Excel export
+function prevPage() { if (page.value > 1) page.value-- }
+function nextPage() { if (page.value < totalPages.value) page.value++ }
+
+function onView(r) {
+  localStorage.setItem('selectedRequest', JSON.stringify(r))
+  router.push({ name: 'RequestDetail', params: { id: r.id } })
+}
+
 function downloadExcel() {
   if (!exportData.value.length) return
-
   const rows = exportData.value.map(r => ({
-    Kode      : r.employee_code,
-    Karyawan  : r.employee.name,
-    Jabatan   : r.position_name,
-    Tipe      : r.type,
-    Start     : r.start_date,
-    End       : r.end_date,
-    Alasan    : r.reason,
-    Status    : r.status,
-    Dibuat    : new Date(r.created_at).toLocaleString()
+    Kode     : r.employee_code,
+    Karyawan : r.employee.name,
+    Jabatan  : r.position_name,
+    Tipe     : r.type,
+    Start    : r.start_date,
+    End      : r.end_date,
+    Alasan   : r.reason,
+    Status   : r.status,
+    Dibuat   : new Date(r.created_at).toLocaleString()
   }))
-
   const ws = XLSX.utils.json_to_sheet(rows, { origin: 'A2' })
   let title, filename
   if (exportFilterType.value === 'employee' && exportCode.value !== 'all') {
-    title = `Requests • ${rows[0].Karyawan}`
+    title    = `Requests • ${rows[0].Karyawan}`
     filename = `requests_${exportCode.value}.xlsx`
   } else if (exportFilterType.value === 'position' && exportPosition.value !== 'all') {
-    title = `Requests • Jabatan ${exportPosition.value}`
+    title    = `Requests • Jabatan ${exportPosition.value}`
     filename = `requests_jabatan_${exportPosition.value}.xlsx`
   } else {
-    title = 'Daftar Seluruh Request'
+    title    = 'Daftar Seluruh Request'
     filename = 'requests_all.xlsx'
   }
-
   XLSX.utils.sheet_add_aoa(ws, [[title]], { origin: 'A1' })
   ws['!merges'] = [{ s: { r:0, c:0 }, e: { r:0, c:7 } }]
-  ws['!cols'] = Object.keys(rows[0]).map(() => ({ wch: 15 }))
-
+  ws['!cols']   = Object.keys(rows[0]).map(() => ({ wch: 15 }))
   const wb = XLSX.utils.book_new()
   XLSX.utils.book_append_sheet(wb, ws, 'Requests')
   XLSX.writeFile(wb, filename)

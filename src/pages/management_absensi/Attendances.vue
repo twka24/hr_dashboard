@@ -43,93 +43,108 @@
         </div>
 
         <!-- Toolbar Filters (Table View only) -->
-        <div v-if="!isCalendarView" class="flex flex-col md:flex-row items-center justify-between gap-4 p-6">
-          <div class="flex flex-1 flex-col md:flex-row gap-4 w-full">
-            <!-- Cari Nama Karyawan -->
-            <div class="relative w-full md:w-1/4">
-              <MagnifyingGlassIcon
-                class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5"
-              />
-              <input
-                v-model="searchName"
-                type="text"
-                placeholder="Cari Nama karyawan..."
-                class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 focus:ring-2 focus:ring-indigo-500 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 pl-10 pr-4 py-2 transition"
-              />
-            </div>
-            <!-- Filter Tanggal Dari -->
-            <div class="w-full md:w-1/6">
-              <input
-                v-model="dateFrom"
-                type="date"
-                class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-3 pr-3 py-2 transition"
-              />
-            </div>
-            <!-- Filter Tanggal Sampai -->
-            <div class="w-full md:w-1/6">
-              <input
-                v-model="dateTo"
-                type="date"
-                class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-3 pr-3 py-2 transition"
-              />
-            </div>
-            <!-- Filter Jabatan -->
-            <div class="relative w-full md:w-1/4">
-              <select
-                v-model="filterPosition"
-                class="appearance-none w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-4 pr-10 py-2 transition"
-              >
-                <option value="">— Semua Jabatan —</option>
-                <option v-for="pos in positions" :key="pos" :value="pos">
-                  {{ pos }}
-                </option>
-              </select>
-              <ChevronDownIcon
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
-              />
-            </div>
-            <!-- Status Filter -->
-            <div class="relative w-full md:w-1/4">
-              <select
-                v-model="filterStatus"
-                class="appearance-none w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-4 pr-10 py-2 transition"
-              >
-                <option value="">— Semua Status —</option>
-                <option v-for="st in statuses" :key="st" :value="st">
-                  {{ st }}
-                </option>
-              </select>
-              <ChevronDownIcon
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
-              />
-            </div>
-          </div>
+<div
+  v-if="!isCalendarView"
+  class="flex flex-col md:flex-row md:items-end justify-between gap-4 p-6"
+>
+  <!-- Filters -->
+  <div class="flex flex-1 flex-col md:flex-row gap-4 w-full">
+    <!-- Cari Nama Karyawan -->
+    <div class="w-full md:w-1/4">
+      <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1">
+        Cari Nama Karyawan
+      </label>
+      <div class="relative">
+        <MagnifyingGlassIcon
+          class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5"
+        />
+        <input
+          v-model="searchName"
+          type="text"
+          placeholder="Cari Nama karyawan..."
+          class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 focus:ring-2 focus:ring-indigo-500 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 pl-10 pr-4 py-2 transition"
+        />
+      </div>
+    </div>
 
-          <div class="flex items-center gap-2">
-            <!-- Clear Filters -->
-            <button
-              @click="clearFilters"
-              class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-            >
-              Hapus Filter
-            </button>
-            <!-- Rows per page -->
-            <div class="relative">
-              <select
-                v-model.number="perPage"
-                @change="page = 1"
-                class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-3 pr-8 py-2 transition"
-              >
-                <option v-for="n in [5,10,20,50]" :key="n" :value="n">
-                  Show {{ n }} rows
-                </option>
-              </select>
-              <ChevronDownIcon
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
-              />
-            </div>
-          </div>
-        </div>
+    <!-- Dari Tanggal -->
+    <div class="w-full md:w-1/6">
+      <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1">
+        Dari Tanggal
+      </label>
+      <input
+        v-model="dateFrom"
+        type="date"
+        class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 px-3 py-2 transition"
+      />
+    </div>
+
+    <!-- Sampai Tanggal -->
+    <div class="w-full md:w-1/6">
+      <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1">
+        Sampai Tanggal
+      </label>
+      <input
+        v-model="dateTo"
+        type="date"
+        class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 px-3 py-2 transition"
+      />
+    </div>
+
+    <!-- Jabatan -->
+    <div class="w-full md:w-1/4">
+      <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1">
+        Jabatan
+      </label>
+      <div class="relative">
+        <select
+          v-model="filterPosition"
+          class="appearance-none w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-4 pr-10 py-2 transition"
+        >
+          <option value="">— Semua Jabatan —</option>
+          <option v-for="pos in positions" :key="pos" :value="pos">
+            {{ pos }}
+          </option>
+        </select>
+        <ChevronDownIcon
+          class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
+        />
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div class="w-full md:w-1/4">
+      <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1">
+        Status
+      </label>
+      <div class="relative">
+        <select
+          v-model="filterStatus"
+          class="appearance-none w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-4 pr-10 py-2 transition"
+        >
+          <option value="">— Semua Status —</option>
+          <option v-for="st in statuses" :key="st" :value="st">
+            {{ st }}
+          </option>
+        </select>
+        <ChevronDownIcon
+          class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="flex items-center gap-2">
+    <button
+      @click="clearFilters"
+      class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition self-end"
+    >
+      Hapus Filter
+    </button>
+  </div>
+</div>
+
 
         <!-- Export Toolbar -->
         <div v-if="!isCalendarView" class="flex flex-col md:flex-row items-center justify-between gap-4 px-6 pb-2">
@@ -185,6 +200,37 @@
               Excel
             </button>
           </div>
+
+          <!-- Ringkasan jumlah -->
+          <div class="flex-1 text-center text-sm text-gray-700 dark:text-gray-300">
+            <template v-if="isFiltered">
+              <span class="font-semibold">Total: {{ totalCount }}</span>
+              <template v-for="(info, pos) in positionSummary" :key="pos">
+                &nbsp;|&nbsp;
+                <span>
+                  {{ pos }}: {{ info.total }}
+                  (Absen: {{ info.absent }}, Ijin/Cuti: {{ info.leave }})
+                </span>
+              </template>
+            </template>
+            <template v-else>
+              <span class="font-semibold">Total keseluruhan: {{ attendances.length }}</span>
+            </template>
+          </div>
+          <div class="relative">
+              <select
+                v-model.number="perPage"
+                @change="page = 1"
+                class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-3 pr-8 py-2 transition"
+              >
+                <option v-for="n in [5,10,20,50]" :key="n" :value="n">
+                  Show {{ n }} rows
+                </option>
+              </select>
+              <ChevronDownIcon
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
+              />
+            </div>
         </div>
 
         <!-- Content -->
@@ -369,6 +415,28 @@ const paginated  = computed(()=> filtered.value.slice((page.value-1)*perPage.val
 const onLeave    = computed(()=> filtered.value.filter(a=>['cuti','izin'].includes(a.status)))
 const absentList = computed(()=> filtered.value.filter(a=>a.status==='absent'))
 const noCheckOut = computed(()=> filtered.value.filter(a=>a.check_in && !a.check_out))
+
+// ringkasan hanya saat ada filter aktif
+const isFiltered = computed(() =>
+  searchName.value !== '' ||
+  dateFrom.value   !== '' ||
+  dateTo.value     !== '' ||
+  filterStatus.value   !== '' ||
+  filterPosition.value !== ''
+)
+
+const totalCount = computed(() => filtered.value.length)
+const positionSummary = computed(() => {
+  const m = {}
+  filtered.value.forEach(a => {
+    const pos = a.employee.position.position_name
+    if (!m[pos]) m[pos] = { total: 0, absent: 0, leave: 0 }
+    m[pos].total++
+    if (['cuti', 'izin'].includes(a.status)) m[pos].leave++
+    if (a.status==='alpha' || a.status==='absent') m[pos].absent++
+  })
+  return m
+})
 
 // pagination
 function prevPage(){ if(page.value>1) page.value-- }
