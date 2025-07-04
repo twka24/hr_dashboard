@@ -13,7 +13,7 @@
       <!-- brand -->
       <div class="flex items-center gap-3 px-6 pt-6 pb-4">
         <img src="/logo_twka.jpg" class="h-10 w-10 rounded-full ring-2 ring-indigo-500"/>
-        <span class="text-xl font-semibold tracking-tight">HRD Dashboard</span>
+        <span class="text-xl font-semibold tracking-tight">HR Dashboard</span>
       </div>
 
       <!-- profile -->
@@ -91,36 +91,38 @@
       </nav>
 
       <!-- Settings menu at bottom -->
-      <div class="mt-auto px-3 pb-6">
-        <router-link
-          to="/dashboard/settings"
-          class="group relative flex w-full items-start gap-3 overflow-hidden
-                 rounded-lg px-4 py-3 text-sm font-medium transition"
-          :class="active==='settings'
-                  ? 'text-indigo-800 dark:text-indigo-200'
-                  : 'text-slate-700 dark:text-slate-300'"
-        >
-          <span
-            class="absolute left-0 top-0 h-full w-1 rounded-r bg-indigo-500 transition-transform"
-            :class="[active==='settings' ? 'translate-x-0' : '-translate-x-full', 'group-hover:translate-x-0']"
-          />
-          <span
-            class="absolute inset-0 z-0 rounded-lg bg-indigo-100/50 dark:bg-white/10
-                   backdrop-blur-sm opacity-0 scale-95 transition-all duration-300"
+      <!-- Tambahkan menu Settings di sidebar -->
+        <div class="mt-auto px-3 pb-6">
+          <router-link
+            :to="{ name: 'SettingsPositions' }"
+            class="group relative flex w-full items-start gap-3 overflow-hidden
+                  rounded-lg px-4 py-3 text-sm font-medium transition"
             :class="active==='settings'
-                    ? 'opacity-100 scale-100'
-                    : 'group-hover:opacity-100 group-hover:scale-100'"
-          />
-          <CogIcon
-            class="relative z-10 h-5 w-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
-            :class="active==='settings' ? 'text-indigo-500' : ''"
-          />
-          <span class="relative z-10 flex flex-col">
-            <span class="truncate">Settings</span>
-            <span class="text-xs text-slate-500 dark:text-slate-400">Pengaturan</span>
-          </span>
-        </router-link>
-      </div>
+                    ? 'text-indigo-800 dark:text-indigo-200'
+                    : 'text-slate-700 dark:text-slate-300'"
+          >
+            <span
+              class="absolute left-0 top-0 h-full w-1 rounded-r bg-indigo-500 transition-transform"
+              :class="[active==='settings' ? 'translate-x-0' : '-translate-x-full', 'group-hover:translate-x-0']"
+            />
+            <span
+              class="absolute inset-0 z-0 rounded-lg bg-indigo-100/50 dark:bg-white/10
+                    backdrop-blur-sm opacity-0 scale-95 transition-all duration-300"
+              :class="active==='settings'
+                      ? 'opacity-100 scale-100'
+                      : 'group-hover:opacity-100 group-hover:scale-100'"
+            />
+            <CogIcon
+              class="relative z-10 h-5 w-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
+              :class="active==='settings' ? 'text-indigo-500' : ''"
+            />
+            <span class="relative z-10 flex flex-col">
+              <span class="truncate">Settings</span>
+              <span class="text-xs text-slate-500 dark:text-slate-400">Pengaturan</span>
+            </span>
+          </router-link>
+        </div>
+
 
     </aside>
 
@@ -275,6 +277,7 @@ import {
   MoonIcon,
   HomeIcon,
   SunIcon,
+  ClockIcon,
   ArrowLeftOnRectangleIcon,
   PencilIcon,
   CogIcon
@@ -361,6 +364,7 @@ const navItems = [
   { id:'employees',  path:'/dashboard/employees', name:'Management Karyawan', desc:'Data karyawan',    icon:UsersIcon },
   { id:'requests',   path:'/dashboard/requests',  name:'Management Request',  desc:'Permohonan & cuti', icon:ClipboardDocumentCheckIcon },
   { id:'attendance', path:'/dashboard/attendance',name:'Management Absensi',  desc:'Riwayat kehadiran', icon:CalendarDaysIcon },
+  { id:'schedules', path:'/dashboard/schedules',name:'Management schedules',  desc:'Jadwal & Shift', icon:ClockIcon },
 ]
 
 // date/time/greeting
