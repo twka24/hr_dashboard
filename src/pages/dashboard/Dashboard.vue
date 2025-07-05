@@ -4,30 +4,28 @@
               dark:from-[#061325] dark:via-[#0e1a2f] dark:to-black">
 
     <!-- Sidebar -->
-    <aside class="fixed inset-y-0 left-0 z-40 flex w-72 flex-col
-                  bg-white/70 dark:bg-white/5 backdrop-blur-xl shadow-2xl
-                  ring-1 ring-black/10 dark:ring-white/15 transition-transform
-                  md:translate-x-0"
-           :class="{ '-translate-x-full': !menuOpen, 'translate-x-0': menuOpen }">
-
+    <aside
+      class="fixed inset-y-0 left-0 z-40 flex w-72 flex-col
+             bg-white/70 dark:bg-white/5 backdrop-blur-xl shadow-2xl
+             ring-1 ring-black/10 dark:ring-white/15 transition-transform
+             md:translate-x-0"
+      :class="{ '-translate-x-full': !menuOpen, 'translate-x-0': menuOpen }"
+    >
       <!-- brand -->
       <div class="flex items-center gap-3 px-6 pt-6 pb-4">
         <img src="/logo_twka.jpg" class="h-10 w-10 rounded-full ring-2 ring-indigo-500"/>
         <span class="text-xl font-semibold tracking-tight">HR Dashboard</span>
       </div>
-
       <!-- profile -->
       <div class="relative mx-4 mb-6 rounded-2xl bg-gradient-to-tr from-indigo-50/60
                   to-transparent dark:from-white/10 p-4 ring-1 ring-indigo-100
                   dark:ring-white/10">
-        <button
-          @click="openEditProfile"
-          class="absolute top-2 right-2 p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded"
-        >
+        <button @click="openEditProfile"
+                class="absolute top-2 right-2 p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">
           <PencilIcon class="h-5 w-5 text-gray-600 dark:text-gray-300"/>
         </button>
         <div class="flex items-center gap-3">
-          <img src="https://i.pravatar.cc/64" class="h-12 w-12 rounded-full"/>
+          <img src="/logo_twka.jpg" class="h-12 w-12 rounded-full"/>
           <div class="text-sm min-w-0">
             <p class="font-bold truncate">{{ profile.name || '...' }}</p>
             <p class="text-xs truncate text-slate-500 dark:text-slate-400">
@@ -45,7 +43,6 @@
           <ArrowLeftOnRectangleIcon class="h-4 w-4"/> Logout
         </button>
       </div>
-
       <!-- navigation -->
       <nav class="flex-1 space-y-1 px-3">
         <router-link
@@ -60,7 +57,8 @@
         >
           <span
             class="absolute left-0 top-0 h-full w-1 rounded-r bg-indigo-500 transition-transform"
-            :class="[active===item.id ? 'translate-x-0' : '-translate-x-full', 'group-hover:translate-x-0']"
+            :class="[ active===item.id ? 'translate-x-0' : '-translate-x-full',
+                      'group-hover:translate-x-0' ]"
           />
           <span
             class="absolute inset-0 z-0 rounded-lg bg-indigo-100/50 dark:bg-white/10
@@ -79,7 +77,6 @@
               <span class="truncate">{{ item.name }}</span>
               <span class="text-xs text-slate-500 dark:text-slate-400">{{ item.desc }}</span>
             </div>
-            <!-- dot indicator for pending on Requests -->
             <span
               v-if="item.id==='requests' && pendingCount > 0"
               class="ml-2 inline-flex items-center justify-center h-5 w-5 rounded-full bg-yellow-500 text-xs font-semibold text-white"
@@ -89,46 +86,43 @@
           </span>
         </router-link>
       </nav>
-
-      <!-- Settings menu at bottom -->
-      <!-- Tambahkan menu Settings di sidebar -->
-        <div class="mt-auto px-3 pb-6">
-          <router-link
-            :to="{ name: 'SettingsPositions' }"
-            class="group relative flex w-full items-start gap-3 overflow-hidden
-                  rounded-lg px-4 py-3 text-sm font-medium transition"
+      <!-- Settings -->
+      <div class="mt-auto px-3 pb-6">
+        <router-link
+          :to="{ name: 'SettingsPositions' }"
+          class="group relative flex w-full items-start gap-3 overflow-hidden
+                 rounded-lg px-4 py-3 text-sm font-medium transition"
+          :class="active==='settings'
+                  ? 'text-indigo-800 dark:text-indigo-200'
+                  : 'text-slate-700 dark:text-slate-300'"
+        >
+          <span
+            class="absolute left-0 top-0 h-full w-1 rounded-r bg-indigo-500 transition-transform"
+            :class="[ active==='settings' ? 'translate-x-0' : '-translate-x-full',
+                      'group-hover:translate-x-0' ]"
+          />
+          <span
+            class="absolute inset-0 z-0 rounded-lg bg-indigo-100/50 dark:bg-white/10
+                   backdrop-blur-sm opacity-0 scale-95 transition-all duration-300"
             :class="active==='settings'
-                    ? 'text-indigo-800 dark:text-indigo-200'
-                    : 'text-slate-700 dark:text-slate-300'"
-          >
-            <span
-              class="absolute left-0 top-0 h-full w-1 rounded-r bg-indigo-500 transition-transform"
-              :class="[active==='settings' ? 'translate-x-0' : '-translate-x-full', 'group-hover:translate-x-0']"
-            />
-            <span
-              class="absolute inset-0 z-0 rounded-lg bg-indigo-100/50 dark:bg-white/10
-                    backdrop-blur-sm opacity-0 scale-95 transition-all duration-300"
-              :class="active==='settings'
-                      ? 'opacity-100 scale-100'
-                      : 'group-hover:opacity-100 group-hover:scale-100'"
-            />
-            <CogIcon
-              class="relative z-10 h-5 w-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
-              :class="active==='settings' ? 'text-indigo-500' : ''"
-            />
-            <span class="relative z-10 flex flex-col">
-              <span class="truncate">Settings</span>
-              <span class="text-xs text-slate-500 dark:text-slate-400">Pengaturan</span>
-            </span>
-          </router-link>
-        </div>
-
-
+                    ? 'opacity-100 scale-100'
+                    : 'group-hover:opacity-100 group-hover:scale-100'"
+          />
+          <CogIcon
+            class="relative z-10 h-5 w-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
+            :class="active==='settings' ? 'text-indigo-500' : ''"
+          />
+          <span class="relative z-10 flex flex-col">
+            <span class="truncate">Settings</span>
+            <span class="text-xs text-slate-500 dark:text-slate-400">Pengaturan</span>
+          </span>
+        </router-link>
+      </div>
     </aside>
 
-    <!-- Main -->
+    <!-- Main content -->
     <div class="flex flex-1 flex-col md:ml-72">
-      <!-- top-bar -->
+      <!-- Header -->
       <header class="sticky top-0 z-20 flex justify-between items-center
                      bg-white/60 dark:bg-[#0E1A2F]/80 backdrop-blur-md
                      px-4 md:px-8 py-3 shadow">
@@ -154,8 +148,27 @@
         </button>
       </header>
 
-      <!-- page content -->
-      <RouterView/>
+      <!-- PAGE CONTENT: only Dashboard gets transition -->
+      <RouterView v-slot="{ Component, route }">
+        <!-- Dashboard (path '/dashboard') → NO transition -->
+        <component
+          v-if="route.name === 'DashboardHome'"
+          :is="Component"
+          :key="route.fullPath"
+        />
+        <!-- semua route lain → pakai slide transition -->
+        <transition
+          v-else
+          name="page-slide"
+          mode="out-in"
+          appear
+        >
+          <component
+            :is="Component"
+            :key="route.fullPath"
+          />
+        </transition>
+      </RouterView>
 
       <!-- Edit Profile Modal -->
       <transition name="fade">
@@ -184,15 +197,13 @@
               </div>
             </div>
             <div class="mt-6 flex justify-end gap-3">
-              <button
-                @click="editProfileOpen = false"
-                class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600"
-              >Batal</button>
-              <button
-                @click="saveProfile"
-                :disabled="savingProfile"
-                class="px-4 py-2 bg-emerald-500 text-white rounded-full hover:bg-emerald-600 disabled:opacity-50"
-              >
+              <button @click="editProfileOpen = false"
+                      class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600">
+                Batal
+              </button>
+              <button @click="saveProfile"
+                      :disabled="savingProfile"
+                      class="px-4 py-2 bg-emerald-500 text-white rounded-full hover:bg-emerald-600 disabled:opacity-50">
                 <span v-if="!savingProfile">Simpan</span>
                 <span v-else>Memproses…</span>
               </button>
@@ -229,25 +240,13 @@
           class="fixed top-6 right-6 z-[998] flex items-center gap-3 rounded-lg px-4 py-3 shadow-lg text-sm text-white"
           :class="toastOk ? 'bg-emerald-600' : 'bg-red-600'"
         >
-          <svg
-            v-if="toastOk"
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
+          <svg v-if="toastOk" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+               viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M5 13l4 4L19 7"/>
           </svg>
-          <svg
-            v-else
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
+          <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+               viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M6 18L18 6M6 6l12 12"/>
           </svg>
@@ -264,9 +263,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import { useToggle, useDark } from '@vueuse/core'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter, useRoute, RouterView } from 'vue-router'
 import api from '@/services/api'
 import {
   UsersIcon,
@@ -290,23 +289,51 @@ const toggleDark = useToggle(isDark)
 // router & active route
 const router    = useRouter()
 const route     = useRoute()
-const active    = computed(() => (route.name ?? 'dashboard').toString().toLowerCase())
+const active    = computed(() => (route.name ?? '').toString().toLowerCase())
 
 // sidebar state
 const menuOpen = ref(false)
 
-// profile data
-const profile = ref({ name:'', email:'', position_name:'' })
-async function loadProfile() {
+// profile data + cache
+const profile = reactive({ name:'', email:'', position_name:'' })
+const lastFetched = ref(0)
+
+// coba baca cache dari localStorage
+function readCache() {
+  const raw = localStorage.getItem('hr-dashboard-profile')
+  if (!raw) return false
+  try {
+    const { profile: p, ts } = JSON.parse(raw)
+    profile.name = p.name
+    profile.email = p.email
+    profile.position_name = p.position_name
+    lastFetched.value = ts
+    return true
+  } catch {
+    return false
+  }
+}
+
+// loadProfile dengan cache timeout 5 menit
+async function loadProfile(force = false) {
+  const now = Date.now()
+  if (!force && lastFetched.value && now - lastFetched.value < 5 * 60 * 1000) {
+    return
+  }
   try {
     const { data } = await api.get('/me')
     const u = data.data || {}
-    profile.value = {
-      name: u.name,
-      email: u.email,
-      position_name: u.position?.position_name,
-    }
-  } catch (e) { console.error(e) }
+    profile.name = u.name
+    profile.email = u.email
+    profile.position_name = u.position?.position_name || ''
+    lastFetched.value = now
+    localStorage.setItem(
+      'hr-dashboard-profile',
+      JSON.stringify({ profile: { ...profile }, ts: now })
+    )
+  } catch (e) {
+    console.error('Gagal load profile', e)
+  }
 }
 
 // edit profile
@@ -315,8 +342,8 @@ const editName        = ref('')
 const editEmail       = ref('')
 const savingProfile   = ref(false)
 function openEditProfile() {
-  editName.value  = profile.value.name
-  editEmail.value = profile.value.email
+  editName.value  = profile.name
+  editEmail.value = profile.email
   editProfileOpen.value = true
 }
 async function saveProfile() {
@@ -324,8 +351,13 @@ async function saveProfile() {
   savingProfile.value = true
   try {
     await api.put('/me', { name: editName.value, email: editEmail.value })
-    profile.value.name  = editName.value
-    profile.value.email = editEmail.value
+    profile.name  = editName.value
+    profile.email = editEmail.value
+    // update cache
+    localStorage.setItem(
+      'hr-dashboard-profile',
+      JSON.stringify({ profile: { ...profile }, ts: Date.now() })
+    )
     showToast('Profile diperbarui', true)
     editProfileOpen.value = false
   } catch {
@@ -364,7 +396,7 @@ const navItems = [
   { id:'employees',  path:'/dashboard/employees', name:'Management Karyawan', desc:'Data karyawan',    icon:UsersIcon },
   { id:'requests',   path:'/dashboard/requests',  name:'Management Request',  desc:'Permohonan & cuti', icon:ClipboardDocumentCheckIcon },
   { id:'attendance', path:'/dashboard/attendance',name:'Management Absensi',  desc:'Riwayat kehadiran', icon:CalendarDaysIcon },
-  { id:'schedules', path:'/dashboard/schedules',name:'Management schedules',  desc:'Jadwal & Shift', icon:ClockIcon },
+  { id:'schedules',  path:'/dashboard/schedules', name:'Management Schedule', desc:'Jadwal & Shift',      icon:ClockIcon },
 ]
 
 // date/time/greeting
@@ -380,7 +412,7 @@ const greeting = computed(() => {
   return 'Selamat malam'
 })
 
-// pending count for Requests badge
+// pending count
 const pendingCount = ref(0)
 async function loadPendingCount() {
   try {
@@ -391,22 +423,14 @@ async function loadPendingCount() {
   }
 }
 
-// on mounted
+// on mounted: coba baca cache, lalu fetch jika perlu
 onMounted(() => {
-  loadProfile()
+  if (!readCache()) {
+    loadProfile(true)
+  } else {
+    loadProfile(false)
+  }
   loadPendingCount()
 })
 </script>
 
-<style scoped>
-.fade-enter-active,.fade-leave-active { transition: opacity .25s }
-.fade-enter-from,.fade-leave-to { opacity: 0 }
-.slide-fade-enter-active,.slide-fade-leave-active { transition: all .35s }
-.slide-fade-enter-from,.slide-fade-leave-to { opacity:0; transform:translateY(10px) }
-
-thead tr {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-</style>
