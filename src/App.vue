@@ -1,12 +1,27 @@
 <script setup>
 import { RouterView } from 'vue-router'
-
 </script>
 
 <template>
   <RouterView v-slot="{ Component, route }">
-    <transition name="page-slide" mode="out-in" appear>
-      <component :is="Component" :key="route.fullPath" />
+    <!-- Jika bukan halaman Dashboard, render langsung tanpa transition -->
+    <component
+      v-if="route.name !== 'DashboardHome'"
+      :is="Component"
+      :key="route.fullPath"
+    />
+
+    <!-- Hanya untuk halaman Dashboard (route.name === 'Dashboard'), pakai transition -->
+    <transition
+      v-else
+      name="page-slide"
+      mode="out-in"
+      appear
+    >
+      <component
+        :is="Component"
+        :key="route.fullPath"
+      />
     </transition>
   </RouterView>
 </template>

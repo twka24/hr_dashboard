@@ -47,7 +47,7 @@ const routes = [
       },
       {
         path: 'requests/:id',
-        name: 'Request Detail',
+        name: 'RequestDetail',
         component: RequestDetail,
         meta: { requiresAuth: true },
       },
