@@ -89,7 +89,6 @@
               <th class="px-4 py-2 text-left">Nama Schedule</th>
               <th class="px-4 py-2 text-left">Position</th>
               <th class="px-4 py-2 text-left">Bulan</th>
-              <th class="px-4 py-2 text-left">Hari Kerja</th>
               <th class="px-4 py-2 text-left">Jam Kerja</th>
               <th class="px-4 py-2 text-left">Istirahat</th>
               <th class="px-4 py-2 text-left">Status</th>
@@ -98,45 +97,39 @@
             </tr>
           </thead>
           <tbody>
-            <tr
-              v-for="sched in paginatedSchedules"
-              :key="sched.id"
-              class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
-            >
-              <td class="px-4 py-2">{{ sched.schedule_name }}</td>
-              <td class="px-4 py-2">{{ sched.position.position_name }}</td>
-              <td class="px-4 py-2">{{ sched.month_year }}</td>
-              <td class="px-4 py-2">
-                <span
-                  v-for="day in sched.working_days"
-                  :key="day"
-                  class="inline-block mr-1 text-sm px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded"
-                >
-                  {{ dayName(day) }}
-                </span>
-              </td>
-              <td class="px-4 py-2">{{ sched.start_time }} – {{ sched.end_time }}</td>
-              <td class="px-4 py-2">{{ sched.break_start }} – {{ sched.break_end }}</td>
-              <td class="px-4 py-2">
-                <span v-if="sched.is_active" class="text-green-600 font-semibold">Aktif</span>
-                <span v-else class="text-red-600 font-semibold">Nonaktif</span>
-              </td>
-              <td class="px-4 py-2">{{ formatDate(sched.created_at) }}</td>
-              <td class="px-4 py-2">
-                <button
-                      @click="editSchedule(sched.id)"
-                    class="inline-flex items-center p-2 rounded-full hover:bg-indigo-100 dark:hover:bg-gray-700 transition"
-                  >
-                    <PencilSquareIcon class="h-5 w-5 text-indigo-600 dark:text-indigo-300" />
-                  </button>
-              </td>
-            </tr>
-            <tr v-if="!filteredSchedules.length">
-              <td colspan="9" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">
-                Tidak ada data
-              </td>
-            </tr>
-          </tbody>
+    <tr
+      v-for="sched in paginatedSchedules"
+      :key="sched.id"
+      class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
+    >
+      <td class="px-4 py-2">{{ sched.schedule_name }}</td>
+      <!-- Ganti baris ini: -->
+      <td class="px-4 py-2">
+        {{ sched.position?.position_name || '-' }}
+      </td>
+      <td class="px-4 py-2">{{ sched.month_year }}</td>
+      <td class="px-4 py-2">{{ sched.start_time }} – {{ sched.end_time }}</td>
+      <td class="px-4 py-2">{{ sched.break_start }} – {{ sched.break_end }}</td>
+      <td class="px-4 py-2">
+        <span v-if="sched.is_active" class="text-green-600 font-semibold">Aktif</span>
+        <span v-else class="text-red-600 font-semibold">Nonaktif</span>
+      </td>
+      <td class="px-4 py-2">{{ formatDate(sched.created_at) }}</td>
+      <td class="px-4 py-2">
+        <button
+          @click="editSchedule(sched.id)"
+          class="inline-flex items-center p-2 rounded-full hover:bg-indigo-100 dark:hover:bg-gray-700 transition"
+        >
+          <PencilSquareIcon class="h-5 w-5 text-indigo-600 dark:text-indigo-300" />
+        </button>
+      </td>
+    </tr>
+    <tr v-if="!filteredSchedules.length">
+      <td colspan="9" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">
+        Tidak ada data
+      </td>
+    </tr>
+  </tbody>
         </table>
       </div>
     </div>

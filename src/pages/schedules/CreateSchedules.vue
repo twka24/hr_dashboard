@@ -25,25 +25,26 @@
         </div>
       </transition>
 
-      <!-- Form -->
+      <!-- Form kiri & kanan -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Left -->
+        <!-- Kiri -->
         <div class="space-y-4">
           <div>
             <label class="block text-sm text-gray-700 dark:text-gray-300">Schedule Name</label>
             <input
               v-model="form.schedule_name"
               type="text"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 focus:ring-indigo-500"
             />
           </div>
           <div>
             <label class="block text-sm text-gray-700 dark:text-gray-300">Position</label>
             <select
               v-model="form.position_code"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
-            >
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 focus:ring-indigo-500"
+            > 
               <option value="">— Pilih Jabatan —</option>
+              <option :value="null">Semua Jabatan —</option>
               <option
                 v-for="pos in positions"
                 :key="pos.position_code"
@@ -57,8 +58,9 @@
             <label class="block text-sm text-gray-700 dark:text-gray-300">Month &amp; Year</label>
             <input
               v-model="form.month_year"
+              @change="onMonthChange"
               type="month"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 focus:ring-indigo-500"
             />
           </div>
           <div class="flex items-center gap-2">
@@ -72,14 +74,14 @@
           </div>
         </div>
 
-        <!-- Right -->
+        <!-- Kanan -->
         <div class="space-y-4">
           <div>
             <label class="block text-sm text-gray-700 dark:text-gray-300">Start Time</label>
             <input
               v-model="form.start_time"
               type="time"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 focus:ring-indigo-500"
             />
           </div>
           <div>
@@ -87,7 +89,7 @@
             <input
               v-model="form.end_time"
               type="time"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 focus:ring-indigo-500"
             />
           </div>
           <div>
@@ -95,7 +97,7 @@
             <input
               v-model="form.break_start"
               type="time"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 focus:ring-indigo-500"
             />
           </div>
           <div>
@@ -103,30 +105,29 @@
             <input
               v-model="form.break_end"
               type="time"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 focus:ring-indigo-500"
             />
           </div>
         </div>
       </div>
 
-      <!-- Working Days -->
-      <div>
-        <label class="block text-sm text-gray-700 dark:text-gray-300 mb-2">Working Days</label>
-        <div class="flex flex-wrap gap-4">
-          <label
-            v-for="(name,num) in dayOptions"
-            :key="num"
-            class="flex items-center gap-2"
-          >
-            <input
-              type="checkbox"
-              :value="num"
-              v-model="form.working_days"
-              class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-            />
-            <span class="text-sm text-gray-700 dark:text-gray-300">{{ name }}</span>
-          </label>
-        </div>
+      <!-- Tombol tambah libur & kalender -->
+      <div class="space-y-2">
+        <button
+          @click="addingHoliday = !addingHoliday"
+          :class="addingHoliday
+            ? 'bg-green-600 hover:bg-green-700'
+            : 'bg-blue-600 hover:bg-blue-700'"
+          class="text-white px-4 py-2 rounded-lg transition"
+        >
+          {{ addingHoliday ? 'Selesai Tandai Libur' : 'Tandai Libur Nasional' }}
+        </button>
+
+       <FullCalendar
+        ref="calendarRef"
+        :options="calendarOptions"
+        class="border rounded-lg overflow-hidden"
+      />
       </div>
 
       <!-- Actions -->
@@ -140,16 +141,67 @@
         </button>
       </div>
     </div>
+
+    <!-- Modal Tambah/Edit Libur -->
+    <div
+      v-if="modalOpen"
+      class="fixed inset-0 z-50 flex items-center justify-center"
+    >
+      <!-- Backdrop -->
+      <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40"></div>
+
+      <!-- Modal content -->
+      <div class="relative z-50 bg-white dark:bg-gray-800 rounded-lg p-6 w-80 shadow-lg">
+        <h2 class="text-lg font-semibold mb-4">
+          {{ isEditing ? 'Edit Libur Nasional' : 'Tandai Libur Nasional' }}
+        </h2>
+        <p class="mb-2"><strong>Tanggal:</strong> {{ modalDate }}</p>
+        <input
+          v-model="modalTitle"
+          type="text"
+          placeholder="Judul libur"
+          class="w-full mb-4 rounded-lg border px-3 py-2 bg-gray-50 dark:bg-gray-700 focus:ring-indigo-500"
+        />
+        <div class="flex justify-end gap-2">
+          <button
+            v-if="isEditing"
+            @click="deleteHoliday"
+            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+          >
+            Hapus
+          </button>
+          <button
+            @click="saveHoliday"
+            class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+          >
+            Simpan
+          </button>
+          <button
+            @click="closeModal"
+            class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition"
+          >
+            Batal
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, computed, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
+import FullCalendar from '@fullcalendar/vue3'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import interactionPlugin from '@fullcalendar/interaction'
 import api from '@/services/api'
 
 const router = useRouter()
 
+// ref untuk instance FullCalendar
+const calendarRef = ref(null)
+
+// state form
 const form = reactive({
   position_code: '',
   schedule_name: '',
@@ -162,22 +214,14 @@ const form = reactive({
   is_active: false,
 })
 
+// positions
 const positions = ref([])
-const dayOptions = {
-  1: 'Senin',
-  2: 'Selasa',
-  3: 'Rabu',
-  4: 'Kamis',
-  5: 'Jumat',
-  6: 'Sabtu',
-  7: 'Minggu',
-}
 
+// toast
 const toastShow = ref(false)
 const toastMsg = ref('')
 const toastOk = ref(true)
 const saving = ref(false)
-
 function showToast(msg, ok = true) {
   toastMsg.value = msg
   toastOk.value = ok
@@ -185,6 +229,147 @@ function showToast(msg, ok = true) {
   setTimeout(() => (toastShow.value = false), 3000)
 }
 
+// toggle mode tambah libur
+const addingHoliday = ref(false)
+
+// modal state
+const modalOpen = ref(false)
+const modalDate = ref('')
+const modalTitle = ref('Libur Nasional')
+
+// holiday events
+const holidayEvents = ref([
+  { title: 'Tahun Baru Masehi', date: '2025-01-01' },
+  { title: 'Hari Kartini',        date: '2025-04-21' },
+  { title: 'Kemerdekaan RI',      date: '2025-08-17' },
+])
+
+// semua tanggal di bulan aktif
+let allDatesInMonth = []
+// generate dates & default working_days (exclude Sundays + holidays)
+function onMonthChange() {
+  if (!form.month_year) return
+  const [year, month] = form.month_year.split('-').map(Number)
+  allDatesInMonth = []
+  const daysInMonth = new Date(year, month, 0).getDate()
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dd = String(d).padStart(2, '0')
+    const mm = String(month).padStart(2, '0')
+    allDatesInMonth.push(`${year}-${mm}-${dd}`)
+  }
+  form.working_days = allDatesInMonth.filter(date => {
+    const dayOfWeek = new Date(date).getDay()
+    const isHoliday = holidayEvents.value.some(e => e.date === date)
+    return dayOfWeek !== 0 && !isHoliday
+  })
+   nextTick(() => {
+      calendarRef.value?.getApi().rerenderCells()
+    })
+}
+
+// non-working days computed
+const nonWorkingDays = computed(() =>
+  allDatesInMonth.filter(date => !form.working_days.includes(date))
+)
+
+// sync saat navigasi kalender
+function onDatesSet(arg) {
+  const iso = arg.view.currentStart.toISOString().slice(0,7)
+  if (form.month_year !== iso) {
+    form.month_year = iso
+    onMonthChange()
+  }
+}
+
+// klik tanggal
+function handleDateClick(arg) {
+  const date = arg.dateStr
+  if (addingHoliday.value) {
+    modalDate.value = date
+    const idx = holidayEvents.value.findIndex(e => e.date === date)
+    modalTitle.value = idx > -1
+      ? holidayEvents.value[idx].title
+      : 'Libur Nasional'
+    modalOpen.value = true
+  } else {
+    const dayOfWeek = new Date(date).getDay()
+    if (dayOfWeek === 0) return
+    if (holidayEvents.value.some(e => e.date === date)) return
+
+    const i = form.working_days.indexOf(date)
+    if (i > -1) form.working_days.splice(i,1)
+    else        form.working_days.push(date)
+  }
+  nextTick(() => {
+      calendarRef.value?.getApi().rerenderCells()
+    })
+}
+
+// modal edit logic
+const editingIndex = computed(() =>
+  holidayEvents.value.findIndex(e => e.date === modalDate.value)
+)
+const isEditing = computed(() => editingIndex.value !== -1)
+
+function saveHoliday() {
+  const idx = editingIndex.value
+  if (idx > -1) {
+    holidayEvents.value[idx].title = modalTitle.value
+  } else {
+    holidayEvents.value.push({ title: modalTitle.value, date: modalDate.value })
+  }
+  const wi = form.working_days.indexOf(modalDate.value)
+  if (wi > -1) form.working_days.splice(wi,1)
+  closeModal()
+}
+
+function deleteHoliday() {
+  const idx = editingIndex.value
+  if (idx > -1) {
+    const removed = holidayEvents.value.splice(idx,1)[0]
+    if (allDatesInMonth.includes(removed.date)) {
+      const wd = new Date(removed.date).getDay()
+      if (wd !== 0 && !form.working_days.includes(removed.date)) {
+        form.working_days.push(removed.date)
+      }
+    }
+  }
+  closeModal()
+}
+
+function closeModal() {
+  modalOpen.value = false
+  modalDate.value = ''
+  modalTitle.value = ''
+}
+
+// FullCalendar options, sekarang termasuk dayCellClassNames
+const calendarOptions = reactive({
+  plugins: [ dayGridPlugin, interactionPlugin ],
+  initialView: 'dayGridMonth',
+  events: holidayEvents.value,
+  dateClick: handleDateClick,
+  datesSet: onDatesSet,
+  height: 450,
+  dayMaxEvents: true,
+  // <-- tambahkan ini:
+  dayCellClassNames(arg) {
+    const isoDate = arg.date.toISOString().slice(0,10)
+   return nonWorkingDays.value.includes(isoDate)
+      ? ['fc-non-working']
+      : []
+  }
+})
+watch(holidayEvents, nv => { calendarOptions.events = nv })
+
+// setelah working_days berubah, rerender ulang sel
+watch(form.working_days, () => {
+  nextTick(() => {
+    calendarRef.value?.getApi().rerenderCells()
+  })
+})
+
+// load positions & inisialisasi bulan
 async function loadPositions() {
   try {
     const { data: res } = await api.get('/positions')
@@ -196,26 +381,25 @@ async function loadPositions() {
 
 async function createSchedule() {
   if (saving.value) return
-
-  // Validasi: end_time harus setelah start_time
   if (form.end_time <= form.start_time) {
     showToast('Waktu selesai harus setelah waktu mulai.', false)
     return
   }
-
   saving.value = true
   try {
-    const { status } = await api.post('/schedules', {
-      position_code: form.position_code,
+    const days = form.working_days.map(d => parseInt(d.split('-')[2], 10))
+    const payload = {
+      position_code: form.position_code === '' ? null : form.position_code,
       schedule_name: form.schedule_name,
-      working_days: form.working_days,
+      working_days: days,
       month_year: form.month_year,
       start_time: form.start_time,
       end_time: form.end_time,
       break_start: form.break_start,
       break_end: form.break_end,
       is_active: form.is_active,
-    })
+    }
+    const { status } = await api.post('/schedules', payload)
     if (status === 201) {
       showToast('Schedule berhasil dibuat', true)
       router.push({ name: 'Schedules' })
@@ -224,23 +408,23 @@ async function createSchedule() {
     }
   } catch (err) {
     console.error(err)
-    if (err.response && err.response.data && err.response.data.errors) {
-      const messages = Object.values(err.response.data.errors)
-        .flat()
-        .join('\n')
-      showToast(messages, false)
-    } else {
-      showToast('Gagal membuat schedule', false)
-    }
+    const errs = err.response?.data?.errors
+    if (errs) showToast(Object.values(errs).flat().join('\n'), false)
+    else     showToast('Gagal membuat schedule', false)
   } finally {
     saving.value = false
   }
 }
 
-onMounted(loadPositions)
+// inisialisasi
+loadPositions()
+// set initial month kalau perlu
+if (form.month_year) onMonthChange()
 </script>
-
 <style scoped>
-.slide-fade-enter-active { transition: all .3s }
-.slide-fade-enter-from { transform: translateY(-10px); opacity: 0 }
+
+/* highlight tanggal NON-working */
+::v-deep .fc-non-working {
+  background-color: rgba(220, 38, 38, 0.2) !important;
+}
 </style>
