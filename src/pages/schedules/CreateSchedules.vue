@@ -44,7 +44,7 @@
               class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 focus:ring-indigo-500"
             > 
               <option value="">— Pilih Jabatan —</option>
-              <option :value="null">Semua Jabatan —</option>
+              <option :value="null">Semua Jabatan</option>
               <option
                 v-for="pos in positions"
                 :key="pos.position_code"
@@ -56,12 +56,12 @@
           </div>
           <div>
             <label class="block text-sm text-gray-700 dark:text-gray-300">Month &amp; Year</label>
-            <input
-              v-model="form.month_year"
-              @change="onMonthChange"
-              type="month"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 focus:ring-indigo-500"
-            />
+           <input
+            v-model="form.month_year"
+            @input="onMonthChange"
+            type="month"
+            class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 focus:ring-indigo-500"
+          />
           </div>
           <div class="flex items-center gap-2">
             <input
@@ -113,21 +113,35 @@
 
       <!-- Tombol tambah libur & kalender -->
       <div class="space-y-2">
-        <button
-          @click="addingHoliday = !addingHoliday"
-          :class="addingHoliday
-            ? 'bg-green-600 hover:bg-green-700'
-            : 'bg-blue-600 hover:bg-blue-700'"
-          class="text-white px-4 py-2 rounded-lg transition"
-        >
-          {{ addingHoliday ? 'Selesai Tandai Libur' : 'Tandai Libur Nasional' }}
-        </button>
+          <div class="mb-4 flex items-center">
+        <div role="group" class="inline-flex rounded-lg border border-gray-300 dark:border-gray-700 overflow-hidden">
+  <!-- Tombol Tandai Libur -->
+  <button
+    @click="addingHoliday = !addingHoliday; if (addingHoliday) editingMode = ''"
+    :class="addingHoliday
+      ? 'bg-green-600 text-white hover:bg-green-700'
+      : 'bg-white text-gray-700 dark:bg-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'"
+    class="flex items-center gap-2 px-4 py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path v-if="!addingHoliday" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+      <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+    </svg>
+    <span>{{ addingHoliday ? 'Selesai Tandai' : 'Tandai Libur' }}</span>
+  </button>
 
-       <FullCalendar
-        ref="calendarRef"
-        :options="calendarOptions"
-        class="border rounded-lg overflow-hidden"
-      />
+  <!-- Tombol Hapus Libur -->
+
+</div>
+</div>
+
+        
+
+        <FullCalendar
+          ref="calendarRef"
+          :options="calendarOptions"
+          class="border rounded-lg overflow-hidden"
+        />
       </div>
 
       <!-- Actions -->
@@ -189,7 +203,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch, nextTick } from 'vue'
+import { ref, reactive, computed, watch, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -198,15 +212,20 @@ import api from '@/services/api'
 
 const router = useRouter()
 
-// ref untuk instance FullCalendar
+// 1) ref untuk instance FullCalendar
 const calendarRef = ref(null)
+// ref untuk instance FullCalendar
+
+// hitung YYYY-MM untuk bulan sekarang
+const today     = new Date()
+const defaultYm = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}`
 
 // state form
 const form = reactive({
   position_code: '',
   schedule_name: '',
   working_days: [],
-  month_year: '',
+  month_year: defaultYm,
   start_time: '',
   end_time: '',
   break_start: '',
@@ -246,9 +265,12 @@ const holidayEvents = ref([
 
 // semua tanggal di bulan aktif
 let allDatesInMonth = []
+
 // generate dates & default working_days (exclude Sundays + holidays)
 function onMonthChange() {
   if (!form.month_year) return
+
+  // 1) rebuild semua tanggal & working_days seperti biasa
   const [year, month] = form.month_year.split('-').map(Number)
   allDatesInMonth = []
   const daysInMonth = new Date(year, month, 0).getDate()
@@ -262,47 +284,73 @@ function onMonthChange() {
     const isHoliday = holidayEvents.value.some(e => e.date === date)
     return dayOfWeek !== 0 && !isHoliday
   })
-   nextTick(() => {
-      calendarRef.value?.getApi().rerenderCells()
-    })
+
+  // 2) setelah DOM update, navigasi & rerender cells
+  nextTick(() => {
+    const calendarApi = calendarRef.value?.getApi()
+    if (!calendarApi) return
+
+    // ambil YYYY-MM dari view sekarang
+    const d    = calendarApi.view.currentStart
+   const viewYm = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2,'0')}`
+
+    // navigasi hanya kalau beda
+    if (viewYm !== form.month_year) {
+      calendarApi.gotoDate(`${form.month_year}-01`)
+    }
+
+    // highlight ulang non-working days
+    calendarApi.rerenderCells()
+  })
 }
 
-// non-working days computed
+
+// non-working days computed (string-based)
 const nonWorkingDays = computed(() =>
   allDatesInMonth.filter(date => !form.working_days.includes(date))
 )
 
 // sync saat navigasi kalender
 function onDatesSet(arg) {
-  const iso = arg.view.currentStart.toISOString().slice(0,7)
+  const d   = arg.view.currentStart
+  const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2,'0')}`
   if (form.month_year !== iso) {
     form.month_year = iso
     onMonthChange()
   }
 }
 
+
 // klik tanggal
 function handleDateClick(arg) {
-  const date = arg.dateStr
+  // pakai dateStr langsung (YYYY-MM-DD lokal)
+  const dateStr   = arg.dateStr
+  const dayOfWeek = arg.date.getDay()
+
   if (addingHoliday.value) {
-    modalDate.value = date
-    const idx = holidayEvents.value.findIndex(e => e.date === date)
+    // buka modal untuk edit/tambah libur nasional
+    modalDate.value  = dateStr
+    const idx = holidayEvents.value.findIndex(e => e.date === dateStr)
     modalTitle.value = idx > -1
       ? holidayEvents.value[idx].title
       : 'Libur Nasional'
-    modalOpen.value = true
-  } else {
-    const dayOfWeek = new Date(date).getDay()
-    if (dayOfWeek === 0) return
-    if (holidayEvents.value.some(e => e.date === date)) return
+    modalOpen.value    = true
 
-    const i = form.working_days.indexOf(date)
-    if (i > -1) form.working_days.splice(i,1)
-    else        form.working_days.push(date)
-  }
-  nextTick(() => {
+  } else {
+    // kalau Minggu atau sudah libur nasional, abaikan
+    if (dayOfWeek === 0) return
+    if (holidayEvents.value.some(e => e.date === dateStr)) return
+
+    // toggle di working_days
+    const i = form.working_days.indexOf(dateStr)
+    if (i > -1) form.working_days.splice(i, 1)
+    else        form.working_days.push(dateStr)
+
+    // rerender kalender agar class fc-non-working ter-update
+    nextTick(() => {
       calendarRef.value?.getApi().rerenderCells()
     })
+  }
 }
 
 // modal edit logic
@@ -343,7 +391,7 @@ function closeModal() {
   modalTitle.value = ''
 }
 
-// FullCalendar options, sekarang termasuk dayCellClassNames
+// FullCalendar options with dayCellClassNames
 const calendarOptions = reactive({
   plugins: [ dayGridPlugin, interactionPlugin ],
   initialView: 'dayGridMonth',
@@ -352,24 +400,31 @@ const calendarOptions = reactive({
   datesSet: onDatesSet,
   height: 450,
   dayMaxEvents: true,
-  // <-- tambahkan ini:
-  dayCellClassNames(arg) {
-    const isoDate = arg.date.toISOString().slice(0,10)
-   return nonWorkingDays.value.includes(isoDate)
+
+ dayCellClassNames(arg) {
+    // bangun YYYY-MM-DD secara lokal (tanpa toISOString)
+    const d   = arg.date
+    const yyyy = d.getFullYear()
+    const mm   = String(d.getMonth()+1).padStart(2,'0')
+    const dd   = String(d.getDate()).padStart(2,'0')
+    const dateStr = `${yyyy}-${mm}-${dd}`
+
+    const isSunday = d.getDay() === 0
+    const isHoliday = holidayEvents.value.some(e => e.date === dateStr)
+
+    return (isSunday || isHoliday)
       ? ['fc-non-working']
       : []
   }
-})
+});
+
+
 watch(holidayEvents, nv => { calendarOptions.events = nv })
-
-// setelah working_days berubah, rerender ulang sel
 watch(form.working_days, () => {
-  nextTick(() => {
-    calendarRef.value?.getApi().rerenderCells()
-  })
+  nextTick(() => { calendarRef.value?.getApi().rerenderCells() })
 })
 
-// load positions & inisialisasi bulan
+// load positions
 async function loadPositions() {
   try {
     const { data: res } = await api.get('/positions')
@@ -379,6 +434,7 @@ async function loadPositions() {
   }
 }
 
+// submit schedule
 async function createSchedule() {
   if (saving.value) return
   if (form.end_time <= form.start_time) {
@@ -417,12 +473,13 @@ async function createSchedule() {
 }
 
 // inisialisasi
-loadPositions()
-// set initial month kalau perlu
-if (form.month_year) onMonthChange()
+onMounted(async () => {
+  await loadPositions()
+  onMonthChange()
+})
 </script>
-<style scoped>
 
+<style scoped>
 /* highlight tanggal NON-working */
 ::v-deep .fc-non-working {
   background-color: rgba(220, 38, 38, 0.2) !important;

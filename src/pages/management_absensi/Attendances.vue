@@ -43,110 +43,110 @@
         </div>
 
         <!-- Toolbar Filters (Table View only) -->
-<div
-  v-if="!isCalendarView"
-  class="flex flex-col md:flex-row md:items-end justify-between gap-4 p-6"
->
-  <!-- Filters -->
-  <div class="flex flex-1 flex-col md:flex-row gap-4 w-full">
-    <!-- Cari Nama Karyawan -->
-    <div class="w-full md:w-1/4">
-      <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1">
-        Cari Nama Karyawan
-      </label>
-      <div class="relative">
-        <MagnifyingGlassIcon
-          class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5"
-        />
-        <input
-          v-model="searchName"
-          type="text"
-          placeholder="Cari Nama karyawan..."
-          class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 focus:ring-2 focus:ring-indigo-500 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 pl-10 pr-4 py-2 transition"
-        />
-      </div>
-    </div>
-
-    <!-- Dari Tanggal -->
-    <div class="w-full md:w-1/6">
-      <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1">
-        Dari Tanggal
-      </label>
-      <input
-        v-model="dateFrom"
-        type="date"
-        class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 px-3 py-2 transition"
-      />
-    </div>
-
-    <!-- Sampai Tanggal -->
-    <div class="w-full md:w-1/6">
-      <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1">
-        Sampai Tanggal
-      </label>
-      <input
-        v-model="dateTo"
-        type="date"
-        class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 px-3 py-2 transition"
-      />
-    </div>
-
-    <!-- Jabatan -->
-    <div class="w-full md:w-1/4">
-      <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1">
-        Jabatan
-      </label>
-      <div class="relative">
-        <select
-          v-model="filterPosition"
-          class="appearance-none w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-4 pr-10 py-2 transition"
+        <div
+          v-if="!isCalendarView"
+          class="flex flex-col md:flex-row md:items-end justify-between gap-4 p-6"
         >
-          <option value="">— Semua Jabatan —</option>
-          <option v-for="pos in positions" :key="pos" :value="pos">
-            {{ pos }}
-          </option>
-        </select>
-        <ChevronDownIcon
-          class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
-        />
-      </div>
-    </div>
+          <!-- Filters -->
+          <div class="flex flex-1 flex-col md:flex-row gap-4 w-full">
+            <!-- Cari Nama Karyawan -->
+            <div class="w-full md:w-1/4">
+              <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1">
+                Cari Nama Karyawan
+              </label>
+              <div class="relative">
+                <MagnifyingGlassIcon
+                  class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5"
+                />
+                <input
+                  v-model="searchName"
+                  type="text"
+                  placeholder="Cari Nama karyawan..."
+                  class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 focus:ring-2 focus:ring-indigo-500 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 pl-10 pr-4 py-2 transition"
+                />
+              </div>
+            </div>
 
-    <!-- Status -->
-    <div class="w-full md:w-1/4">
-      <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1">
-        Status
-      </label>
-      <div class="relative">
-        <select
-          v-model="filterStatus"
-          class="appearance-none w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-4 pr-10 py-2 transition"
-        >
-          <option value="">— Semua Status —</option>
-          <option v-for="st in statuses" :key="st" :value="st">
-            {{ st }}
-          </option>
-        </select>
-        <ChevronDownIcon
-          class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
-        />
-      </div>
-    </div>
-  </div>
+            <!-- Dari Tanggal -->
+            <div class="w-full md:w-1/6">
+              <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1">
+                Dari Tanggal
+              </label>
+              <input
+                v-model="dateFrom"
+                type="date"
+                class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 px-3 py-2 transition"
+              />
+            </div>
 
-  <!-- Actions -->
-  <div class="flex items-center gap-2">
-    <button
-      @click="clearFilters"
-      class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition self-end"
-    >
-      Hapus Filter
-    </button>
-  </div>
-</div>
+            <!-- Sampai Tanggal -->
+            <div class="w-full md:w-1/6">
+              <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1">
+                Sampai Tanggal
+              </label>
+              <input
+                v-model="dateTo"
+                type="date"
+                class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 px-3 py-2 transition"
+              />
+            </div>
 
+            <!-- Jabatan -->
+            <div class="w-full md:w-1/4">
+              <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1">
+                Jabatan
+              </label>
+              <div class="relative">
+                <select
+                  v-model="filterPosition"
+                  class="appearance-none w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-4 pr-10 py-2 transition"
+                >
+                  <option value="">— Semua Jabatan —</option>
+                  <option v-for="pos in positions" :key="pos" :value="pos">
+                    {{ pos }}
+                  </option>
+                </select>
+                <ChevronDownIcon
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
+                />
+              </div>
+            </div>
+
+            <!-- Status -->
+            <div class="w-full md:w-1/4">
+              <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1">
+                Status
+              </label>
+              <div class="relative">
+                <select
+                  v-model="filterStatus"
+                  class="appearance-none w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-4 pr-10 py-2 transition"
+                >
+                  <option value="">— Semua Status —</option>
+                  <option v-for="st in statuses" :key="st" :value="st">
+                    {{ st }}
+                  </option>
+                </select>
+                <ChevronDownIcon
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex items-center gap-2">
+            <button
+              @click="clearFilters"
+              class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition self-end"
+            >
+              Hapus Filter
+            </button>
+          </div>
+        </div>
 
         <!-- Export Toolbar -->
+        <!-- (bagian ini TIDAK diubah) -->
         <div v-if="!isCalendarView" class="flex flex-col md:flex-row items-center justify-between gap-4 px-6 pb-2">
           <div class="flex items-center gap-3">
             <label class="text-sm font-medium text-gray-700 dark:text-gray-300 shrink-0">
@@ -218,19 +218,17 @@
             </template>
           </div>
           <div class="relative">
-              <select
-                v-model.number="perPage"
-                @change="page = 1"
-                class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-3 pr-8 py-2 transition"
-              >
-                <option v-for="n in [5,10,20,50]" :key="n" :value="n">
-                  Show {{ n }} rows
-                </option>
-              </select>
-              <ChevronDownIcon
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
-              />
-            </div>
+            <select
+              v-model.number="perPage"
+              @change="page = 1"
+              class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-3 pr-8 py-2 transition"
+            >
+              <option v-for="n in [5,10,20,50]" :key="n" :value="n">Show {{ n }} rows</option>
+            </select>
+            <ChevronDownIcon
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
+            />
+          </div>
         </div>
 
         <!-- Content -->
@@ -241,11 +239,15 @@
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16 8 8 0 018-8z"/>
             </svg>
           </div>
+
+          <!-- Calendar View -->
           <FullCalendar
             v-if="!loading && isCalendarView"
             class="rounded-lg overflow-hidden"
             :options="calendarOptions"
           />
+
+          <!-- Table View -->
           <div v-if="!loading && !isCalendarView" class="overflow-x-auto">
             <table class="w-full table-auto border-collapse">
               <thead class="bg-indigo-100 dark:bg-indigo-900">
@@ -296,6 +298,7 @@
                 </tr>
               </tbody>
             </table>
+
             <div class="flex justify-center items-center gap-2 py-6">
               <button @click="prevPage" :disabled="page===1" class="px-3 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50">Prev</button>
               <span class="px-2 text-sm text-gray-600 dark:text-gray-300">Halaman {{ page }} / {{ totalPages }}</span>
@@ -303,6 +306,8 @@
             </div>
           </div>
         </div>
+
+        <!-- Error -->
         <div v-if="error" class="p-6 text-center text-red-600">{{ error }}</div>
       </div>
     </div>
@@ -318,58 +323,70 @@ import * as XLSX from 'xlsx'
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 
-const router         = useRouter()
-const attendances    = ref([])
-const loading        = ref(true)
-const error          = ref('')
+const router  = useRouter()
+const attendances = ref([])
+const loading = ref(true)
+const error   = ref('')
 
-// Filters
+/* ===================== FILTERS ===================== */
+const todayISO       = new Date().toISOString().slice(0,10)   // YYYY-MM-DD
 const searchName     = ref('')
-const dateFrom       = ref('')
-const dateTo         = ref('')
+const dateFrom       = ref(todayISO)      // default hari ini
+const dateTo         = ref(todayISO)      // default hari ini
 const filterStatus   = ref('')
 const filterPosition = ref('')
 
-// Pagination & view
+/* ==================== PAGINATION & VIEW ==================== */
 const page           = ref(1)
 const perPage        = ref(10)
 const isCalendarView = ref(false)
 
-// Export
+/* ==================== EXPORT ==================== */
 const exportFilterType = ref('all')
 const exportCode       = ref('all')
 const exportPosition   = ref('all')
 
+/* ==================== CALENDAR CONFIG ==================== */
 const calendarPlugins       = [ dayGridPlugin ]
 const calendarInitialView   = 'dayGridMonth'
 const calendarHeaderToolbar = { left:'prev,next today', center:'title', right:'' }
 
-function formatDate(iso) {
-  return new Date(iso).toLocaleDateString()
-}
-function formatTime(iso) {
-  return new Date(iso).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' })
+/* ==================== FORMATTERS ==================== */
+function formatDate(iso){ return new Date(iso).toLocaleDateString() }
+function formatTime (value) {
+  if (!value) return '-'
+
+  // Jika value sudah persis "HH:mm", kembalikan apa adanya
+  if (typeof value === 'string' && /^\d{2}:\d{2}$/.test(value)) {
+    return value
+  }
+
+  // Selain itu, olah seperti sebelumnya
+  return new Date(value).toLocaleTimeString('id-ID', {
+    hour  : '2-digit',
+    minute: '2-digit'
+  })
 }
 
-// load once
-async function loadAttendances() {
-  loading.value = true; error.value = ''
-  try {
+/* ==================== DATA LOADING ==================== */
+async function loadAttendances(){
+  loading.value = true
+  try{
     const res = await api.get('/attendances')
     attendances.value = res.data.data
-  } catch {
+  }catch{
     error.value = 'Gagal memuat data absensi.'
-  } finally {
+  }finally{
     loading.value = false
   }
 }
 onMounted(loadAttendances)
 
-// clear filters
+/* ==================== CLEAR FILTERS ==================== */
 function clearFilters(){
   searchName.value     = ''
-  dateFrom.value       = ''
-  dateTo.value         = ''
+  dateFrom.value       = todayISO   // kembali ke hari ini
+  dateTo.value         = todayISO
   filterStatus.value   = ''
   filterPosition.value = ''
   exportFilterType.value = 'all'
@@ -378,77 +395,74 @@ function clearFilters(){
   page.value = 1
 }
 
-// computed lists
-const statuses = computed(() => Array.from(new Set(attendances.value.map(a=>a.status))))
-const positions = computed(() => Array.from(new Set(attendances.value.map(a=>a.employee.position.position_name))))
+/* ==================== OPTIONS LIST ==================== */
+const statuses  = computed(()=>[...new Set(attendances.value.map(a=>a.status))])
+const positions = computed(()=>[...new Set(attendances.value.map(a=>a.employee.position.position_name))])
 const exportOptions = computed(()=>{
-  const m = new Map()
+  const m=new Map()
   attendances.value.forEach(a=>{ if(!m.has(a.employee_code)) m.set(a.employee_code,a.employee.name) })
-  return Array.from(m, ([code,name])=>({code,name}))
+  return [...m].map(([code,name])=>({code,name}))
 })
 
-// client-side filtering
+/* ==================== FILTERING ==================== */
 const filtered = computed(()=>{
   let list = attendances.value
+
+  // filter tanggal (wajib)
+  const d0 = new Date(dateFrom.value)
+  const d1 = new Date(dateTo.value)
+  list = list.filter(a=>{
+    const d = new Date(a.attendance_date)
+    return d >= d0 && d <= d1
+  })
+
   if(searchName.value)
     list = list.filter(a=>a.employee.name.toLowerCase().includes(searchName.value.trim().toLowerCase()))
-  if(dateFrom.value){
-    const d0 = new Date(dateFrom.value)
-    list = list.filter(a=> new Date(a.attendance_date) >= d0 )
-  }
-  if(dateTo.value){
-    const d1 = new Date(dateTo.value)
-    list = list.filter(a=> new Date(a.attendance_date) <= d1 )
-  }
   if(filterStatus.value)
     list = list.filter(a=>a.status===filterStatus.value)
   if(filterPosition.value)
     list = list.filter(a=>a.employee.position.position_name===filterPosition.value)
+
   return list
 })
-watch([searchName,dateFrom,dateTo,filterStatus,filterPosition], ()=> page.value = 1)
+watch([searchName,dateFrom,dateTo,filterStatus,filterPosition],()=>page.value=1)
 
-const totalPages = computed(()=> Math.ceil(filtered.value.length/perPage.value)||1)
-const paginated  = computed(()=> filtered.value.slice((page.value-1)*perPage.value, page.value*perPage.value))
+/* ==================== PAGINATION ==================== */
+const totalPages = computed(()=>Math.max(1,Math.ceil(filtered.value.length/perPage.value)))
+const paginated  = computed(()=>filtered.value.slice((page.value-1)*perPage.value, page.value*perPage.value))
+function prevPage(){ if(page.value>1) page.value-- }
+function nextPage(){ if(page.value<totalPages.value) page.value++ }
 
-// notifications on filtered
-const onLeave    = computed(()=> filtered.value.filter(a=>['cuti','izin'].includes(a.status)))
-const absentList = computed(()=> filtered.value.filter(a=>a.status==='absent'))
-const noCheckOut = computed(()=> filtered.value.filter(a=>a.check_in && !a.check_out))
+/* ==================== NOTIFICATION LISTS ==================== */
+const onLeave    = computed(()=>filtered.value.filter(a=>['cuti','izin'].includes(a.status)))
+const absentList = computed(()=>filtered.value.filter(a=>a.status==='absent'))
+const noCheckOut = computed(()=>filtered.value.filter(a=>a.check_in && !a.check_out))
 
-// ringkasan hanya saat ada filter aktif
-const isFiltered = computed(() =>
-  searchName.value !== '' ||
-  dateFrom.value   !== '' ||
-  dateTo.value     !== '' ||
-  filterStatus.value   !== '' ||
-  filterPosition.value !== ''
-)
-
-const totalCount = computed(() => filtered.value.length)
-const positionSummary = computed(() => {
-  const m = {}
-  filtered.value.forEach(a => {
-    const pos = a.employee.position.position_name
-    if (!m[pos]) m[pos] = { total: 0, absent: 0, leave: 0 }
+/* ==================== SUMMARY ==================== */
+const isFiltered = computed(()=>(
+  searchName.value     || filterStatus.value   || filterPosition.value ||
+  dateFrom.value!==todayISO || dateTo.value!==todayISO
+))
+const totalCount = computed(()=>filtered.value.length)
+const positionSummary = computed(()=>{
+  const m={}
+  filtered.value.forEach(a=>{
+    const pos=a.employee.position.position_name
+    if(!m[pos]) m[pos]={total:0,absent:0,leave:0}
     m[pos].total++
-    if (['cuti', 'izin'].includes(a.status)) m[pos].leave++
-    if (a.status==='alpha' || a.status==='absent') m[pos].absent++
+    if(['cuti','izin'].includes(a.status)) m[pos].leave++
+    if(['alpha','absent'].includes(a.status)) m[pos].absent++
   })
   return m
 })
 
-// pagination
-function prevPage(){ if(page.value>1) page.value-- }
-function nextPage(){ if(page.value<totalPages.value) page.value++ }
-
-// detail
+/* ==================== DETAIL ==================== */
 function viewDetail(a){
   localStorage.setItem('selectedAttendance',JSON.stringify(a))
-  router.push({ name:'AttendanceDetail', params:{ id: a.id } })
+  router.push({ name:'AttendanceDetail', params:{ id:a.id } })
 }
 
-// exportData
+/* ==================== EXPORT ==================== */
 const exportData = computed(()=>{
   let list = filtered.value
   if(exportFilterType.value==='employee' && exportCode.value!=='all')
@@ -458,39 +472,94 @@ const exportData = computed(()=>{
   return list
 })
 
-// downloadExcel
-function downloadExcel(){
-  if(!exportData.value.length) return
-  const rows = exportData.value.map(a=>({
-    Kode: a.employee_code,
-    Nama: a.employee.name,
-    Jabatan: a.employee.position.position_name,
-    Tanggal: formatDate(a.attendance_date),
-    'Jam Masuk': a.check_in?formatTime(a.check_in):'-',
-    'Jam Pulang': a.check_out?formatTime(a.check_out):'-',
-    Status: a.status
-  }))
-  const ws = XLSX.utils.json_to_sheet(rows,{origin:'A2'})
-  let title,fn
-  if(exportFilterType.value==='employee'&&exportCode.value!=='all'){
-    title=`Absensi • ${rows[0].Nama}`; fn=`absensi_${exportCode.value}.xlsx`
-  } else if(exportFilterType.value==='position'&&exportPosition.value!=='all'){
-    title=`Absensi • Jabatan ${exportPosition.value}`; fn=`absensi_jabatan_${exportPosition.value}.xlsx`
-  } else {
-    title='Daftar Semua Absensi'; fn='absensi_all.xlsx'
-  }
-  XLSX.utils.sheet_add_aoa(ws,[[title]],{origin:'A1'})
-  ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:4}}]
-  ws['!cols']=Object.keys(rows[0]).map(()=>({wch:15}))
-  const wb = XLSX.utils.book_new()
-  XLSX.utils.book_append_sheet(wb,ws,'Absensi')
-  XLSX.writeFile(wb,fn)
-}
+/* helper sudah dibuat sebelumnya
+   function posLabel(name){ return name && name!=='null' ? name : 'Semua Jabatan' } */
 
-// calendar
+/* ========================== */
+function downloadExcel () {
+  if (!exportData.value.length) return
+
+  /* ==== REKAP & TANGGAL RINCI ==== */
+  const summary = new Map()          // key = employee_code
+
+  exportData.value.forEach(a => {
+    const key = a.employee_code
+    if (!summary.has(key)) {
+      summary.set(key, {
+        Kode        : a.employee_code,
+        Nama        : a.employee.name,
+        Jabatan     : posLabel(a.employee.position.position_name),
+        Hadir       : 0,
+        Alpha       : 0,
+        'Ijin/Cuti' : 0,
+        TglAlpha    : [],
+        TglIjinCuti : []
+      })
+    }
+    const rec  = summary.get(key)
+    const dStr = formatDate(a.attendance_date)      // fungsi formatDate sudah ada
+
+    if (a.status === 'hadir' || a.status === 'late') {
+      rec.Hadir++
+    } else if (['alpha', 'absent'].includes(a.status)) {
+      rec.Alpha++
+      rec.TglAlpha.push(dStr)
+    } else if (['cuti', 'izin'].includes(a.status)) {
+      rec['Ijin/Cuti']++
+      rec.TglIjinCuti.push(dStr)
+    }
+  })
+
+  const rows = Array.from(summary.values()).map(r => ({
+    Kode        : r.Kode,
+    Nama        : r.Nama,
+    Jabatan     : r.Jabatan,
+    Hadir       : r.Hadir,
+    Alpha       : r.Alpha,
+    'Ijin/Cuti' : r['Ijin/Cuti'],
+    Total       : r.Hadir + r.Alpha + r['Ijin/Cuti'],
+    'Tgl Alpha'     : r.TglAlpha.join(', '),
+    'Tgl Ijin/Cuti' : r.TglIjinCuti.join(', ')
+  }))
+
+  /* ==== JUDUL & NAMA FILE (bulan-tahun) ==== */
+  // asumsikan data dalam bulan yang sama → ambil tanggal pertama
+  let bulanTahun = 'Semua Periode'
+  if (exportData.value.length) {
+    bulanTahun = new Date(exportData.value[0].attendance_date)
+      .toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })   // ex: "Juli 2025"
+  }
+
+  let title = `Rekap Absensi • ${bulanTahun}`
+  let fn    = `rekap_absensi_${bulanTahun.replace(' ', '_').toLowerCase()}.xlsx`
+
+  if (exportFilterType.value === 'employee' && exportCode.value !== 'all') {
+    title += ` • ${rows[0].Nama}`
+    fn     = `rekap_${exportCode.value}_${bulanTahun.replace(' ', '_').toLowerCase()}.xlsx`
+  } else if (exportFilterType.value === 'position' && exportPosition.value !== 'all') {
+    title += ` • Jabatan ${exportPosition.value}`
+    fn     = `rekap_jabatan_${exportPosition.value}_${bulanTahun.replace(' ', '_').toLowerCase()}.xlsx`
+  }
+
+  /* ==== TULIS KE EXCEL ==== */
+  const ws = XLSX.utils.json_to_sheet(rows, { origin: 'A2' })
+  XLSX.utils.sheet_add_aoa(ws, [[title]], { origin: 'A1' })
+
+  const colCount  = Object.keys(rows[0]).length
+  ws['!merges']   = [{ s: { r: 0, c: 0 }, e: { r: 0, c: colCount - 1 } }]
+  ws['!cols']     = Array(colCount).fill({ wch: 18 })
+
+  const wb = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(wb, ws, 'Rekap Absensi')
+  XLSX.writeFile(wb, fn)
+}
+/* ========================== */
+
+
+/* ==================== CALENDAR ==================== */
 const calendarEvents = computed(()=>filtered.value.map(a=>({
-  title: a.employee.name,
-  start: a.attendance_date,
+  title:a.employee.name,
+  start:a.attendance_date,
   extendedProps:{status:a.status,checkIn:a.check_in,checkOut:a.check_out},
   color:({'hadir':'#00FF00','alpha':'#EF4444','late':'#F59E0B','cuti':'#F59E0B'}[a.status]||'#6B7280')
 })))
@@ -499,17 +568,20 @@ const calendarOptions = computed(()=>({
   initialView:calendarInitialView,
   headerToolbar:calendarHeaderToolbar,
   events:calendarEvents.value,
-  eventDidMount:info=>{
+  eventDidMount(info){
     const p=info.event.extendedProps
-    info.el.setAttribute('title',
-      `Karyawan: ${info.event.title}\nStatus: ${p.status}\nMasuk: ${p.checkIn?formatTime(p.checkIn):'-'}\nPulang: ${p.checkOut?formatTime(p.checkOut):'-'}`
-    )
+    info.el.title=`Karyawan: ${info.event.title}\nStatus: ${p.status}\nMasuk: ${p.checkIn?formatTime(p.checkIn):'-'}\nPulang: ${p.checkOut?formatTime(p.checkOut):'-'}`
   }
 }))
+
+function posLabel (name) {
+  return name && name !== 'null' ? name : 'Semua Jabatan'
+}
+
 </script>
 
 <style scoped>
-thead tr { position: sticky; top: 0; z-index: 10; }
-.fc .fc-toolbar-title { font-weight:600; font-size:1.25rem; }
-.fc .fc-daygrid-event { font-size:.75rem; border-radius:.375rem; }
+thead tr { position: sticky; top: 0; z-index: 10 }
+.fc .fc-toolbar-title { font-weight:600; font-size:1.25rem }
+.fc .fc-daygrid-event { font-size:.75rem; border-radius:.375rem }
 </style>

@@ -6,7 +6,7 @@
         @click="$router.back()"
         class="bg-white dark:bg-gray-700 rounded-lg px-3 py-1 text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 transition"
       >
-        ← Kembali ke Positions
+        ← Kembali ke Schedules
       </button>
     </div>
 
@@ -53,7 +53,7 @@
               class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
             >
               <option value="" disabled>— Pilih Jabatan —</option>
-              <option :value="null">— Semua Jabatan —</option>
+              <option :value="null">Semua Jabatan</option>
               <option
                 v-for="pos in positions"
                 :key="pos.position_code"
@@ -170,7 +170,7 @@
         <button
           @click="saveSchedule"
           :disabled="saving"
-          class="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition"
+          class="px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition"
         >
           {{ saving ? 'Menyimpan…' : 'Simpan Perubahan' }}
         </button>
@@ -532,7 +532,7 @@ function closeHolidayModal() { modalOpen.value = false }
 const calendarOptions = reactive({
   plugins: [ dayGridPlugin, interactionPlugin ],
   initialView: 'dayGridMonth',
-  headerToolbar: { left:'', center:'title', right:'today prev,next' },
+  height: 500,
   events: holidayEvents.value,
   dateClick(arg) {
     if (editingMode.value === 'mark' || editingMode.value === 'unmark') {

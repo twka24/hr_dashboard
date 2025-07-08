@@ -63,12 +63,33 @@ const routes = [
         component: () => import('@/pages/schedules/CreateSchedules.vue'),
         meta: { requiresAuth: true },
       },
+       {
+        path: 'bulkassignments',
+        name: 'BulkAssignments',
+        component: () => import('@/pages/schedules/CreateBulkAssignments.vue'),
+        meta: { requiresAuth: true },
+      },
+        {
+        path: 'scheduleassignments',
+        name: 'ScheduleAssignments',
+        component: () => import('@/pages/schedules/ScheduleAssignments.vue'),
+        meta: { requiresAuth: true },
+      },
+     {
+        path: '/schedule-assignments/:id',
+        name: 'DetailScheduleAssignments',
+        component: () => import('@/pages/schedules/DetailScheduleAssignments.vue'),
+        props: true,
+        meta: { requiresAuth: true },
+      },
+
       {
         path: 'schedulesedit/:id',
         name: 'SchedulesEdit',
         component: () => import('@/pages/schedules/SchedulesEdit.vue'),
         meta: { requiresAuth: true },
       },
+      
       // Settings nested under /dashboard
       {
         path: 'settings',
