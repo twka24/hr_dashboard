@@ -5,7 +5,7 @@
       <!-- Card Header -->
       <div class="flex items-center justify-between mb-4">
         <h1 class="text-2xl font-bold">
-          Management Schedules
+          Bulk Assignments
         </h1>
         <div class="flex space-x-2">
           <router-link
@@ -13,7 +13,7 @@
             class="flex items-center space-x-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
           >
             <PlusIcon class="h-5 w-5" />
-            <span>Buat Schedule Assignments</span>
+            <span>Buat Bulk Assignments</span>
           </router-link>
         </div>
       </div>
