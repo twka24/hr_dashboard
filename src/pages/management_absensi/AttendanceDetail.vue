@@ -22,7 +22,7 @@
           class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-6 border-b border-gray-100 dark:border-gray-700 gap-3"
         >
           <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
-            Detail Absensi #{{ attendance.id }}
+            Detail Absensi
           </h1>
 
           <!-- Tombol aksi -->

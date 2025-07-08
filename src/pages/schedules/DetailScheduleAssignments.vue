@@ -6,7 +6,7 @@
         @click="$router.back()"
         class="bg-white dark:bg-gray-700 rounded-lg px-3 py-1 text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 transition"
       >
-        ← Kembali
+        ← Kembali Bulk Assignments
       </button>
     </div>
 
