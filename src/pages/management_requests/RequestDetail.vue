@@ -4,13 +4,14 @@
     <div class="mx-[20px]">
 
       <!-- Back button -->
+     <div class="flex items-center gap-2 mb-4">
       <button
-        @click="router.push({ name: 'Requests' })"
-        class="mb-4 inline-flex items-center gap-2 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-transform hover:scale-105"
+        @click="$router.back()"
+        class="bg-white dark:bg-gray-700 rounded-lg px-3 py-1 text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 transition"
       >
-        <ArrowLeftIcon class="h-5 w-5" />
-        Kembali
+        ← Kembali ke Request
       </button>
+    </div>
 
       <!-- Card -->
       <div
