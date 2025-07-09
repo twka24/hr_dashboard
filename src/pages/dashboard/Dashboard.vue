@@ -7,23 +7,22 @@
   >
     <!-- ========================== SIDEBAR ========================== -->
     <aside
-      class="fixed inset-y-0 left-0 z-40 flex w-72 flex-col
+      class="fixed inset-y-0 left-0 z-40 flex flex-col
+             w-64 sm:w-64 lg:w-72 xl:w-80 2xl:w-80
              bg-white/70 dark:bg-white/5 backdrop-blur-xl shadow-2xl
-             ring-1 ring-black/10 dark:ring-white/15 transition-transform
+             ring-1 ring-black/10 dark:ring-white/15 transition-transform duration-300
              md:translate-x-0"
       :class="{ '-translate-x-full': !menuOpen, 'translate-x-0': menuOpen }"
     >
       <!-- Brand -->
-      <div class="flex items-center gap-3 px-6 pt-6 pb-4">
+      <div class="flex items-center gap-3 px-4 sm:px-6 pt-6 pb-4">
         <img src="/logo_twka.jpg" class="h-10 w-10 rounded-full ring-2 ring-indigo-500" />
-        <span class="text-xl font-semibold tracking-tight">HR Dashboard</span>
+        <span class="text-lg sm:text-xl font-semibold tracking-tight">HR Dashboard</span>
       </div>
 
       <!-- Profile card -->
       <div
-        class="relative mx-4 mb-6 rounded-2xl bg-gradient-to-tr from-indigo-50/60
-               to-transparent dark:from-white/10 p-4 ring-1 ring-indigo-100
-               dark:ring-white/10"
+        class="relative mx-3 sm:mx-4 mb-6 rounded-2xl bg-gradient-to-tr from-indigo-50/60 to-transparent dark:from-white/10 p-4 ring-1 ring-indigo-100 dark:ring-white/10"
       >
         <button
           @click="openEditProfile"
@@ -46,8 +45,7 @@
         <button
           @click="confirmOpen = true"
           class="mt-4 flex w-full items-center justify-center gap-2 rounded-lg
-                 bg-indigo-500/90 px-3 py-2 text-xs font-semibold text-white
-                 shadow hover:bg-indigo-600"
+                 bg-indigo-500/90 px-3 py-2 text-xs font-semibold text-white shadow hover:bg-indigo-600"
         >
           <ArrowLeftOnRectangleIcon class="h-4 w-4" />
           Logout
@@ -55,19 +53,16 @@
       </div>
 
       <!-- ===================== NAVIGATION ===================== -->
-      <nav class="flex-1 space-y-1 px-3">
+      <nav class="flex-1 space-y-1 px-2 sm:px-3 overflow-y-auto custom-scroll">
         <template v-for="item in navItems" :key="item.id">
           <!-- ===== Link menu utama ===== -->
           <router-link
             :to="item.path"
             active-class=""
             exact-active-class=""
-            class="group relative flex w-full items-start gap-3 overflow-hidden
-                   rounded-lg px-4 py-3 text-sm font-medium transition"
+            class="group relative flex w-full items-start gap-3 overflow-hidden rounded-lg px-3 sm:px-4 py-3 text-sm font-medium transition"
             :class="[
-              (item.id === 'schedules'
-                 ? scheduleGroupParent.includes(active)
-                 : active === item.id)
+              (item.id === 'schedules' ? scheduleGroupParent.includes(active) : active === item.id)
                ? 'text-indigo-800 dark:text-indigo-200'
                : 'text-slate-700 dark:text-slate-300'
             ]"
@@ -75,21 +70,16 @@
             <span
               class="absolute left-0 top-0 h-full w-1 rounded-r bg-indigo-500 transition-transform"
               :class="[
-                (item.id === 'schedules'
-                   ? scheduleGroupParent.includes(active)
-                   : active === item.id)
+                (item.id === 'schedules' ? scheduleGroupParent.includes(active) : active === item.id)
                 ? 'translate-x-0'
                 : '-translate-x-full',
                 'group-hover:translate-x-0'
               ]"
             />
             <span
-              class="absolute inset-0 z-0 rounded-lg bg-indigo-100/50 dark:bg-white/10
-                     backdrop-blur-sm opacity-0 scale-95 transition-all duration-300"
+              class="absolute inset-0 z-0 rounded-lg bg-indigo-100/50 dark:bg-white/10 backdrop-blur-sm opacity-0 scale-95 transition-all duration-300"
               :class="[
-                (item.id === 'schedules'
-                   ? scheduleGroupParent.includes(active)
-                   : active === item.id)
+                (item.id === 'schedules' ? scheduleGroupParent.includes(active) : active === item.id)
                 ? 'opacity-100 scale-100'
                 : 'group-hover:opacity-100 group-hover:scale-100'
               ]"
@@ -98,16 +88,15 @@
               :is="item.icon"
               class="relative z-10 h-5 w-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
               :class="[
-                (item.id === 'schedules'
-                   ? scheduleGroupParent.includes(active)
-                   : active === item.id)
+                (item.id === 'schedules' ? scheduleGroupParent.includes(active) : active === item.id)
                 ? 'text-indigo-500'
                 : '' ]"
             />
-            <span class="relative z-10 flex-1 flex items-center justify-between">
-              <div class="flex flex-col">
+            <span class="relative z-10 flex-1 flex items-center justify-between min-w-0">
+              <div class="flex flex-col min-w-0">
                 <span class="truncate">{{ item.name }}</span>
-                <span class="text-xs text-slate-500 dark:text-slate-400">{{ item.desc }}</span>
+                <!-- Hide description on very small screens for compact sidebar -->
+                <span class="text-xs text-slate-500 dark:text-slate-400 hidden xl:inline">{{ item.desc }}</span>
               </div>
               <span
                 v-if="item.id === 'requests' && pendingCount > 0"
@@ -124,9 +113,8 @@
             :to="{ name: 'ScheduleAssignments' }"
             active-class=""
             exact-active-class=""
-            class="group relative flex w-auto min-w-[calc(100%-2rem)] items-center gap-3 ml-8 rounded-lg px-4 py-3 text-sm font-medium transition
-                   text-slate-700 dark:text-slate-300 hover:text-indigo-800 dark:hover:text-indigo-200
-                   hover:bg-indigo-50 dark:hover:bg-white/10"
+            class="group relative flex w-auto min-w-[calc(100%-2rem)] items-center gap-3 ml-6 sm:ml-8 rounded-lg px-3 sm:px-4 py-3 text-sm font-medium transition
+                   text-slate-700 dark:text-slate-300 hover:text-indigo-800 dark:hover:text-indigo-200 hover:bg-indigo-50 dark:hover:bg-white/10"
             :class="[
               ['scheduleassignments','detailscheduleassignments','bulkassignments'].includes(active)
               ? 'text-indigo-800 dark:text-indigo-200 bg-indigo-50 dark:bg-white/10'
@@ -152,70 +140,65 @@
       </nav>
 
       <!-- ============ SETTINGS ============ -->
-      <div class="mt-auto px-3 pb-6">
+      <div class="mt-auto px-2 sm:px-3 pb-6">
         <router-link
           :to="{ name: 'SettingsPositions' }"
           active-class=""
           exact-active-class=""
-          class="group relative flex w-full items-start gap-3 overflow-hidden
-                 rounded-lg px-4 py-3 text-sm font-medium transition"
-          :class="active === 'settings'
-                  ? 'text-indigo-800 dark:text-indigo-200'
-                  : 'text-slate-700 dark:text-slate-300'"
+          class="group relative flex w-full items-start gap-3 overflow-hidden rounded-lg px-3 sm:px-4 py-3 text-sm font-medium transition"
+          :class="active === 'settings' ? 'text-indigo-800 dark:text-indigo-200' : 'text-slate-700 dark:text-slate-300'"
         >
           <span
             class="absolute left-0 top-0 h-full w-1 rounded-r bg-indigo-500 transition-transform"
-            :class="[ active === 'settings' ? 'translate-x-0' : '-translate-x-full',
-                      'group-hover:translate-x-0' ]"
+            :class="[ active === 'settings' ? 'translate-x-0' : '-translate-x-full', 'group-hover:translate-x-0' ]"
           />
           <span
-            class="absolute inset-0 z-0 rounded-lg bg-indigo-100/50 dark:bg-white/10
-                   backdrop-blur-sm opacity-0 scale-95 transition-all duration-300"
-            :class="active === 'settings'
-                    ? 'opacity-100 scale-100'
-                    : 'group-hover:opacity-100 group-hover:scale-100'"
+            class="absolute inset-0 z-0 rounded-lg bg-indigo-100/50 dark:bg-white/10 backdrop-blur-sm opacity-0 scale-95 transition-all duration-300"
+            :class="active === 'settings' ? 'opacity-100 scale-100' : 'group-hover:opacity-100 group-hover:scale-100'"
           />
           <CogIcon
             class="relative z-10 h-5 w-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
             :class="active === 'settings' ? 'text-indigo-500' : ''"
           />
-          <span class="relative z-10 flex flex-col">
+          <span class="relative z-10 flex flex-col min-w-0">
             <span class="truncate">Settings</span>
-            <span class="text-xs text-slate-500 dark:text-slate-400">Pengaturan</span>
+            <span class="text-xs text-slate-500 dark:text-slate-400 hidden xl:inline">Pengaturan</span>
           </span>
         </router-link>
       </div>
     </aside>
 
     <!-- ========================== MAIN ========================== -->
-    <div class="flex flex-1 flex-col md:ml-72">
+    <div
+      class="flex flex-1 flex-col ml-0 sm:ml-64 lg:ml-72 xl:ml-80 transition-[margin] duration-300"
+    >
       <!-- Header -->
       <header
-        class="sticky top-0 z-20 flex justify-between items-center
+        class="sticky top-0 z-20 flex flex-wrap justify-between items-center gap-y-2
                bg-white/60 dark:bg-[#0E1A2F]/80 backdrop-blur-md
-               px-4 md:px-8 py-3 shadow"
+               px-3 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-3 shadow"
       >
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-3 sm:gap-4">
           <button class="md:hidden" @click="menuOpen = !menuOpen">
-            <Bars3Icon v-if="!menuOpen" class="h-7 w-7" />
-            <XMarkIcon  v-else class="h-7 w-7" />
+            <Bars3Icon v-if="!menuOpen" class="h-6 w-6" />
+            <XMarkIcon  v-else class="h-6 w-6" />
           </button>
-          <h2 class="text-lg font-semibold capitalize tracking-tight">
+          <h2 class="text-base sm:text-lg font-semibold capitalize tracking-tight truncate max-w-[60vw]">
             {{ active.replace('-', ' ') }}
           </h2>
         </div>
-        <div class="text-center">
-          <p class="text-sm font-medium">{{ greeting }}</p>
-          <p class="text-sm">{{ currentDate }}</p>
-          <p class="text-sm">{{ currentTime }}</p>
+        <div class="text-center flex-1 order-last md:order-none">
+          <p class="text-xs sm:text-sm font-medium">{{ greeting }}</p>
+          <p class="text-xs sm:text-sm">{{ currentDate }}</p>
+          <p class="text-xs">{{ currentTime }}</p>
         </div>
         <button
           @click="toggleDark()"
-          class="flex items-center gap-2 rounded-full px-3 py-1 hover:bg-indigo-100 dark:hover:bg-white/10"
+          class="flex items-center gap-1 sm:gap-2 rounded-full px-2 sm:px-3 py-1 hover:bg-indigo-100 dark:hover:bg-white/10"
         >
-          <SunIcon v-if="isDark" class="h-5 w-5" />
-          <MoonIcon v-else class="h-5 w-5" />
-          <span class="text-sm">{{ isDark ? 'Light Mode' : 'Dark Mode' }}</span>
+          <SunIcon v-if="isDark" class="h-4 w-4 sm:h-5 sm:w-5" />
+          <MoonIcon v-else class="h-4 w-4 sm:h-5 sm:w-5" />
+          <span class="hidden sm:inline text-xs sm:text-sm">{{ isDark ? 'Light Mode' : 'Dark Mode' }}</span>
         </button>
       </header>
 
@@ -236,9 +219,9 @@
       <transition name="fade">
         <div
           v-if="editProfileOpen"
-          class="fixed inset-0 z-[1000] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          class="fixed inset-0 z-[1000] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
         >
-          <div class="w-full max-w-md rounded-2xl bg-white p-6 dark:bg-[#1c2738] shadow-xl">
+          <div class="w-full max-w-md rounded-2xl bg-white p-6 dark:bg-[#1c2738] shadow-xl overflow-y-auto max-h-[90vh]">
             <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
               Edit Profile
             </h2>
@@ -260,7 +243,7 @@
                 />
               </div>
             </div>
-            <div class="mt-6 flex justify-end gap-3">
+            <div class="mt-6 flex flex-wrap justify-end gap-3">
               <button
                 @click="editProfileOpen = false"
                 class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600"
@@ -284,12 +267,12 @@
       <transition name="fade">
         <div
           v-if="confirmOpen"
-          class="fixed inset-0 z-[999] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          class="fixed inset-0 z-[999] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
         >
-          <div class="w-full max-w-xs rounded-2xl bg-white p-6 dark:bg-[#1c2738] shadow-xl text-center">
+          <div class="w-full max-w-xs rounded-2xl bg-white p-6 dark:bg-[#1c2738] shadow-xl text-center overflow-y-auto max-h-[90vh]">
             <p class="text-lg font-semibold text-slate-700 dark:text-slate-100">Keluar dari akun?</p>
             <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Anda akan kembali ke halaman login.</p>
-            <div class="mt-6 flex justify-center gap-3">
+            <div class="mt-6 flex flex-wrap justify-center gap-3">
               <button
                 @click="confirmOpen = false"
                 class="rounded-lg border border-slate-300 px-4 py-2 text-sm hover:bg-slate-100 dark:border-slate-500 dark:hover:bg-white/10"
@@ -311,13 +294,13 @@
       <transition name="slide-fade">
         <div
           v-if="toastShow"
-          class="fixed top-6 right-6 z-[998] flex items-center gap-3 rounded-lg px-4 py-3 shadow-lg text-sm text-white"
+          class="fixed top-4 sm:top-6 right-4 sm:right-6 z-[998] flex items-center gap-3 rounded-lg px-4 py-3 shadow-lg text-xs sm:text-sm text-white"
           :class="toastOk ? 'bg-emerald-600' : 'bg-red-600'"
         >
           <svg
             v-if="toastOk"
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
+            class="h-4 w-4 sm:h-5 sm:w-5"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -327,20 +310,20 @@
           <svg
             v-else
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
+            class="h-4 w-4 sm:h-5 sm:w-5"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
           >
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
-          <span>{{ toastMsg }}</span>
+          <span class="truncate max-w-[60vw]">{{ toastMsg }}</span>
         </div>
       </transition>
 
       <!-- Watermark -->
       <div
-        class="fixed bottom-2 left-1/2 -translate-x-1/2 text-xs text-gray-400 dark:text-gray-600 pointer-events-none"
+        class="fixed bottom-2 left-1/2 -translate-x-1/2 text-[10px] sm:text-xs text-gray-400 dark:text-gray-600 pointer-events-none"
       >
         Design by TWKA 2025 © | Licensed MIT
       </div>
@@ -349,6 +332,7 @@
 </template>
 
 <script setup>
+/* ---------- UNUSED IMPORTS REMOVED BY BUNDLER IN PRODUCTION ---------- */
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useToggle, useDark } from '@vueuse/core'
 import { useRouter, useRoute } from 'vue-router'
@@ -531,8 +515,29 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.slide-fade-enter-active { transition: all .3s ease }
-.slide-fade-enter-from   { transform: translateY(-8px); opacity: 0 }
-.fade-enter-active       { transition: opacity .3s ease }
-.fade-enter-from         { opacity: 0 }
+/***************************
+ * Transition Animations
+ ***************************/
+.slide-fade-enter-active { transition: all .3s ease; }
+.slide-fade-enter-from   { transform: translateY(-8px); opacity: 0; }
+.fade-enter-active       { transition: opacity .3s ease; }
+.fade-enter-from         { opacity: 0; }
+
+/***************************
+ * Custom Scrollbar for Sidebar (visible on hover for better UX on mobile)
+ ***************************/
+.custom-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: theme('colors.indigo.500') transparent;
+}
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+  background-color: theme('colors.indigo.500');
+  border-radius: 8px;
+}
+.custom-scroll:hover::-webkit-scrollbar-thumb {
+  background-color: theme('colors.indigo.600');
+}
 </style>

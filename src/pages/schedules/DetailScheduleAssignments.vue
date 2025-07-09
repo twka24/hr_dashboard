@@ -178,6 +178,7 @@ const id = route.params.id
 const assignment = ref(null)
 const allAssignments = ref([])
 const loading = ref(false)
+const error = ref('')
 
 const toast = reactive({
   show: false,
@@ -187,28 +188,6 @@ const toast = reactive({
 
 /* ---- modal state ---- */
 const showDeleteModal = ref(false)
-
-/* ---- fetch detail ---- */
-async function loadDetail() {
-  try {
-    const { data: res } = await api.get(`/schedule-assignments/${id}`)
-    assignment.value = res.data
-    setupCalendar()
-  } catch {
-    showToast('Data tidak ditemukan', false)
-    setTimeout(() => router.back(), 1500)
-  }
-}
-
-/* ---- fetch all assignments ---- */
-async function loadAllAssignments() {
-  try {
-    const { data: res } = await api.get('/schedule-assignments')
-    allAssignments.value = res.data
-  } catch (e) {
-    console.error('Gagal fetch daftar penugasan', e)
-  }
-}
 
 /* ---- unique employees ---- */
 const sameScheduleEmployees = computed(() => {
@@ -233,16 +212,14 @@ function showToast(msg, ok = true) {
   setTimeout(() => (toast.show = false), 3000)
 }
 
-/* ---- delete logic: hapus SEMUA yang matching schedule_id ---- */
+/* ---- delete logic ---- */
 async function confirmDelete() {
   loading.value = true
   try {
-    // cari semua id yang schedule_id sama
     const toDelete = allAssignments.value
       .filter(a => a.schedule_id === assignment.value.schedule_id)
       .map(a => a.id)
 
-    // eksekusi delete secara paralel
     await Promise.all(
       toDelete.map(delId => api.delete(`/schedule-assignments/${delId}`))
     )
@@ -257,35 +234,77 @@ async function confirmDelete() {
   }
 }
 
-/* ---------- Calendar logic ---------- */
+/* ---- Calendar state ---- */
 const calendarRef = ref(null)
 const calendarKey = ref(0)
+const calendarEvents = ref([])
+
 const calendarOptions = reactive({
-  plugins: [dayGridPlugin],
+  plugins:     [ dayGridPlugin ],
   initialView: 'dayGridMonth',
   initialDate: '',
-  height: 500,
-  dayCellClassNames(arg) {
-    const wd = assignment.value?.schedule.working_days || []
-    const d = arg.date
-    if (d.getDay() === 0 || !wd.includes(d.getDate())) {
-      return ['fc-non-working']
-    }
-    return []
-  }
+  height:      500,
+  events:      calendarEvents,
+  eventDisplay:'block',
 })
 
+/* ---- build calendar ---- */
 function setupCalendar() {
   if (!assignment.value) return
-  const my = assignment.value.schedule.month_year
-  calendarOptions.initialDate = `${my}-01`
+
+  // 1) set initialDate to first day of the selected month
+  const [year, month] = assignment.value.schedule.month_year.split('-').map(Number)
+  calendarOptions.initialDate = `${year}-${String(month).padStart(2,'0')}-01`
+
+  // 2) build events: non-working days as "Libur"
+  const wd = assignment.value.schedule.working_days || []
+  const daysInMonth = new Date(year, month, 0).getDate()
+  const evs = []
+  for (let d = 1; d <= daysInMonth; d++) {
+    if (!wd.includes(d)) {
+      const key = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`
+      evs.push({
+        title : 'Libur',
+        start : key,
+        allDay: true,
+        color : 'red'
+      })
+    }
+  }
+  calendarEvents.value = evs
+
+  // 3) force re-render
   calendarKey.value++
+}
+
+/* ---- data fetchers ---- */
+async function loadAllAssignments() {
+  try {
+    const { data: res } = await api.get('/schedule-assignments')
+    allAssignments.value = res.data
+  } catch (e) {
+    console.error('Gagal fetch daftar penugasan', e)
+  }
+}
+
+async function loadDetail() {
+  loading.value = true
+  try {
+    const { data: res } = await api.get(`/schedule-assignments/${id}`)
+    assignment.value = res.data
+    setupCalendar()
+  } catch {
+    showToast('Data tidak ditemukan', false)
+    setTimeout(() => router.back(), 1500)
+  } finally {
+    loading.value = false
+  }
 }
 
 /* ---- init ---- */
 onMounted(() => {
-  loadDetail()
   loadAllAssignments()
+  loadDetail()
 })
 </script>
 
@@ -304,10 +323,5 @@ onMounted(() => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
-}
-
-/* highlight tanggal non-working */
-::v-deep .fc-non-working {
-  background-color: rgba(220, 38, 38, 0.2) !important;
 }
 </style>
