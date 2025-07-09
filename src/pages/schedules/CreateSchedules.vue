@@ -397,6 +397,7 @@ const calendarOptions = reactive({
   initialView: 'dayGridMonth',
   events: holidayEvents.value,
   dateClick: handleDateClick,
+  eventColor:   'red',
   datesSet: onDatesSet,
   height: 450,
   dayMaxEvents: true,
@@ -409,17 +410,19 @@ const calendarOptions = reactive({
     const dd   = String(d.getDate()).padStart(2,'0')
     const dateStr = `${yyyy}-${mm}-${dd}`
 
-    const isSunday = d.getDay() === 0
+
     const isHoliday = holidayEvents.value.some(e => e.date === dateStr)
 
-    return (isSunday || isHoliday)
-      ? ['fc-non-working']
+    return ( isHoliday)
+      ? ['']
       : []
   }
 });
 
 
-watch(holidayEvents, nv => { calendarOptions.events = nv })
+watch(holidayEvents, nv => { 
+  calendarOptions.events = nv 
+})
 watch(form.working_days, () => {
   nextTick(() => { calendarRef.value?.getApi().rerenderCells() })
 })

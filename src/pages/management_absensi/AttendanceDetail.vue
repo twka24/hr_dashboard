@@ -57,33 +57,38 @@
         <!-- Content -->
         <div class="p-6 space-y-4">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <!-- Data statis -->
+            <!-- Kode Karyawan -->
             <div>
               <p class="text-sm text-gray-500 dark:text-gray-400">Kode Karyawan</p>
               <p class="font-medium text-gray-800 dark:text-gray-100">
-                {{ attendance.employee?.employee_code  || '-'}}
+                {{ attendance.employee?.employee_code || '-' }}
               </p>
             </div>
+
+            <!-- Nama -->
             <div>
               <p class="text-sm text-gray-500 dark:text-gray-400">Nama</p>
               <p class="font-medium text-gray-800 dark:text-gray-100">
                 {{ attendance.employee?.name || '-' }}
               </p>
             </div>
+
+            <!-- Posisi -->
             <div>
               <p class="text-sm text-gray-500 dark:text-gray-400">Posisi</p>
               <p class="font-medium text-gray-800 dark:text-gray-100">
                 {{ attendance.employee?.position?.position_name || 'Semua Jabatan' }}
               </p>
             </div>
+
+            <!-- Tanggal -->
             <div>
               <p class="text-sm text-gray-500 dark:text-gray-400">Tanggal</p>
               <p class="font-medium text-gray-800 dark:text-gray-100">
-                {{ formatDate(attendance.attendance_date) || '-'}}
+                {{ formatDate(attendance.attendance_date) || '-' }}
               </p>
             </div>
 
-            <!-- ====== BARIS INPUT / LABEL ====== -->
             <!-- Jam Masuk -->
             <div>
               <p class="text-sm text-gray-500 dark:text-gray-400">Jam Masuk</p>
@@ -100,6 +105,7 @@
                 </p>
               </template>
             </div>
+
             <!-- Lokasi Masuk -->
             <div>
               <p class="text-sm text-gray-500 dark:text-gray-400">Lokasi Masuk</p>
@@ -124,6 +130,7 @@
                 </p>
               </template>
             </div>
+
             <!-- Lokasi Pulang -->
             <div>
               <p class="text-sm text-gray-500 dark:text-gray-400">Lokasi Pulang</p>
@@ -132,7 +139,7 @@
               </p>
             </div>
 
-            <!-- Break Start -->
+            <!-- Istirahat Mulai -->
             <div>
               <p class="text-sm text-gray-500 dark:text-gray-400">Istirahat Mulai</p>
               <template v-if="editMode">
@@ -149,7 +156,7 @@
               </template>
             </div>
 
-            <!-- Break End -->
+            <!-- Istirahat Selesai -->
             <div>
               <p class="text-sm text-gray-500 dark:text-gray-400">Istirahat Selesai</p>
               <template v-if="editMode">
@@ -185,9 +192,9 @@
                 <p
                   class="font-medium"
                   :class="{
-                    'text-green-600' : attendance.status==='hadir',
-                    'text-yellow-600': attendance.status==='late' || attendance.status==='cuti' || attendance.status==='izin',
-                    'text-red-600'   : attendance.status==='alpha' || attendance.status==='absent'
+                    'text-green-600': attendance.status==='hadir',
+                    'text-yellow-600': ['late','cuti','izin'].includes(attendance.status),
+                    'text-red-600': ['alpha','absent'].includes(attendance.status)
                   }"
                 >
                   {{ attendance.status }}
@@ -212,7 +219,7 @@
               </template>
             </div>
 
-            <!-- Created at -->
+            <!-- Dibuat -->
             <div>
               <p class="text-sm text-gray-500 dark:text-gray-400">Dibuat</p>
               <p class="font-medium text-gray-600 dark:text-gray-400">
@@ -222,7 +229,7 @@
           </div>
         </div>
 
-        <!-- Maps (tidak berubah) -->
+        <!-- Lokasi Absensi -->
         <div class="p-6 border-t border-gray-100 dark:border-gray-700">
           <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
             Lokasi Absensi
@@ -258,14 +265,34 @@
             </div>
           </div>
         </div>
+
+        <!-- Kalender Absensi Bulan Ini -->
+        <div class="p-6 border-t border-gray-100 dark:border-gray-700">
+          <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
+            Kalender Absensi Bulan Ini
+          </h2>
+          <FullCalendar :options="calendarOptions" />
+        </div>
       </div>
 
       <!-- Loading & Error -->
       <div v-if="loading" class="flex justify-center py-20">
-        <svg class="h-12 w-12 animate-spin text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="opacity-25"/>
-          <path fill="currentColor" class="opacity-75"
-            d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16 8 8 0 018-8z"/>
+        <svg
+          class="h-12 w-12 animate-spin text-indigo-600"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            cx="12" cy="12" r="10"
+            stroke="currentColor" stroke-width="4"
+            class="opacity-25"
+          />
+          <path
+            fill="currentColor"
+            class="opacity-75"
+            d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16 8 8 0 018-8z"
+          />
         </svg>
       </div>
       <div v-if="error" class="text-center text-red-600">{{ error }}</div>
@@ -288,111 +315,111 @@
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import api from '@/services/api'
+import FullCalendar from '@fullcalendar/vue3'
+import dayGridPlugin from '@fullcalendar/daygrid'
 
 const router = useRouter()
 const route  = useRoute()
 
-/* ---------- state ---------- */
 const attendance = ref(null)
 const loading    = ref(true)
 const error      = ref('')
-
-const editMode = ref(false)
-const saving   = ref(false)
+const editMode   = ref(false)
+const saving     = ref(false)
 
 const form = reactive({
-  check_in    : '',
-  check_out   : '',
-  break_start : '',
-  break_end   : '',
-  status      : '',
-  notes       : ''
+  check_in:    '',
+  check_out:   '',
+  break_start: '',
+  break_end:   '',
+  status:      '',
+  notes:       ''
 })
 
-/* ---------- helpers ---------- */
-function formatDate (iso) {
+// FullCalendar setup
+const calendarEvents  = ref([])
+const calendarOptions = reactive({
+  plugins:     [ dayGridPlugin ],
+  initialView: 'dayGridMonth',
+  initialDate: '',            // akan di-set di onMounted()
+  events:      calendarEvents,
+  eventDisplay:'block',
+  height:      'auto',
+})
+
+function formatDate(iso) {
   return new Date(iso).toLocaleDateString()
 }
-function formatTime (value) {
-  if (!value) return '-'
-  if (typeof value === 'string' && /^\d{2}:\d{2}$/.test(value)) return value
-  return new Date(value).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+function formatTime(v) {
+  if (!v) return '-'
+  if (typeof v === 'string' && /^\d{2}:\d{2}$/.test(v)) return v
+  return new Date(v).toLocaleTimeString('id-ID',{ hour:'2-digit', minute:'2-digit' })
 }
-function formatDateTime (iso) {
-  return new Date(iso).toLocaleString('id-ID', {
-    year   : 'numeric',
-    month  : '2-digit',
-    day    : '2-digit',
-    hour   : '2-digit',
-    minute : '2-digit',
-    second : '2-digit'
-  })
+function formatDateTime(iso) {
+  return new Date(iso).toLocaleString('id-ID',{ year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit' })
 }
-
-/* ---------- Google Maps ---------- */
-function embedUrl (type) {
-  const lat = type === 'in' ? attendance.value.check_in_latitude  : attendance.value.check_out_latitude
-  const lng = type === 'in' ? attendance.value.check_in_longitude : attendance.value.check_out_longitude
-  const loc = type === 'in' ? attendance.value.check_in_location  : attendance.value.check_out_location
-  if (lat && lng) return `https://www.google.com/maps?q=${lat},${lng}&z=15&output=embed`
-  if (loc)        return `https://www.google.com/maps?q=${encodeURIComponent(loc)}&z=15&output=embed`
+function embedUrl(type) {
+  const lat = type==='in'
+    ? attendance.value.check_in_latitude
+    : attendance.value.check_out_latitude
+  const lng = type==='in'
+    ? attendance.value.check_in_longitude
+    : attendance.value.check_out_longitude
+  const loc = type==='in'
+    ? attendance.value.check_in_location
+    : attendance.value.check_out_location
+  if(lat&&lng) return `https://www.google.com/maps?q=${lat},${lng}&z=15&output=embed`
+  if(loc)      return `https://www.google.com/maps?q=${encodeURIComponent(loc)}&z=15&output=embed`
   return null
 }
 
-/* ---------- toast ---------- */
-const toast = reactive({ show: false, message: '', ok: true })
-function showToast (msg, ok = true) {
+const toast = reactive({ show:false, message:'', ok:true })
+function showToast(msg, ok=true) {
   toast.message = msg
   toast.ok      = ok
   toast.show    = true
-  setTimeout(() => (toast.show = false), 3000)
+  setTimeout(() => toast.show = false, 3000)
 }
 
-/* ---------- edit handlers ---------- */
-function timeHHmm (v) {
-  if (!v) return ''
-  if (typeof v === 'string' && /^\d{2}:\d{2}$/.test(v)) return v
-  return new Date(v).toISOString().substring(11, 16)
+function timeHHmm(v) {
+  if(!v) return ''
+  if(typeof v==='string' && /^\d{2}:\d{2}$/.test(v)) return v
+  return new Date(v).toISOString().substring(11,16)
 }
-
-function populateForm () {
+function populateForm() {
   form.check_in    = timeHHmm(attendance.value.check_in)
   form.check_out   = timeHHmm(attendance.value.check_out)
   form.break_start = timeHHmm(attendance.value.break_start)
   form.break_end   = timeHHmm(attendance.value.break_end)
   form.status      = attendance.value.status || 'hadir'
-  form.notes       = attendance.value.notes || ''
+  form.notes       = attendance.value.notes  || ''
 }
-
-function startEdit () {
-  if (!attendance.value) return
+function startEdit() {
+  if(!attendance.value) return
   populateForm()
   editMode.value = true
 }
-
-function cancelEdit () {
+function cancelEdit() {
   editMode.value = false
 }
 
-/* ---------- save PUT ---------- */
-async function saveEdit () {
-  if (saving.value) return
+async function saveEdit() {
+  if(saving.value) return
   saving.value = true
   try {
     await api.put(`/attendances/${attendance.value.id}`, {
-      check_in    : form.check_in    || null,
-      check_out   : form.check_out   || null,
-      break_start : form.break_start || null,
-      break_end   : form.break_end   || null,
-      status      : form.status,
-      notes       : form.notes
+      check_in:    form.check_in    || null,
+      check_out:   form.check_out   || null,
+      break_start: form.break_start || null,
+      break_end:   form.break_end   || null,
+      status:      form.status,
+      notes:       form.notes
     })
     showToast('Berhasil diperbarui', true)
-    // refresh detail
     const { data } = await api.get(`/attendances/${attendance.value.id}`)
     attendance.value = data.data
     editMode.value   = false
-  } catch (e) {
+  } catch(e) {
     console.error(e)
     showToast('Gagal menyimpan', false)
   } finally {
@@ -400,14 +427,49 @@ async function saveEdit () {
   }
 }
 
-/* ---------- load on mount ---------- */
 onMounted(async () => {
   loading.value = true
   try {
-    const { data } = await api.get(`/attendances/${route.params.id}`)
-    attendance.value = data.data
-  } catch {
-    error.value = 'Gagal memuat detail absensi.'
+    // 1) ambil detail
+    const { data: d1 } = await api.get(`/attendances/${route.params.id}`)
+    attendance.value   = d1.data
+
+    // 2) atur kalender ke bulan dari attendance_date
+    const base = new Date(attendance.value.attendance_date)
+    const Y    = base.getFullYear()
+    const M    = String(base.getMonth()+1).padStart(2,'0')
+    calendarOptions.initialDate = `${Y}-${M}-01`
+
+    // 3) ambil semua & filter milik karyawan ini
+    const respAll = await api.get('/attendances')
+    const all     = respAll.data.data
+    const code    = attendance.value.employee.employee_code
+    const myRecs  = all.filter(a => a.employee_code === code)
+
+    // 4) kumpulkan tanggal hadir
+    const hadirSet = new Set(myRecs.map(a => a.attendance_date.substr(0,10)))
+
+    // 5) tentukan first & last day di bulan tersebut
+    const first = new Date(Y, base.getMonth(),   1)
+    const last  = new Date(Y, base.getMonth()+1, 0)
+
+    // 6) bangun events
+    const evs = []
+    for (let d = new Date(first); d <= last; d.setDate(d.getDate()+1)) {
+      const key = d.toISOString().substr(0,10)
+      if (hadirSet.has(key)) {
+        const rec = myRecs.find(a => a.attendance_date.substr(0,10) === key)
+         evs.push({ start: key, allDay: true, display:'background', backgroundColor:'white' })
+        
+      } else {
+        evs.push({ title: 'Libur', start: key, allDay: true, color:'red' })
+      }
+    }
+    calendarEvents.value = evs
+
+  } catch (e) {
+    console.error(e)
+    error.value = 'Gagal memuat detail absensi atau kalender.'
   } finally {
     loading.value = false
   }

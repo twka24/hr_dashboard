@@ -202,33 +202,6 @@
           </div>
 
           <!-- Ringkasan jumlah -->
-          <div class="flex-1 text-center text-sm text-gray-700 dark:text-gray-300">
-            <template v-if="isFiltered">
-              <span class="font-semibold">Total: {{ totalCount }}</span>
-              <template v-for="(info, pos) in positionSummary" :key="pos">
-                &nbsp;|&nbsp;
-                <span>
-                  {{ pos }}: {{ info.total }}
-                  (Absen: {{ info.absent }}, Ijin/Cuti: {{ info.leave }})
-                </span>
-              </template>
-            </template>
-            <template v-else>
-              <span class="font-semibold">Total keseluruhan: {{ attendances.length }}</span>
-            </template>
-          </div>
-          <div class="relative">
-            <select
-              v-model.number="perPage"
-              @change="page = 1"
-              class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-3 pr-8 py-2 transition"
-            >
-              <option v-for="n in [5,10,20,50]" :key="n" :value="n">Show {{ n }} rows</option>
-            </select>
-            <ChevronDownIcon
-              class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
-            />
-          </div>
         </div>
 
         <!-- Content -->

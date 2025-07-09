@@ -388,7 +388,6 @@ async function loadDetail() {
     is_active:     p.is_active,
   })
   onMonthChange()
-  // paksa FullCalendar re-render setelah GET
   calendarKey.value++
 }
 
@@ -445,7 +444,7 @@ function onMonthChange() {
 }
 watch(() => schedule.month_year, onMonthChange)
 
-// compute non-working days
+// compute non-working days (angka saja)
 const nonWorkingDays = computed(() =>
   allDatesInMonth.value.filter(d => !schedule.working_days.includes(d))
 )
@@ -494,7 +493,6 @@ function confirmHolidayModal() {
     showToast(`Tanggal ${d} dikembalikan ke working days`, true)
   }
   showHolidayModal.value = false
-  // paksa re-render setelah unmark
   calendarKey.value++
 }
 
@@ -528,25 +526,57 @@ function deleteHoliday() {
 
 function closeHolidayModal() { modalOpen.value = false }
 
+// ---------- build red events list ----------
+const calendarEvents = ref([])
+
+function rebuildEvents() {
+  const evs = []
+  // 1) libur nasional
+  for (const h of holidayEvents.value) {
+    evs.push({
+      title:  h.title,
+      start:  h.date,
+      allDay: true,
+      color:  'red'
+    })
+  }
+  // 2) semua tanggal non-working hasil toggle (angka → YYYY-MM-DD)
+  for (const d of allDatesInMonth.value) {
+    if (!schedule.working_days.includes(d)) {
+      const [y,m] = schedule.month_year.split('-')
+      const dd = String(d).padStart(2,'0')
+      evs.push({
+        title:  'Libur',
+        start:  `${y}-${m}-${dd}`,
+        allDay: true,
+        color:  'red'
+      })
+    }
+  }
+  calendarEvents.value = evs
+}
+
+watch(holidayEvents, rebuildEvents, { deep: true })
+watch(schedule.working_days, rebuildEvents, { deep: true })
+watch(allDatesInMonth, rebuildEvents)
+
 // ---------- FullCalendar config ----------
 const calendarOptions = reactive({
-  plugins: [ dayGridPlugin, interactionPlugin ],
-  initialView: 'dayGridMonth',
-  height: 500,
-  events: holidayEvents.value,
+  plugins:    [ dayGridPlugin, interactionPlugin ],
+  initialView:'dayGridMonth',
+  height:     500,
+  events:     calendarEvents,
   dateClick(arg) {
     if (editingMode.value === 'mark' || editingMode.value === 'unmark') {
       markUnmarkDateClick(arg)
     } else {
       addHolidayDateClick(arg)
     }
-  },
-  dayCellClassNames(arg) {
-    const d = arg.date.getDate()
-    return nonWorkingDays.value.includes(d) ? ['fc-non-working'] : []
   }
 })
-watch(holidayEvents, v => calendarOptions.events = v)
+
+watch(holidayEvents, v => calendarOptions.events = calendarEvents)
+watch(schedule.working_days, v => calendarOptions.events = calendarEvents)
 
 // ---------- Init ----------
 onMounted(() => {
@@ -560,9 +590,5 @@ onMounted(() => {
 .slide-fade-enter-from { transform: translateY(-10px); opacity: 0 }
 .fade-enter-active, .fade-leave-active { transition: opacity .2s }
 .fade-enter-from, .fade-leave-to { opacity: 0 }
-
-/* highlight tanggal NON-working */
-::v-deep .fc-non-working {
-  background-color: rgba(220, 38, 38, 0.2) !important;
-}
 </style>
+

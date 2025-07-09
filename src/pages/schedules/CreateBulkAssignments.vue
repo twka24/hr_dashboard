@@ -162,102 +162,146 @@ import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import api from '@/services/api'
 
-// router instance
 const router = useRouter()
 
-// state
+// form state
 const schedules = ref([])
 const positions = ref([])
-const bulk = reactive({ schedule_id: '', position_codes: [''] })
-const toast = reactive({ show: false, message: '', ok: true })
+const bulk = reactive({
+  schedule_id: '',
+  position_codes: ['']
+})
 const loading = ref(false)
+const toast = reactive({ show: false, message: '', ok: true })
 
-// Calendar refs & state
-const calendarRef = ref(null)
-const calendarKey = ref(0)
+// calendar state
+const calendarRef    = ref(null)
+const calendarKey    = ref(0)
 const allDatesInMonth = ref([])
+const calendarEvents = ref([])
 
-// Compute selected schedule
-const selectedSchedule = computed(() => schedules.value.find(s => s.id === bulk.schedule_id))
+const calendarOptions = reactive({
+  plugins:     [dayGridPlugin],
+  initialView: 'dayGridMonth',
+  initialDate: '',
+  height:      500,
+  events:      calendarEvents,
+  eventDisplay:'block',
+})
 
-// Reset posisi otomatis saat jadwal dipilih
+// selected schedule
+const selectedSchedule = computed(() =>
+  schedules.value.find(s => s.id === bulk.schedule_id)
+)
+
+// reset posisi jika jadwal berubah
 watch(selectedSchedule, sch => {
-  if (sch && sch.position?.position_code) {
+  if (sch?.position?.position_code) {
     bulk.position_codes = [sch.position.position_code]
   } else {
     bulk.position_codes = ['']
   }
 })
 
-// Compute non-working days
-const nonWorkingDays = computed(() => {
-  if (!selectedSchedule.value?.working_days || !allDatesInMonth.value.length) return []
-  return allDatesInMonth.value.filter(d => !selectedSchedule.value.working_days.includes(d))
-})
-
-// Calendar options
-const calendarOptions = reactive({
-  plugins: [dayGridPlugin],
-  initialView: 'dayGridMonth',
-  initialDate: '',
-  height: 500,
-  dayCellClassNames(arg) {
-    return nonWorkingDays.value.includes(arg.date.getDate()) ? ['fc-non-working'] : []
-  }
-})
-
-// Watch selectedSchedule to set dates and calendar date
+// build calendar events saat jadwal berubah
 watch(selectedSchedule, sch => {
-  if (sch && sch.month_year) {
-    const [y,m] = sch.month_year.split('-').map(Number)
-    const dim = new Date(y, m, 0).getDate()
-    allDatesInMonth.value = Array.from({ length: dim }, (_, i) => i + 1)
-    calendarOptions.initialDate = `${sch.month_year}-01`
-    calendarKey.value++
+  if (!sch?.month_year) {
+    calendarEvents.value = []
+    return
   }
+
+  // tanggal dalam bulan
+  const [year, month] = sch.month_year.split('-').map(Number)
+  const dim = new Date(year, month, 0).getDate()
+  allDatesInMonth.value = Array.from({ length: dim }, (_, i) => i + 1)
+
+  // set view ke bulan tsb
+  calendarOptions.initialDate = `${sch.month_year}-01`
+
+  // bangun event "Libur" untuk non-working days
+  const evs = []
+  const working = sch.working_days || []
+  for (let day of allDatesInMonth.value) {
+    if (!working.includes(day)) {
+      const dd = String(day).padStart(2,'0')
+      const mm = String(month).padStart(2,'0')
+      evs.push({
+        title : 'Libur',
+        start : `${year}-${mm}-${dd}`,
+        allDay: true,
+        color : 'red'
+      })
+    }
+  }
+  calendarEvents.value = evs
+  calendarKey.value++  // rerender
 })
 
-// Load data
+// fetch data
 async function loadSchedules() {
-  const { data: res } = await api.get('/schedules')
-  schedules.value = res.data
+  try {
+    const { data: res } = await api.get('/schedules')
+    schedules.value = res.data
+  } catch (e) {
+    console.error(e)
+  }
 }
 async function loadPositions() {
-  const { data: res } = await api.get('/positions')
-  positions.value = res.data
+  try {
+    const { data: res } = await api.get('/positions')
+    positions.value = res.data
+  } catch (e) {
+    console.error(e)
+  }
 }
 
-// Helpers
+// utility
 function showToast(msg, ok = true) {
-  toast.message = msg; toast.ok = ok; toast.show = true
+  toast.message = msg
+  toast.ok      = ok
+  toast.show    = true
   setTimeout(() => (toast.show = false), 3000)
 }
-function addPosition() { bulk.position_codes.push('') }
-function removePosition(i) { bulk.position_codes.length > 1 ? bulk.position_codes.splice(i,1) : bulk.position_codes = [''] }
+function addPosition() {
+  bulk.position_codes.push('')
+}
+function removePosition(i) {
+  if (bulk.position_codes.length > 1) {
+    bulk.position_codes.splice(i, 1)
+  } else {
+    bulk.position_codes = ['']
+  }
+}
 
-// Bulk assign
+// bulk assign
 async function bulkAssign() {
   if (!selectedSchedule.value) return
   loading.value = true
   try {
-    // jika hanya satu kode dan kosong, kirim null
-    let payloadPositions = bulk.position_codes.length === 1 && !bulk.position_codes[0]
-      ? null
-      : bulk.position_codes
-    const payload = {
-      schedule_id: bulk.schedule_id,
-      month_year: selectedSchedule.value.month_year,
+    const payloadPositions =
+      bulk.position_codes.length === 1 && !bulk.position_codes[0]
+        ? null
+        : bulk.position_codes
+
+    await api.post('/schedule-assignments/bulk-assign', {
+      schedule_id:   bulk.schedule_id,
+      month_year:    selectedSchedule.value.month_year,
       position_code: payloadPositions
-    }
-    await api.post('/schedule-assignments/bulk-assign', payload)
+    })
+
     showToast('Bulk assignments berhasil', true)
     setTimeout(() => router.back(), 2000)
   } catch (e) {
-    showToast(`Gagal melakukan bulk assignments: ${e.response?.data?.message || e.message}`, false)
-  } finally { loading.value = false }
+    showToast(
+      `Gagal bulk assign: ${e.response?.data?.message || e.message}`,
+      false
+    )
+  } finally {
+    loading.value = false
+  }
 }
 
-// Init
+// init
 onMounted(() => {
   loadSchedules()
   loadPositions()
@@ -266,10 +310,8 @@ onMounted(() => {
 
 <style scoped>
 .slide-fade-enter-active { transition: all .3s ease }
-.slide-fade-enter-from { transform: translateY(-8px); opacity: 0 }
+.slide-fade-enter-from   { transform: translateY(-8px); opacity: 0 }
 
-/* non-working day highlight */
-::v-deep .fc-non-working {
-  background-color: rgba(220, 38, 38, 0.2) !important;
-}
+/* styling event libur sudah oleh FullCalendar via color:red */
 </style>
+
