@@ -1,19 +1,23 @@
 <template>
-  <div class="p-6 md:p-10">
+  <div class="p-4 sm:p-6 lg:p-10">
     <!-- Breadcrumb / Back -->
     <div class="flex items-center gap-2 mb-4">
       <button
         @click="$router.back()"
         class="bg-white dark:bg-gray-700 rounded-lg px-3 py-1 text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 transition"
       >
-        ← Kembali Bulk Assignments
+        ← Kembali ke Schedules
       </button>
     </div>
 
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow p-6 space-y-6 relative">
+    <div
+      class="bg-white dark:bg-gray-800 rounded-2xl shadow p-4 sm:p-6 space-y-6 relative"
+    >
       <!-- Header -->
-      <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
+      <div
+        class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2"
+      >
+        <h1 class="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100">
           Bulk Assignments
         </h1>
       </div>
@@ -22,7 +26,7 @@
       <transition name="slide-fade">
         <div
           v-if="toast.show"
-          class="fixed top-4 right-4 z-50 flex items-center gap-3 rounded-lg px-4 py-2 shadow-lg text-sm text-white"
+          class="fixed top-4 right-4 z-50 flex items-center gap-3 rounded-lg px-4 py-2 shadow-lg text-sm text-white w-[calc(100%-2rem)] sm:w-auto"
           :class="toast.ok ? 'bg-emerald-600' : 'bg-red-600'"
         >
           {{ toast.message }}
@@ -30,7 +34,7 @@
       </transition>
 
       <!-- Form: pilih schedule, periode, posisi dynamic -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         <!-- Pilih Schedule -->
         <div>
           <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1">
@@ -42,11 +46,7 @@
             class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
           >
             <option value="" disabled>— Pilih Jadwal —</option>
-            <option
-              v-for="sch in schedules"
-              :key="sch.id"
-              :value="sch.id"
-            >
+            <option v-for="sch in schedules" :key="sch.id" :value="sch.id">
               {{ sch.schedule_name }}
             </option>
           </select>
@@ -70,7 +70,11 @@
           <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1">
             Posisi
           </label>
-          <div v-for="(code, idx) in bulk.position_codes" :key="idx" class="flex items-center mb-2">
+          <div
+            v-for="(code, idx) in bulk.position_codes"
+            :key="idx"
+            class="flex flex-col sm:flex-row items-stretch sm:items-center mb-2 gap-2"
+          >
             <select
               v-model="bulk.position_codes[idx]"
               :disabled="loading"
@@ -89,7 +93,7 @@
               @click.prevent="removePosition(idx)"
               type="button"
               :disabled="loading"
-              class="ml-2 text-red-600 hover:underline"
+              class="text-red-600 hover:underline flex-shrink-0"
             >
               Hapus
             </button>
@@ -110,33 +114,53 @@
         v-if="selectedSchedule"
         class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600 space-y-4"
       >
-        <h2 class="font-medium text-gray-800 dark:text-gray-100 mb-2">Detail Jadwal</h2>
+        <h2 class="font-medium text-gray-800 dark:text-gray-100 mb-2">
+          Detail Jadwal
+        </h2>
         <ul class="text-sm space-y-1 text-gray-700 dark:text-gray-300">
           <li><strong>ID:</strong> {{ selectedSchedule.id }}</li>
           <li><strong>Nama:</strong> {{ selectedSchedule.schedule_name }}</li>
-          <li><strong>Waktu:</strong> {{ selectedSchedule.start_time }} – {{ selectedSchedule.end_time }}</li>
-          <li><strong>Istirahat:</strong> {{ selectedSchedule.break_start }} – {{ selectedSchedule.break_end }}</li>
-          <li><strong>Hari Kerja:</strong> {{ selectedSchedule.working_days.join(', ') }}</li>
-          <li><strong>Status:</strong> <span :class="selectedSchedule.is_active ? 'text-green-600' : 'text-red-600'">{{ selectedSchedule.is_active ? 'Aktif' : 'Tidak Aktif' }}</span></li>
+          <li>
+            <strong>Waktu:</strong> {{ selectedSchedule.start_time }} –
+            {{ selectedSchedule.end_time }}
+          </li>
+          <li>
+            <strong>Istirahat:</strong> {{ selectedSchedule.break_start }} –
+            {{ selectedSchedule.break_end }}
+          </li>
+          <li>
+            <strong>Hari Kerja:</strong>
+            {{ selectedSchedule.working_days.join(', ') }}
+          </li>
+          <li>
+            <strong>Status:</strong>
+            <span
+              :class="
+                selectedSchedule.is_active ? 'text-green-600' : 'text-red-600'
+              "
+            >
+              {{ selectedSchedule.is_active ? 'Aktif' : 'Tidak Aktif' }}
+            </span>
+          </li>
         </ul>
 
         <!-- Kalender Hari Kerja -->
-        <div>
+        <div class="overflow-x-auto">
           <FullCalendar
             :key="calendarKey"
             ref="calendarRef"
             :options="calendarOptions"
-            class="mt-4 border rounded-lg overflow-hidden"
+            class="mt-4 border rounded-lg overflow-hidden min-w-[300px]"
           />
         </div>
       </div>
 
       <!-- Button Bulk Assign -->
-      <div class="flex justify-end">
+      <div class="flex flex-col sm:flex-row justify-end gap-2">
         <button
           @click="bulkAssign"
           :disabled="loading || !bulk.schedule_id"
-          class="px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition flex items-center justify-center"
+          class="w-full sm:w-auto px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition flex items-center justify-center"
         >
           <svg
             v-if="loading"
@@ -145,8 +169,19 @@
             fill="none"
             viewBox="0 0 24 24"
           >
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 01-8 8z" />
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            />
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 01-8 8z"
+            />
           </svg>
           <span>{{ loading ? 'Memuat...' : 'Bulk Assignments' }}</span>
         </button>
@@ -175,18 +210,18 @@ const loading = ref(false)
 const toast = reactive({ show: false, message: '', ok: true })
 
 // calendar state
-const calendarRef    = ref(null)
-const calendarKey    = ref(0)
+const calendarRef = ref(null)
+const calendarKey = ref(0)
 const allDatesInMonth = ref([])
 const calendarEvents = ref([])
 
 const calendarOptions = reactive({
-  plugins:     [dayGridPlugin],
+  plugins: [dayGridPlugin],
   initialView: 'dayGridMonth',
   initialDate: '',
-  height:      500,
-  events:      calendarEvents,
-  eventDisplay:'block',
+  height: 'auto',
+  events: calendarEvents,
+  eventDisplay: 'block'
 })
 
 // selected schedule
@@ -223,18 +258,18 @@ watch(selectedSchedule, sch => {
   const working = sch.working_days || []
   for (let day of allDatesInMonth.value) {
     if (!working.includes(day)) {
-      const dd = String(day).padStart(2,'0')
-      const mm = String(month).padStart(2,'0')
+      const dd = String(day).padStart(2, '0')
+      const mm = String(month).padStart(2, '0')
       evs.push({
-        title : 'Libur',
-        start : `${year}-${mm}-${dd}`,
+        title: 'Libur',
+        start: `${year}-${mm}-${dd}`,
         allDay: true,
-        color : 'red'
+        color: 'red'
       })
     }
   }
   calendarEvents.value = evs
-  calendarKey.value++  // rerender
+  calendarKey.value++ // rerender
 })
 
 // fetch data
@@ -258,8 +293,8 @@ async function loadPositions() {
 // utility
 function showToast(msg, ok = true) {
   toast.message = msg
-  toast.ok      = ok
-  toast.show    = true
+  toast.ok = ok
+  toast.show = true
   setTimeout(() => (toast.show = false), 3000)
 }
 function addPosition() {
@@ -284,8 +319,8 @@ async function bulkAssign() {
         : bulk.position_codes
 
     await api.post('/schedule-assignments/bulk-assign', {
-      schedule_id:   bulk.schedule_id,
-      month_year:    selectedSchedule.value.month_year,
+      schedule_id: bulk.schedule_id,
+      month_year: selectedSchedule.value.month_year,
       position_code: payloadPositions
     })
 
@@ -309,9 +344,17 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.slide-fade-enter-active { transition: all .3s ease }
-.slide-fade-enter-from   { transform: translateY(-8px); opacity: 0 }
+/* Animasi toast */
+.slide-fade-enter-active {
+  transition: all 0.3s ease;
+}
+.slide-fade-enter-from {
+  transform: translateY(-8px);
+  opacity: 0;
+}
 
-/* styling event libur sudah oleh FullCalendar via color:red */
+/* Pastikan FullCalendar selalu muat di layar kecil */
+:deep(.fc) {
+  font-size: 0.75rem; /* perkecil font untuk mobile */
+}
 </style>
-
