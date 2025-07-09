@@ -137,7 +137,9 @@
             Konfirmasi Hapus
           </h2>
           <p class="text-sm text-gray-600 dark:text-gray-300 mb-6">
-            Anda yakin ingin menghapus penugasan ini?
+            Semua penugasan untuk jadwal
+            <span class="font-semibold">{{ assignment.schedule.schedule_name }}</span>
+            akan dihapus.
           </p>
           <div class="flex justify-end gap-3">
             <button
@@ -151,7 +153,7 @@
               :disabled="loading"
               class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 transition"
             >
-              {{ loading ? 'Menghapus…' : 'Hapus' }}
+              {{ loading ? 'Menghapus…' : 'Hapus Semuanya' }}
             </button>
           </div>
         </div>
@@ -213,11 +215,12 @@ const sameScheduleEmployees = computed(() => {
   if (!assignment.value) return []
   const seen = new Set()
   return allAssignments.value
-    .filter((a) => a.schedule_id === assignment.value.schedule_id)
-    .map((a) => a.employee)
-    .filter((emp) => {
-      if (seen.has(emp.id)) return false
-      seen.add(emp.id)
+    .filter(a => a.schedule_id === assignment.value.schedule_id)
+    .map(a => a.employee)
+    .filter(emp => {
+      const eid = emp?.id
+      if (!eid || seen.has(eid)) return false
+      seen.add(eid)
       return true
     })
 })
@@ -230,12 +233,21 @@ function showToast(msg, ok = true) {
   setTimeout(() => (toast.show = false), 3000)
 }
 
-/* ---- delete logic ---- */
+/* ---- delete logic: hapus SEMUA yang matching schedule_id ---- */
 async function confirmDelete() {
   loading.value = true
   try {
-    await api.delete(`/schedule-assignments/${id}`)
-    showToast('Penugasan berhasil dihapus', true)
+    // cari semua id yang schedule_id sama
+    const toDelete = allAssignments.value
+      .filter(a => a.schedule_id === assignment.value.schedule_id)
+      .map(a => a.id)
+
+    // eksekusi delete secara paralel
+    await Promise.all(
+      toDelete.map(delId => api.delete(`/schedule-assignments/${delId}`))
+    )
+
+    showToast('Semua penugasan berhasil dihapus', true)
     showDeleteModal.value = false
     setTimeout(() => router.back(), 1000)
   } catch {
@@ -254,7 +266,6 @@ const calendarOptions = reactive({
   initialDate: '',
   height: 500,
   dayCellClassNames(arg) {
-    // libur: hari minggu ATAU tanggal di luar working_days
     const wd = assignment.value?.schedule.working_days || []
     const d = arg.date
     if (d.getDay() === 0 || !wd.includes(d.getDate())) {

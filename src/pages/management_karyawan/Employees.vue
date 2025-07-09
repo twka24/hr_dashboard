@@ -418,8 +418,9 @@
             </div>
             <div class="md:col-span-2 flex items-center justify-between mt-6">
               <button
-                @click="deleteEmployee"
+                @click="askDelete"
                 :disabled="deleting"
+                type="button"
                 class="flex items-center gap-2 px-5 py-3 bg-red-600 text-white rounded-full hover:bg-red-700 disabled:opacity-50 transition-transform hover:scale-105"
               >
                 <TrashIcon class="h-5 w-5" />
@@ -448,7 +449,39 @@
         </div>
       </div>
     </transition>
-
+<!-- ===================== MODAL KONFIRMASI HAPUS ===================== -->
+    <transition name="fade">
+      <div
+        v-if="showDeleteModal"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+      >
+        <div class="w-full max-w-sm bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl text-center">
+          <TrashIcon class="h-12 w-12 mx-auto text-red-600 mb-4" />
+          <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
+            Yakin ingin menghapus karyawan?
+          </h2>
+          <p class="text-sm text-gray-600 dark:text-gray-300 mb-6">
+            Data <span class="font-semibold">“{{ deleteTarget.name }}”</span> akan dihapus permanen.
+          </p>
+          <div class="flex justify-center gap-4">
+            <button
+              @click="showDeleteModal = false"
+              class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+            >
+              Batal
+            </button>
+            <button
+              @click="confirmDelete"
+              :disabled="deleting"
+              class="px-5 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 disabled:opacity-50 transition"
+            >
+              <span v-if="!deleting">Ya, Hapus</span>
+              <span v-else>Memproses…</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </transition>
     <!-- Toast -->
     <transition name="slide-fade">
       <div
@@ -522,10 +555,32 @@ function showToast(msg, ok = true) {
 const showAddPositionModal = ref(false)
 const newPosition          = ref({ position_name:'', prefix:'' })
 const posSubmitting        = ref(false)
+const showDeleteModal = ref(false)
+const deleteTarget    = ref({ employee_code:'', name:'' })
 
 function openAddPositionModal() {
   newPosition.value = { position_name:'', prefix:'' }
   showAddPositionModal.value = true
+}
+
+function askDelete() {
+  // dipanggil dari tombol di modal Edit
+  deleteTarget.value = { ...editEmp.value }   // salin data aktif
+  showDeleteModal.value = true
+}
+
+async function confirmDelete() {
+  if (deleting.value) return
+  deleting.value = true
+  try {
+    await api.delete(`/employees/${deleteTarget.value.employee_code}`)
+    showToast('Karyawan berhasil dihapus', true)
+    showDeleteModal.value = false
+    showEditModal.value   = false
+    await loadEmployees()
+  } catch {
+    showToast('Gagal menghapus karyawan', false)
+  } finally { deleting.value = false }
 }
 
 async function submitNewPosition() {

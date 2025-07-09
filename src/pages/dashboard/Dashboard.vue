@@ -1,3 +1,4 @@
+<!-- DashboardLayout.vue -->
 <template>
   <div
     class="flex min-h-screen text-slate-900 dark:text-slate-100
@@ -31,7 +32,7 @@
           <PencilIcon class="h-5 w-5 text-gray-600 dark:text-gray-300" />
         </button>
         <div class="flex items-center gap-3">
-          <img src="/logo_twka.jpg" class="h-12 w-12 rounded-full" />
+          <img src="/hr_manager.png" class="h-12 w-12 rounded-full" />
           <div class="text-sm min-w-0">
             <p class="font-bold truncate">{{ profile.name || '...' }}</p>
             <p class="text-xs truncate text-slate-500 dark:text-slate-400">
@@ -53,82 +54,109 @@
         </button>
       </div>
 
-      <!-- Navigation -->
+      <!-- ===================== NAVIGATION ===================== -->
       <nav class="flex-1 space-y-1 px-3">
-        <!-- Menu utama -->
-        <router-link
-          v-for="item in navItems"
-          :key="item.id"
-          :to="item.path"
-          class="group relative flex w-full items-start gap-3 overflow-hidden
-                 rounded-lg px-4 py-3 text-sm font-medium transition"
-          :class="active === item.id
-                  ? 'text-indigo-800 dark:text-indigo-200'
-                  : 'text-slate-700 dark:text-slate-300'"
-        >
-          <span
-            class="absolute left-0 top-0 h-full w-1 rounded-r bg-indigo-500 transition-transform"
-            :class="[ active === item.id ? 'translate-x-0' : '-translate-x-full',
-                      'group-hover:translate-x-0' ]"
-          />
-          <span
-            class="absolute inset-0 z-0 rounded-lg bg-indigo-100/50 dark:bg-white/10
-                   backdrop-blur-sm opacity-0 scale-95 transition-all duration-300"
-            :class="active === item.id
-                    ? 'opacity-100 scale-100'
-                    : 'group-hover:opacity-100 group-hover:scale-100'"
-          />
-          <component
-            :is="item.icon"
-            class="relative z-10 h-5 w-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
-            :class="active === item.id ? 'text-indigo-500' : ''"
-          />
-          <span class="relative z-10 flex-1 flex items-center justify-between">
-            <div class="flex flex-col">
-              <span class="truncate">{{ item.name }}</span>
-              <span class="text-xs text-slate-500 dark:text-slate-400">{{ item.desc }}</span>
-            </div>
+        <template v-for="item in navItems" :key="item.id">
+          <!-- ===== Link menu utama ===== -->
+          <router-link
+            :to="item.path"
+            active-class=""
+            exact-active-class=""
+            class="group relative flex w-full items-start gap-3 overflow-hidden
+                   rounded-lg px-4 py-3 text-sm font-medium transition"
+            :class="[
+              (item.id === 'schedules'
+                 ? scheduleGroupParent.includes(active)
+                 : active === item.id)
+               ? 'text-indigo-800 dark:text-indigo-200'
+               : 'text-slate-700 dark:text-slate-300'
+            ]"
+          >
             <span
-              v-if="item.id === 'requests' && pendingCount > 0"
-              class="ml-2 inline-flex items-center justify-center h-5 w-5 rounded-full bg-yellow-500 text-xs font-semibold text-white"
-            >
-              {{ pendingCount }}
+              class="absolute left-0 top-0 h-full w-1 rounded-r bg-indigo-500 transition-transform"
+              :class="[
+                (item.id === 'schedules'
+                   ? scheduleGroupParent.includes(active)
+                   : active === item.id)
+                ? 'translate-x-0'
+                : '-translate-x-full',
+                'group-hover:translate-x-0'
+              ]"
+            />
+            <span
+              class="absolute inset-0 z-0 rounded-lg bg-indigo-100/50 dark:bg-white/10
+                     backdrop-blur-sm opacity-0 scale-95 transition-all duration-300"
+              :class="[
+                (item.id === 'schedules'
+                   ? scheduleGroupParent.includes(active)
+                   : active === item.id)
+                ? 'opacity-100 scale-100'
+                : 'group-hover:opacity-100 group-hover:scale-100'
+              ]"
+            />
+            <component
+              :is="item.icon"
+              class="relative z-10 h-5 w-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
+              :class="[
+                (item.id === 'schedules'
+                   ? scheduleGroupParent.includes(active)
+                   : active === item.id)
+                ? 'text-indigo-500'
+                : '' ]"
+            />
+            <span class="relative z-10 flex-1 flex items-center justify-between">
+              <div class="flex flex-col">
+                <span class="truncate">{{ item.name }}</span>
+                <span class="text-xs text-slate-500 dark:text-slate-400">{{ item.desc }}</span>
+              </div>
+              <span
+                v-if="item.id === 'requests' && pendingCount > 0"
+                class="ml-2 inline-flex items-center justify-center h-5 w-5 rounded-full bg-yellow-500 text-xs font-semibold text-white"
+              >
+                {{ pendingCount }}
+              </span>
             </span>
-          </span>
-        </router-link>
+          </router-link>
 
-        <!-- Sub-menu Bulk Assignments (di bawah Schedules) -->
-        <router-link
-          v-if="['schedules','scheduleassignments','detailscheduleassignments',
-                  'bulkassignments','createschedules','schedulesedit'].includes(active)"
-          :to="{ name: 'ScheduleAssignments' }"
-          class="group relative flex w-auto min-w-[calc(100%-2rem)] items-center gap-3 ml-8 rounded-lg px-4 py-3 text-sm font-medium transition
-                 text-slate-700 dark:text-slate-300 hover:text-indigo-800 dark:hover:text-indigo-200
-                 hover:bg-indigo-50 dark:hover:bg-white/10"
-          :class="['scheduleassignments','detailscheduleassignments','bulkassignments'].includes(active)
-                  ? 'text-indigo-800 dark:text-indigo-200 bg-indigo-50 dark:bg-white/10'
-                  : ''"
-        >
-          <span
-            class="absolute left-0 top-3 h-[calc(100%-1.5rem)] w-1 rounded-r bg-indigo-500 transition-transform"
-            :class="['scheduleassignments','detailscheduleassignments','bulkassignments'].includes(active)
-                    ? 'translate-x-0'
-                    : '-translate-x-full group-hover:translate-x-0'"
-          />
-          <DocumentDuplicateIcon
-            class="relative z-10 h-5 w-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
-            :class="['scheduleassignments','detailscheduleassignments','bulkassignments'].includes(active)
-                    ? 'text-indigo-500'
-                    : 'text-slate-400'"
-          />
-          <span class="relative z-10 truncate">Bulk Assignments</span>
-        </router-link>
+          <!-- ===== Sub-menu Bulk Assignments ===== -->
+          <router-link
+            v-if="item.id === 'schedules' && scheduleGroupAll.includes(active)"
+            :to="{ name: 'ScheduleAssignments' }"
+            active-class=""
+            exact-active-class=""
+            class="group relative flex w-auto min-w-[calc(100%-2rem)] items-center gap-3 ml-8 rounded-lg px-4 py-3 text-sm font-medium transition
+                   text-slate-700 dark:text-slate-300 hover:text-indigo-800 dark:hover:text-indigo-200
+                   hover:bg-indigo-50 dark:hover:bg-white/10"
+            :class="[
+              ['scheduleassignments','detailscheduleassignments','bulkassignments'].includes(active)
+              ? 'text-indigo-800 dark:text-indigo-200 bg-indigo-50 dark:bg-white/10'
+              : '' ]"
+          >
+            <span
+              class="absolute left-0 top-3 h-[calc(100%-1.5rem)] w-1 rounded-r bg-indigo-500 transition-transform"
+              :class="[
+                ['scheduleassignments','detailscheduleassignments','bulkassignments'].includes(active)
+                ? 'translate-x-0'
+                : '-translate-x-full group-hover:translate-x-0' ]"
+            />
+            <DocumentDuplicateIcon
+              class="relative z-10 h-5 w-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
+              :class="[
+                ['scheduleassignments','detailscheduleassignments','bulkassignments'].includes(active)
+                ? 'text-indigo-500'
+                : 'text-slate-400' ]"
+            />
+            <span class="relative z-10 truncate">Bulk Assignments</span>
+          </router-link>
+        </template>
       </nav>
 
-      <!-- Settings -->
+      <!-- ============ SETTINGS ============ -->
       <div class="mt-auto px-3 pb-6">
         <router-link
           :to="{ name: 'SettingsPositions' }"
+          active-class=""
+          exact-active-class=""
           class="group relative flex w-full items-start gap-3 overflow-hidden
                  rounded-lg px-4 py-3 text-sm font-medium transition"
           :class="active === 'settings'
@@ -203,7 +231,7 @@
         </transition>
       </RouterView>
 
-      <!-- ===== Modals & Toast (tak diubah) ===== -->
+      <!-- ===== Modals, Toast, Watermark ===== -->
       <!-- Edit Profile Modal -->
       <transition name="fade">
         <div
@@ -349,14 +377,26 @@ const toggleDark = useToggle(isDark)
 const router = useRouter()
 const route  = useRoute()
 
-// ▶ baru: detail-route → menu induk
+// halaman yang dianggap bagian jadwal (induk Schedule aktif)
+const scheduleGroupParent = [
+  'schedules',
+  'createschedules',
+  'schedulesedit'
+]
+// seluruh halaman jadwal (termasuk BulkAssign.) hanya untuk men-show submenu
+const scheduleGroupAll = [
+  ...scheduleGroupParent,
+  'scheduleassignments',
+  'detailscheduleassignments',
+  'bulkassignments'
+]
 const active = computed(() => {
   const name = (route.name ?? '').toString()
   const map  = {
     RequestDetail    : 'requests',
     AttendanceDetail : 'attendance',
-    CreateSchedules  : 'schedules',
-    SchedulesEdit    : 'schedules'
+    CreateSchedules  : 'createschedules',
+    SchedulesEdit    : 'schedulesedit'
   }
   return (map[name] ?? name).toLowerCase()
 })
@@ -395,9 +435,7 @@ async function loadProfile (force = false) {
       'hr-dashboard-profile',
       JSON.stringify({ profile: { ...profile }, ts: now })
     )
-  } catch (e) {
-    console.error('Gagal load profile', e)
-  }
+  } catch (e) { console.error('Gagal load profile', e) }
 }
 
 /* ---------- Edit profile ---------- */
@@ -457,8 +495,8 @@ const navItems = [
   { id: 'dashboard',  path: '/dashboard',           name: 'Dashboard',           desc: 'Ringkasan',         icon: HomeIcon },
   { id: 'employees',  path: '/dashboard/employees', name: 'Management Karyawan', desc: 'Data karyawan',     icon: UsersIcon },
   { id: 'requests',   path: '/dashboard/requests',  name: 'Management Request',  desc: 'Permohonan & cuti', icon: ClipboardDocumentCheckIcon },
-  { id: 'attendance', path: '/dashboard/attendance',name: 'Management Absensi',  desc: 'Riwayat kehadiran', icon: CalendarDaysIcon },
-  { id: 'schedules',  path: '/dashboard/schedules', name: 'Management Schedule', desc: 'Jadwal & Shift',    icon: ClockIcon }
+  { id: 'schedules',  path: '/dashboard/schedules', name: 'Management Schedule', desc: 'Jadwal & Shift',    icon: ClockIcon },
+  { id: 'attendance', path: '/dashboard/attendance',name: 'Management Absensi',  desc: 'Riwayat kehadiran', icon: CalendarDaysIcon }
 ]
 
 /* ---------- Clock & greeting ---------- */

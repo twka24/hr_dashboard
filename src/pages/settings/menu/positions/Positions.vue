@@ -78,6 +78,7 @@
         </div>
 
         <!-- Modal Tambah Position -->
+          <teleport to="body">
         <transition name="fade">
           <div
             v-if="showAdd"
@@ -127,6 +128,7 @@
             </div>
           </div>
         </transition>
+        </teleport>
       </div>
     </div>
   </div>

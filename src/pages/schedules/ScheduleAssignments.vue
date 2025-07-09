@@ -49,60 +49,87 @@
         <div class="flex-1 text-center font-bold text-gray-700 dark:text-gray-300">
           Total keseluruhan: {{ filteredGrouped.length }}
         </div>
-        <div class="flex items-center text-gray-700 dark:text-gray-300">
-          <span class="mr-2">Show</span>
+        <div class="relative">
           <select
             v-model.number="perPage"
             @change="page = 1"
-            class="rounded-lg border border-gray-300 px-3 py-1 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700
+                   focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100
+                   pl-3 pr-8 py-2 transition"
           >
-            <option v-for="n in [5,10,20,50]" :key="n" :value="n">{{ n }}</option>
+            <option v-for="n in [5,10,20,50]" :key="n" :value="n">
+              Show {{ n }} rows
+            </option>
           </select>
-          <span class="ml-2">rows</span>
+          <ChevronDownIcon
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5 pointer-events-none"
+          />
         </div>
       </div>
 
       <!-- Table -->
-      <div class="overflow-x-auto">
-        <table class="w-full text-left table-auto">
-          <thead>
-            <tr class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
-              <th class="px-4 py-2">Schedule</th>
-              <th class="px-4 py-2">Jabatan</th>
-              <th class="px-4 py-2">Periode</th>
-              <th class="px-4 py-2">Status</th>
-              <th class="px-4 py-2">Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="item in paginatedGrouped"
-              :key="item.id"
-              class="even:bg-gray-50 dark:even:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
-            >
-              <td class="px-4 py-2">{{ item.schedule_name }}</td>
-              <td class="px-4 py-2">{{ item.position_name }}</td>
-              <td class="px-4 py-2">{{ item.month_year }}</td>
-              <td class="px-4 py-2">
-                <span :class="item.is_active ? 'text-green-600' : 'text-red-600'">
-                  {{ item.is_active ? 'Aktif' : 'Nonaktif' }}
-                </span>
-              </td>
-              <td class="px-4 py-2">
-                <router-link
-                  :to="{ name: 'DetailScheduleAssignments', params: { id: item.id } }"
-                  class="inline-flex items-center p-2 rounded-full hover:bg-blue-100 dark:hover:bg-gray-700 transition"
-                >
-                  <EyeIcon class="h-5 w-5 text-blue-600 dark:text-blue-300" />
-                </router-link>
-              </td>
-            </tr>
-            <tr v-if="!filteredGrouped.length">
-              <td colspan="5" class="px-4 py-2 text-center text-gray-500">Tidak ada data.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <!-- === TABEL === -->
+<div class="overflow-x-auto">
+  <table class="w-full text-left table-auto">
+    <thead>
+      <tr class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+        <th class="px-4 py-2">Schedule</th>
+        <th class="px-4 py-2">Jabatan</th>
+        <th class="px-4 py-2">Periode</th>
+        <th class="px-4 py-2">Status</th>
+        <th class="px-4 py-2">Aksi</th>
+      </tr>
+    </thead>
+
+    <!-- ===== Loading spinner di dalam tbody ===== -->
+    <tbody v-if="loading">
+      <tr>
+        <td colspan="5" class="px-4 py-12 text-center">
+          <svg
+            class="animate-spin h-8 w-8 text-indigo-600 mx-auto"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none" viewBox="0 0 24 24"
+          >
+            <circle class="opacity-25" cx="12" cy="12" r="10"
+                    stroke="currentColor" stroke-width="4" />
+            <path class="opacity-75" fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+          </svg>
+        </td>
+      </tr>
+    </tbody>
+
+    <!-- ===== Data normal ===== -->
+    <tbody v-else>
+      <tr
+        v-for="item in paginatedGrouped"
+        :key="item.id"
+        class="even:bg-gray-50 dark:even:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+      >
+        <td class="px-4 py-2">{{ item.schedule_name }}</td>
+        <td class="px-4 py-2">{{ item.position_name }}</td>
+        <td class="px-4 py-2">{{ item.month_year }}</td>
+        <td class="px-4 py-2">
+          <span :class="item.is_active ? 'text-green-600' : 'text-red-600'">
+            {{ item.is_active ? 'Aktif' : 'Nonaktif' }}
+          </span>
+        </td>
+        <td class="px-4 py-2">
+          <router-link
+            :to="{ name: 'DetailScheduleAssignments', params: { id: item.id } }"
+            class="inline-flex items-center p-2 rounded-full hover:bg-blue-100 dark:hover:bg-gray-700 transition"
+          >
+            <EyeIcon class="h-5 w-5 text-blue-600 dark:text-blue-300" />
+          </router-link>
+        </td>
+      </tr>
+      <tr v-if="!filteredGrouped.length">
+        <td colspan="5" class="px-4 py-2 text-center text-gray-500">Tidak ada data.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 
       <!-- Pagination -->
       <div class="flex items-center justify-center gap-2 py-4">
@@ -131,7 +158,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import api from '@/services/api'
-import { EyeIcon, PlusIcon } from '@heroicons/vue/24/outline'
+import { EyeIcon, PlusIcon, ChevronDownIcon } from '@heroicons/vue/24/outline'
 
 const assignments    = ref([])
 const filterSchedule = ref('')
@@ -140,12 +167,14 @@ const perPage        = ref(10)
 const page           = ref(1)
 
 // muat data assignments
+const loading = ref(true)
 async function loadAssignments() {
+  loading.value = true
   try {
-    const { data: res } = await api.get('/schedule-assignments')
-    assignments.value   = res.data
-  } catch (e) {
-    console.error('Gagal memuat schedule assignments:', e)
+    const { data } = await api.get('/schedule-assignments')
+    assignments.value = data.data
+  } finally {                   // sukses atau gagal
+    loading.value = false       // spinner hilang, data (jika ada) tampil
   }
 }
 onMounted(loadAssignments)
