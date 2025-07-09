@@ -39,7 +39,7 @@
           class="mx-auto mb-4 h-16 w-16 rounded-full object-contain shadow-lg ring-2 ring-[#0A1128]"
         />
         <h1 class="text-3xl font-extrabold tracking-wide text-[#0A1128]">
-          HRD Dashboard
+          HR Management
         </h1>
         <p class="mt-1 text-gray-600">
           Sign in to manage attendance & employees
@@ -169,20 +169,6 @@
       </form>
 
       <!-- Quick stats (slide up) -->
-      <motion-div
-        class="mt-10 grid grid-cols-2 gap-6 text-center"
-        :initial="{ opacity: 0, y: 20 }"
-        :enter="{ opacity: 1, y: 0, delay: 0.3 }"
-      >
-        <div>
-          <p class="text-sm font-medium text-gray-400">Employees</p>
-          <span class="mt-1 block text-lg font-extrabold text-[#044eb5]">128</span>
-        </div>
-        <div>
-          <p class="text-sm font-medium text-gray-400">Present Today</p>
-          <span class="mt-1 block text-lg font-extrabold text-[#044eb5]">120</span>
-        </div>
-      </motion-div>
 
       <p class="mt-10 text-center text-xs text-gray-400">
         PT Towuti Karya Abadi v1.2 © 2025 Company

@@ -269,8 +269,8 @@
                   class="border-b even:bg-gray-50 dark:even:bg-gray-700 hover:bg-indigo-50 dark:hover:bg-gray-600 transition-colors"
                 >
                   <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ att.employee_code }}</td>
-                  <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ att.employee.name }}</td>
-                  <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ att.employee.position.position_name }}</td>
+                  <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ att.employee?.name || '—' }}</td>
+                  <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ att.employee?.position?.position_name || '—' }}</td>
                   <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ formatDate(att.attendance_date) }}</td>
                   <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ att.check_in ? formatTime(att.check_in) : '-' }}</td>
                   <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ att.check_out ? formatTime(att.check_out) : '-' }}</td>
@@ -397,7 +397,13 @@ function clearFilters(){
 
 /* ==================== OPTIONS LIST ==================== */
 const statuses  = computed(()=>[...new Set(attendances.value.map(a=>a.status))])
-const positions = computed(()=>[...new Set(attendances.value.map(a=>a.employee.position.position_name))])
+const positions = computed(() => [
+  ...new Set(
+    attendances.value
+      .map(a => a.employee?.position?.position_name || 'Tanpa Jabatan')
+      .filter(Boolean)        // hapus null/'' jika tak ingin label khusus
+  )
+])
 const exportOptions = computed(()=>{
   const m=new Map()
   attendances.value.forEach(a=>{ if(!m.has(a.employee_code)) m.set(a.employee_code,a.employee.name) })
@@ -444,17 +450,27 @@ const isFiltered = computed(()=>(
   dateFrom.value!==todayISO || dateTo.value!==todayISO
 ))
 const totalCount = computed(()=>filtered.value.length)
-const positionSummary = computed(()=>{
-  const m={}
-  filtered.value.forEach(a=>{
-    const pos=a.employee.position.position_name
-    if(!m[pos]) m[pos]={total:0,absent:0,leave:0}
+const positionSummary = computed(() => {
+  const m = {}
+  filtered.value.forEach(a => {
+    // pakai optional chaining & fallback
+    const pos = a.employee?.position?.position_name || '— Semua Jabatan —'
+
+    if (!m[pos]) {
+      m[pos] = { total: 0, absent: 0, leave: 0 }
+    }
     m[pos].total++
-    if(['cuti','izin'].includes(a.status)) m[pos].leave++
-    if(['alpha','absent'].includes(a.status)) m[pos].absent++
+
+    if (['cuti', 'izin'].includes(a.status)) {
+      m[pos].leave++
+    }
+    if (['alpha', 'absent'].includes(a.status)) {
+      m[pos].absent++
+    }
   })
   return m
 })
+
 
 /* ==================== DETAIL ==================== */
 function viewDetail(a){

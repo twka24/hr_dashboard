@@ -217,11 +217,21 @@ const pendingCount   = computed(()=> leaveRequests.value.filter(r=>r.status==='p
 const onLeaveCount   = computed(()=> attendances.value.filter(a=>['cuti','izin'].includes(a.status)&&a.attendance_date===todayStr).length)
 
 /* ---------- Data ter-filter untuk grafik ---------- */
-const filteredAttendances = computed(()=> attendances.value.filter(a=>{
-  const monthOk = a.attendance_date.slice(0,7) === chartMonth.value
-  const posOk   = chartPosition.value==='' || a.employee.position.position_name === chartPosition.value
-  return monthOk && posOk
-}))
+const filteredAttendances = computed(() =>
+  attendances.value.filter(a => {
+    // filter berdasarkan bulan
+    const monthOk = a.attendance_date.slice(0, 7) === chartMonth.value
+
+    // guard untuk posisi: kalau employee/position null maka posName jadi ''
+    const posName = a.employee?.position?.position_name || ''
+
+    // filter berdasarkan posisi ('' artinya semua)
+    const posOk = chartPosition.value === '' || posName === chartPosition.value
+
+    return monthOk && posOk
+  })
+)
+
 
 /* === ⇢ 1. DATA PER-TANGGAL (grafik) ===================================== */
 const dailySummary = computed(()=>{
@@ -249,14 +259,29 @@ const summaryPerEmployee = computed(()=>{
     .filter(e=> chartPosition.value===''||e.position.position_name===chartPosition.value)
     .forEach(e=> map[e.name]={hadir:0,cuti:0,izin:0,alpha:0})
 
-  filteredAttendances.value.forEach(a=>{
-    const rec=map[a.employee.name]; if(!rec) return
-    if(['hadir','late'].includes(a.status)) rec.hadir++
-    else if(a.status==='cuti') rec.cuti++
-    else if(a.status==='izin') rec.izin++
-    else rec.alpha++
-  })
-  return Object.entries(map).map(([name,val])=>({name,...val}))
+  filteredAttendances.value.forEach(a => {
+  // guard: jika a.employee atau name tidak ada, skip
+  const empName = a.employee?.name;
+  if (!empName) return;
+
+  const rec = map[empName];
+  if (!rec) return;
+
+  if (['hadir', 'late'].includes(a.status)) {
+    rec.hadir++;
+  }
+  else if (a.status === 'cuti') {
+    rec.cuti++;
+  }
+  else if (a.status === 'izin') {
+    rec.izin++;
+  }
+  else {
+    rec.alpha++;
+  }
+});
+
+return Object.entries(map).map(([name, val]) => ({ name, ...val }));
 })
 
 /* === ⇢ 3. GRAFIK ======================================================== */

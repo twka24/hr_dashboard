@@ -61,25 +61,25 @@
             <div>
               <p class="text-sm text-gray-500 dark:text-gray-400">Kode Karyawan</p>
               <p class="font-medium text-gray-800 dark:text-gray-100">
-                {{ attendance.employee.employee_code }}
+                {{ attendance.employee?.employee_code  || '-'}}
               </p>
             </div>
             <div>
               <p class="text-sm text-gray-500 dark:text-gray-400">Nama</p>
               <p class="font-medium text-gray-800 dark:text-gray-100">
-                {{ attendance.employee.name }}
+                {{ attendance.employee?.name || '-' }}
               </p>
             </div>
             <div>
               <p class="text-sm text-gray-500 dark:text-gray-400">Posisi</p>
               <p class="font-medium text-gray-800 dark:text-gray-100">
-                {{ attendance.employee.position.position_name || '— Semua Jabatan —' }}
+                {{ attendance.employee?.position?.position_name || 'Semua Jabatan' }}
               </p>
             </div>
             <div>
               <p class="text-sm text-gray-500 dark:text-gray-400">Tanggal</p>
               <p class="font-medium text-gray-800 dark:text-gray-100">
-                {{ formatDate(attendance.attendance_date) }}
+                {{ formatDate(attendance.attendance_date) || '-'}}
               </p>
             </div>
 
