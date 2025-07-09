@@ -769,15 +769,25 @@ async function deleteEmployee() {
 
 
 <style scoped>
+/***** Scrollbar for horizontal table on mobile *****/
+.custom-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: theme('colors.indigo.400');
+  border-radius: 9999px;
+}
+
+/* Sticky table header */
 thead tr {
   position: sticky;
   top: 0;
   z-index: 10;
 }
-/* fade transition */
+
+/* Transitions (reuse existing) */
 .fade-enter-active, .fade-leave-active { transition: opacity .25s }
 .fade-enter-from, .fade-leave-to { opacity: 0 }
-/* slide-fade for toast */
 .slide-fade-enter-active, .slide-fade-leave-active { transition: all .3s }
 .slide-fade-enter-from, .slide-fade-leave-to { transform: translateY(-10px); opacity: 0 }
 </style>
