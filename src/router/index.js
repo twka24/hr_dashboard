@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import RequestDetail from '@/pages/management_requests/RequestDetail.vue'
 
 const routes = [
@@ -76,7 +76,7 @@ const routes = [
         meta: { requiresAuth: true },
       },
      {
-        path: '/schedule-assignments/:id',
+        path: 'schedule-assignments/:id',
         name: 'DetailScheduleAssignments',
         component: () => import('@/pages/schedules/DetailScheduleAssignments.vue'),
         props: true,
@@ -122,7 +122,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 })
 
