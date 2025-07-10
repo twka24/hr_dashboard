@@ -363,18 +363,6 @@ const employeeSearch    = ref('')
 
 const nameSearch = ref('')
 
-
-
-// filter berdasarkan pencarian
-// const filteredEmployees = computed(() => {
-//   const q = employeeSearch.value.trim().toLowerCase()
-//   if (!q) return employees.value
-//   return employees.value.filter(emp =>
-//     emp.name.toLowerCase().includes(q) ||
-//     emp.position.position_name.toLowerCase().includes(q)
-//   )
-// })
-
 // helper tampilan nama karyawan
 function getEmployeeLabel(code) {
   const emp = employees.value.find(e => e.employee_code === code)
@@ -434,9 +422,8 @@ function onMonthChange() {
     allDatesInMonth.push(`${year}-${mm}-${dd}`)
   }
   form.working_days = allDatesInMonth.filter(date => {
-    const dow   = new Date(date).getDay()
     const isHol = holidayEvents.value.some(e => e.date === date)
-    return dow !== 0 && !isHol
+  return !isHol
   })
 
   nextTick(() => {
@@ -469,7 +456,7 @@ function handleDateClick(arg) {
     modalTitle.value = idx > -1 ? holidayEvents.value[idx].title : 'Libur Nasional'
     modalOpen.value  = true
   } else {
-    if (dow === 0 || holidayEvents.value.some(e => e.date === dateStr)) return
+     if (holidayEvents.value.some(e => e.date === dateStr)) return
     const i = form.working_days.indexOf(dateStr)
     if (i > -1) form.working_days.splice(i,1)
     else        form.working_days.push(dateStr)
@@ -500,7 +487,7 @@ function deleteHoliday() {
     const removed = holidayEvents.value.splice(idx,1)[0]
     if (allDatesInMonth.includes(removed.date)) {
       const wd = new Date(removed.date).getDay()
-      if (wd !== 0 && !form.working_days.includes(removed.date)) {
+     if (!form.working_days.includes(removed.date)) {
         form.working_days.push(removed.date)
       }
     }
