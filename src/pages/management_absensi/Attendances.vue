@@ -19,7 +19,7 @@
               <div v-if="absentList.length" class="px-3 py-1 bg-red-100 dark:bg-red-700 rounded-full">
                 Absen ({{ absentList.length }}): {{ absentList.map(a=>a.employee.name).join(', ') }}
               </div>
-              <div v-if="noCheckOut.length" class="px-3 py-1 bg-indigo-100 dark:bg-indigo-700 rounded-full">
+              <div v-if="noCheckOut.length" class="px-3 py-1 bg-blue-100 dark:bg-blue-700 rounded-full">
                 Belum Pulang ({{ noCheckOut.length }}): {{ noCheckOut.map(a=>a.employee.name).join(', ') }}
               </div>
             </div>
@@ -27,15 +27,15 @@
           <div class="mt-4 sm:mt-0 inline-flex rounded-lg bg-gray-100 dark:bg-gray-700">
             <button
               @click="isCalendarView = false"
-              :class="{'bg-indigo-500 text-white': !isCalendarView, 'text-gray-700 dark:text-gray-300': isCalendarView}"
-              class="px-4 py-2 rounded-l-lg hover:bg-indigo-400 transition"
+              :class="{'bg-blue-500 text-white': !isCalendarView, 'text-gray-700 dark:text-gray-300': isCalendarView}"
+              class="px-4 py-2 rounded-l-lg hover:bg-blue-400 transition"
             >
               Table View
             </button>
             <button
               @click="isCalendarView = true"
-              :class="{'bg-indigo-500 text-white': isCalendarView, 'text-gray-700 dark:text-gray-300': !isCalendarView}"
-              class="px-4 py-2 rounded-r-lg hover:bg-indigo-400 transition"
+              :class="{'bg-blue-500 text-white': isCalendarView, 'text-gray-700 dark:text-gray-300': !isCalendarView}"
+              class="px-4 py-2 rounded-r-lg hover:bg-blue-400 transition"
             >
               Calendar View
             </button>
@@ -62,7 +62,7 @@
                   v-model="searchName"
                   type="text"
                   placeholder="Cari Nama karyawan..."
-                  class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 focus:ring-2 focus:ring-indigo-500 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 pl-10 pr-4 py-2 transition"
+                  class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 focus:ring-2 focus:ring-blue-500 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 pl-10 pr-4 py-2 transition"
                 />
               </div>
             </div>
@@ -75,7 +75,7 @@
               <input
                 v-model="dateFrom"
                 type="date"
-                class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 px-3 py-2 transition"
+                class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100 px-3 py-2 transition"
               />
             </div>
 
@@ -87,7 +87,7 @@
               <input
                 v-model="dateTo"
                 type="date"
-                class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 px-3 py-2 transition"
+                class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100 px-3 py-2 transition"
               />
             </div>
 
@@ -99,7 +99,7 @@
               <div class="relative">
                 <select
                   v-model="filterPosition"
-                  class="appearance-none w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-4 pr-10 py-2 transition"
+                  class="appearance-none w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100 pl-4 pr-10 py-2 transition"
                 >
                   <option value="">— Semua Jabatan —</option>
                   <option v-for="pos in positions" :key="pos" :value="pos">
@@ -120,7 +120,7 @@
               <div class="relative">
                 <select
                   v-model="filterStatus"
-                  class="appearance-none w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-4 pr-10 py-2 transition"
+                  class="appearance-none w-full rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100 pl-4 pr-10 py-2 transition"
                 >
                   <option value="">— Semua Status —</option>
                   <option v-for="st in statuses" :key="st" :value="st">
@@ -155,7 +155,7 @@
             <div class="relative">
               <select
                 v-model="exportFilterType"
-                class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-4 pr-8 py-2 transition"
+                class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100 pl-4 pr-8 py-2 transition"
               >
                 <option value="all">Semua</option>
                 <option value="employee">Per Karyawan</option>
@@ -168,7 +168,7 @@
             <div v-if="exportFilterType==='employee'" class="relative">
               <select
                 v-model="exportCode"
-                class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-4 pr-8 py-2 transition"
+                class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100 pl-4 pr-8 py-2 transition"
               >
                 <option value="all">— Pilih Karyawan —</option>
                 <option v-for="opt in exportOptions" :key="opt.code" :value="opt.code">
@@ -182,7 +182,7 @@
             <div v-if="exportFilterType==='position'" class="relative">
               <select
                 v-model="exportPosition"
-                class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-4 pr-8 py-2 transition"
+                class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100 pl-4 pr-8 py-2 transition"
               >
                 <option value="all">— Pilih Jabatan —</option>
                 <option v-for="pos in positions" :key="pos" :value="pos">
@@ -207,7 +207,7 @@
         <!-- Content -->
         <div class="p-6 bg-white dark:bg-gray-800">
           <div v-if="loading" class="flex justify-center py-20">
-            <svg class="h-12 w-12 animate-spin text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <svg class="h-12 w-12 animate-spin text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16 8 8 0 018-8z"/>
             </svg>
@@ -223,7 +223,7 @@
           <!-- Table View -->
           <div v-if="!loading && !isCalendarView" class="overflow-x-auto">
             <table class="w-full table-auto border-collapse">
-              <thead class="bg-indigo-100 dark:bg-indigo-900">
+              <thead class="bg-blue-100 dark:bg-blue-900">
                 <tr>
                   <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-200">Kode</th>
                   <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-200">Nama</th>
@@ -239,7 +239,7 @@
                 <tr
                   v-for="att in paginated"
                   :key="att.id"
-                  class="border-b even:bg-gray-50 dark:even:bg-gray-700 hover:bg-indigo-50 dark:hover:bg-gray-600 transition-colors"
+                  class="border-b even:bg-gray-50 dark:even:bg-gray-700 hover:bg-blue-50 dark:hover:bg-gray-600 transition-colors"
                 >
                   <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ att.employee_code }}</td>
                   <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ att.employee?.name || '—' }}</td>
@@ -259,8 +259,8 @@
                     </span>
                   </td>
                   <td class="px-4 py-3 text-center">
-                    <button @click="viewDetail(att)" class="inline-flex items-center p-2 rounded-full hover:bg-indigo-100 dark:hover:bg-gray-700 transition">
-                      <EyeIcon class="h-5 w-5 text-indigo-600 dark:text-indigo-300" />
+                    <button @click="viewDetail(att)" class="inline-flex items-center p-2 rounded-full hover:bg-blue-100 dark:hover:bg-gray-700 transition">
+                      <EyeIcon class="h-5 w-5 text-blue-600 dark:text-blue-300" />
                     </button>
                   </td>
                 </tr>

@@ -7,7 +7,7 @@
           :to="{ name: 'SettingsPositions' }"
           class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
           :class="isOnPositions
-                    ? 'bg-indigo-100 dark:bg-indigo-900 font-semibold'
+                    ? 'bg-blue-100 dark:bg-blue-900 font-semibold'
                     : ''"
         >
           Positions

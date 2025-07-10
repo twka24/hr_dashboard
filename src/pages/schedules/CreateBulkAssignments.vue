@@ -43,7 +43,7 @@
           <select
             v-model="bulk.schedule_id"
             :disabled="loading"
-            class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+            class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"
           >
             <option value="" disabled>— Pilih Jadwal —</option>
             <option v-for="sch in schedules" :key="sch.id" :value="sch.id">
@@ -74,7 +74,7 @@
             <span
               v-for="emp in selectedSchedule.employees"
               :key="emp.employee_code"
-              class="bg-indigo-100 dark:bg-indigo-700 text-gray-800 dark:text-gray-100 px-3 py-1 rounded-full text-sm"
+              class="bg-blue-100 dark:bg-blue-700 text-gray-800 dark:text-gray-100 px-3 py-1 rounded-full text-sm"
             >
               {{ emp.name }}
             </span>

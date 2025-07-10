@@ -124,7 +124,7 @@
       <!-- Loading Spinner -->
       <div v-if="loading" class="flex justify-center py-20">
         <svg
-          class="h-12 w-12 animate-spin text-indigo-600"
+          class="h-12 w-12 animate-spin text-blue-600"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -199,7 +199,7 @@
               <label class="block text-sm text-gray-700 dark:text-gray-300">Tipe</label>
               <select
                 v-model="editReq.type"
-                class="w-full mt-1 rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+                class="w-full mt-1 rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"
               >
                 <option value="cuti">cuti</option>
                 <option value="izin">izin</option>
@@ -211,7 +211,7 @@
                 <input
                   v-model="editReq.start_date"
                   type="date"
-                  class="w-full mt-1 rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+                  class="w-full mt-1 rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"
                 />
               </div>
               <div class="flex-1">
@@ -219,7 +219,7 @@
                 <input
                   v-model="editReq.end_date"
                   type="date"
-                  class="w-full mt-1 rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+                  class="w-full mt-1 rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"
                 />
               </div>
             </div>
@@ -228,7 +228,7 @@
               <textarea
                 v-model="editReq.reason"
                 rows="3"
-                class="w-full mt-1 rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+                class="w-full mt-1 rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"
               ></textarea>
             </div>
           </div>

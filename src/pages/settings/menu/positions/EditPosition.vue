@@ -50,14 +50,14 @@
             <label class="block text-sm text-gray-700 dark:text-gray-300">Position Name</label>
             <input
               v-model="position.position_name"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"
             />
           </div>
           <div>
             <label class="block text-sm text-gray-700 dark:text-gray-300">Prefix</label>
             <input
               v-model="position.prefix"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"
             />
           </div>
         </div>
@@ -69,7 +69,7 @@
             <input
               v-model.number="radius"
               type="number" min="0"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"
             />
           </div>
           <div>
@@ -78,7 +78,7 @@
               v-model.number="lat"
               @change="updateMarker"
               type="number" step="0.0001"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"
             />
           </div>
           <div>
@@ -87,7 +87,7 @@
               v-model.number="lng"
               @change="updateMarker"
               type="number" step="0.0001"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"
             />
           </div>
         </div>
@@ -100,7 +100,7 @@
           ref="searchBox"
           type="text"
           placeholder="Search location..."
-          class="w-full rounded-lg border border-gray-300 px-3 py-2 mb-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+          class="w-full rounded-lg border border-gray-300 px-3 py-2 mb-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"
         />
         <div ref="mapContainer" class="w-full h-64 rounded-lg overflow-hidden border"></div>
       </div>
@@ -116,7 +116,7 @@
         <button
           @click="saveAll"
           :disabled="saving"
-          class="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition"
+          class="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition"
         >
           {{ saving ? 'Memproses…' : 'Perbarui Semua' }}
         </button>
