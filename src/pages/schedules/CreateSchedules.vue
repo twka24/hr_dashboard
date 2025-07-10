@@ -34,7 +34,7 @@
             <input
               v-model="form.schedule_name"
               type="text"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 focus:ring-blue-500"
             />
           </div>
 
@@ -43,7 +43,7 @@
             <label class="block text-sm text-gray-700 dark:text-gray-300">Karyawan</label>
             <button
               @click="openEmployeeModal"
-              class="mt-1 px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+              class="mt-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
             >
               Pilih Karyawan
             </button>
@@ -51,7 +51,7 @@
               <span
                 v-for="code in form.employee_codes"
                 :key="code"
-                class="flex items-center gap-1 bg-indigo-100 dark:bg-indigo-700 text-gray-800 dark:text-gray-100 px-2 py-1 rounded-full"
+                class="flex items-center gap-1 bg-blue-100 dark:bg-blue-700 text-gray-800 dark:text-gray-100 px-2 py-1 rounded-full"
               >
                 {{ getEmployeeLabel(code) }}
                 <button @click="removeEmployee(code)" class="text-red-500 hover:text-red-700">&times;</button>
@@ -65,7 +65,7 @@
               v-model="form.month_year"
               @input="onMonthChange"
               type="month"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 focus:ring-blue-500"
             />
           </div>
           <div class="flex items-center gap-2">
@@ -73,7 +73,7 @@
               v-model="form.is_active"
               type="checkbox"
               id="aktif"
-              class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+              class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
             />
             <label for="aktif" class="text-sm text-gray-700 dark:text-gray-300">Aktif</label>
           </div>
@@ -86,7 +86,7 @@
             <input
               v-model="form.start_time"
               type="time"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 focus:ring-blue-500"
             />
           </div>
           <div>
@@ -94,7 +94,7 @@
             <input
               v-model="form.end_time"
               type="time"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 focus:ring-blue-500"
             />
           </div>
           <div>
@@ -102,7 +102,7 @@
             <input
               v-model="form.break_start"
               type="time"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 focus:ring-blue-500"
             />
           </div>
           <div>
@@ -110,7 +110,7 @@
             <input
               v-model="form.break_end"
               type="time"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 focus:ring-blue-500"
             />
           </div>
         </div>
@@ -170,7 +170,7 @@
           <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1">Filter Jabatan</label>
           <select
             v-model="positionFilter"
-            class="w-full px-3 py-2 border rounded-lg bg-gray-50 dark:bg-gray-700 focus:ring-indigo-500"
+            class="w-full px-3 py-2 border rounded-lg bg-gray-50 dark:bg-gray-700 focus:ring-blue-500"
           >
             <option value="">— Semua Jabatan —</option>
             <option
@@ -188,7 +188,7 @@
             v-model="nameSearch"
             type="text"
             placeholder="Masukkan nama..."
-            class="w-full px-3 py-2 border rounded-lg bg-gray-50 dark:bg-gray-700 focus:ring-indigo-500"
+            class="w-full px-3 py-2 border rounded-lg bg-gray-50 dark:bg-gray-700 focus:ring-blue-500"
           />
         </div>
       </div>
@@ -204,7 +204,7 @@
                   type="checkbox"
                   :checked="allSelected"
                   @change="toggleSelectAll($event)"
-                  class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                  class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 />
               </th>
               <th class="p-2">Nama</th>
@@ -222,7 +222,7 @@
                   type="checkbox"
                   :value="emp.employee_code"
                   v-model="tempEmployeeCodes"
-                  class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                  class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 />
               </td>
               <td class="p-2">{{ emp.name }}</td>
@@ -239,7 +239,7 @@
         >Batal</button>
         <button
           @click="confirmEmployeeModal"
-          class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
         >Oke</button>
       </div>
     </div>
@@ -264,7 +264,7 @@
           v-model="modalTitle"
           type="text"
           placeholder="Judul libur"
-          class="w-full mb-4 rounded-lg border px-3 py-2 bg-gray-50 dark:bg-gray-700 focus:ring-indigo-500"
+          class="w-full mb-4 rounded-lg border px-3 py-2 bg-gray-50 dark:bg-gray-700 focus:ring-blue-500"
         />
         <div class="flex justify-end gap-2">
           <button

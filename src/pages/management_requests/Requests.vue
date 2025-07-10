@@ -41,7 +41,7 @@
           placeholder="Cari berdasarkan nama karyawan..."
           class="w-full rounded-lg bg-gray-100 dark:bg-gray-700
                  focus:bg-white dark:focus:bg-gray-600
-                 focus:ring-2 focus:ring-indigo-500
+                 focus:ring-2 focus:ring-blue-500
                  placeholder-gray-500 dark:placeholder-gray-400
                  text-gray-900 dark:text-gray-100 pl-10 pr-4 py-2 transition"
         />
@@ -55,7 +55,7 @@
         v-model="dateFrom"
         type="date"
         class="w-full rounded-lg bg-gray-100 dark:bg-gray-700
-               focus:ring-2 focus:ring-indigo-500
+               focus:ring-2 focus:ring-blue-500
                text-gray-900 dark:text-gray-100 px-3 py-2 transition"
       />
     </div>
@@ -67,7 +67,7 @@
         v-model="dateTo"
         type="date"
         class="w-full rounded-lg bg-gray-100 dark:bg-gray-700
-               focus:ring-2 focus:ring-indigo-500
+               focus:ring-2 focus:ring-blue-500
                text-gray-900 dark:text-gray-100 px-3 py-2 transition"
       />
     </div>
@@ -79,7 +79,7 @@
         <select
           v-model="filterStatus"
           class="appearance-none w-full rounded-lg bg-gray-100 dark:bg-gray-700
-                 focus:ring-2 focus:ring-indigo-500
+                 focus:ring-2 focus:ring-blue-500
                  text-gray-900 dark:text-gray-100 pl-4 pr-10 py-2 transition"
         >
           <option value="">— Semua Status —</option>
@@ -114,7 +114,7 @@
             <div class="relative">
               <select
                 v-model="exportFilterType"
-                class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-4 pr-8 py-2 transition"
+                class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100 pl-4 pr-8 py-2 transition"
               >
                 <option value="all">Semua</option>
                 <option value="employee">Per Karyawan</option>
@@ -127,7 +127,7 @@
             <div v-if="exportFilterType==='employee'" class="relative">
               <select
                 v-model="exportCode"
-                class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-4 pr-8 py-2 transition"
+                class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100 pl-4 pr-8 py-2 transition"
               >
                 <option value="all">— Pilih Karyawan —</option>
                 <option v-for="opt in exportOptions" :key="opt.code" :value="opt.code">
@@ -141,7 +141,7 @@
             <div v-if="exportFilterType==='position'" class="relative">
               <select
                 v-model="exportPosition"
-                class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-4 pr-8 py-2 transition"
+                class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100 pl-4 pr-8 py-2 transition"
               >
                 <option value="all">— Pilih Jabatan —</option>
                 <option v-for="pos in positions" :key="pos" :value="pos">
@@ -174,7 +174,7 @@
               <select
                 v-model.number="perPage"
                 @change="page = 1"
-                class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 pl-3 pr-8 py-2 transition"
+                class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100 pl-3 pr-8 py-2 transition"
               >
                 <option v-for="n in [5,10,20,50]" :key="n" :value="n">
                   Show {{ n }} rows
@@ -186,7 +186,7 @@
 
         <!-- Table / Spinner / Error -->
         <div v-if="loading" class="flex justify-center py-20">
-          <svg class="h-12 w-12 animate-spin text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <svg class="h-12 w-12 animate-spin text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16 8 8 0 018-8z"/>
           </svg>
@@ -194,7 +194,7 @@
         <div v-else>
           <div class="overflow-x-auto p-6 bg-white dark:bg-gray-800">
             <table class="w-full table-auto border-collapse">
-              <thead class="bg-indigo-100 dark:bg-indigo-900">
+              <thead class="bg-blue-100 dark:bg-blue-900">
                 <tr>
                   <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-200">Kode</th>
                   <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-200">Karyawan</th>
@@ -212,7 +212,7 @@
                 <tr
                   v-for="req in paginated"
                   :key="req.id"
-                  class="border-b even:bg-gray-50 dark:even:bg-gray-700 hover:bg-indigo-50 dark:hover:bg-gray-600 transition-colors"
+                  class="border-b even:bg-gray-50 dark:even:bg-gray-700 hover:bg-blue-50 dark:hover:bg-gray-600 transition-colors"
                 >
                   <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ req.employee_code }}</td>
                   <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ req.employee.name }}</td>
@@ -236,9 +236,9 @@
                   <td class="px-4 py-3 text-center">
                     <button
                       @click="onView(req)"
-                      class="inline-flex items-center p-2 rounded-full hover:bg-indigo-100 dark:hover:bg-gray-700 transition"
+                      class="inline-flex items-center p-2 rounded-full hover:bg-blue-100 dark:hover:bg-gray-700 transition"
                     >
-                      <EyeIcon class="h-5 w-5 text-indigo-600 dark:text-indigo-300" />
+                      <EyeIcon class="h-5 w-5 text-blue-600 dark:text-blue-300" />
                     </button>
                   </td>
                 </tr>

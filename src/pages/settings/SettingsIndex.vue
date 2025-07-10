@@ -6,14 +6,14 @@
         <RouterLink
           :to="{ name: 'SettingsPositions' }"
           class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
-          :class="isActive('SettingsPositions') ? 'bg-indigo-100 dark:bg-indigo-900 font-semibold' : ''"
+          :class="isActive('SettingsPositions') ? 'bg-blue-100 dark:bg-blue-900 font-semibold' : ''"
         >
           Positions
         </RouterLink>
         <RouterLink
           :to="{ name: 'SettingsEmployees' }"
           class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
-          :class="isActive('SettingsEmployees') ? 'bg-indigo-100 dark:bg-indigo-900 font-semibold' : ''"
+          :class="isActive('SettingsEmployees') ? 'bg-blue-100 dark:bg-blue-900 font-semibold' : ''"
         >
           Employees
         </RouterLink>

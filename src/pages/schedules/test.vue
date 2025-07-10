@@ -43,14 +43,14 @@
             <input
               v-model="schedule.schedule_name"
               type="text"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"
             />
           </div>
           <div>
             <label class="block text-sm text-gray-700 dark:text-gray-300">Position</label>
             <select
               v-model="schedule.position_code"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"
             >
               <option value="" disabled>— Pilih Jabatan —</option>
               <option :value="null">— Semua Jabatan —</option>
@@ -69,7 +69,7 @@
               v-model="schedule.month_year"
               @change="onMonthChange"
               type="month"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"
             />
           </div>
           <div class="flex items-center gap-2">
@@ -77,7 +77,7 @@
               v-model="schedule.is_active"
               type="checkbox"
               id="active"
-              class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+              class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
             />
             <label for="active" class="text-sm text-gray-700 dark:text-gray-300">Active</label>
           </div>
@@ -90,7 +90,7 @@
             <input
               v-model="schedule.start_time"
               type="time"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"
             />
           </div>
           <div>
@@ -98,7 +98,7 @@
             <input
               v-model="schedule.end_time"
               type="time"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"
             />
           </div>
           <div>
@@ -106,7 +106,7 @@
             <input
               v-model="schedule.break_start"
               type="time"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"
             />
           </div>
           <div>
@@ -114,7 +114,7 @@
             <input
               v-model="schedule.break_end"
               type="time"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"
             />
           </div>
         </div>
@@ -128,7 +128,7 @@
             <button
               @click="editingMode = (editingMode === 'mark' ? '' : 'mark')"
               :class="editingMode === 'mark'
-                ? 'bg-indigo-600 text-white'
+                ? 'bg-blue-600 text-white'
                 : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'"
               class="px-3 py-1 rounded-lg transition"
             >
@@ -137,7 +137,7 @@
             <button
               @click="editingMode = (editingMode === 'unmark' ? '' : 'unmark')"
               :class="editingMode === 'unmark'
-                ? 'bg-indigo-600 text-white'
+                ? 'bg-blue-600 text-white'
                 : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'"
               class="px-3 py-1 rounded-lg transition"
             >
@@ -157,7 +157,7 @@
         <button
           @click="saveSchedule"
           :disabled="saving"
-          class="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition"
+          class="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition"
         >
           {{ saving ? 'Menyimpan…' : 'Simpan Perubahan' }}
         </button>
@@ -217,7 +217,7 @@
               </button>
               <button
                 @click="confirmHolidayModal"
-                class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
               >
                 {{ holidayModalAction === 'mark' ? 'Tambah' : 'Hapus' }}
               </button>

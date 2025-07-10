@@ -53,7 +53,7 @@
             v-model.number="perPage"
             @change="page = 1"
             class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700
-                   focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100
+                   focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100
                    pl-3 pr-8 py-2 transition"
           >
             <option v-for="n in [5,10,20,50]" :key="n" :value="n">
@@ -70,7 +70,7 @@
       <!-- === TABEL === -->
  <div class="overflow-x-aut bg-white dark:bg-gray-800">
           <table class="w-full table-auto border-collapse">
-               <thead class="bg-indigo-100 dark:bg-indigo-900">
+               <thead class="bg-blue-100 dark:bg-blue-900">
       <tr>
         <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-200">Schedule</th>
         <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-200">Jabatan</th>
@@ -85,7 +85,7 @@
       <tr>
         <td colspan="5" class="px-4 py-12 text-center">
           <svg
-            class="animate-spin h-8 w-8 text-indigo-600 mx-auto"
+            class="animate-spin h-8 w-8 text-blue-600 mx-auto"
             xmlns="http://www.w3.org/2000/svg"
             fill="none" viewBox="0 0 24 24"
           >
@@ -104,7 +104,7 @@
         v-for="item in paginatedGrouped"
         :key="item.id"
        class="border-b even:bg-gray-50 dark:even:bg-gray-700
-                       hover:bg-indigo-50 dark:hover:bg-gray-600 transition-colors"
+                       hover:bg-blue-50 dark:hover:bg-gray-600 transition-colors"
               >
         <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ item.schedule_name }}</td>
         <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ item.position_name }}</td>

@@ -16,13 +16,13 @@
     >
       <!-- Brand -->
       <div class="flex items-center gap-3 px-4 sm:px-6 pt-6 pb-4">
-        <img src="/logo_twka.jpg" class="h-10 w-10 rounded-full ring-2 ring-indigo-500" />
-        <span class="text-lg sm:text-xl font-semibold tracking-tight">HR Dashboard</span>
+        <span class="text-lg sm:text-xl font-semibold tracking-tight">HRIS</span>
+         <img src="https://tkago.abeng.id/assets/images/logo_bengkel/wVlkHBOXDt.png" class="h-10 w-25  ring-blue-500" />
       </div>
 
       <!-- Profile card -->
       <div
-        class="relative mx-3 sm:mx-4 mb-6 rounded-2xl bg-gradient-to-tr from-indigo-50/60 to-transparent dark:from-white/10 p-4 ring-1 ring-indigo-100 dark:ring-white/10"
+        class="relative mx-3 sm:mx-4 mb-6 rounded-2xl bg-gradient-to-tr from-blue-50/60 to-transparent dark:from-white/10 p-4 ring-1 ring-blue-100 dark:ring-white/10"
       >
         <button
           @click="openEditProfile"
@@ -45,7 +45,7 @@
         <button
           @click="confirmOpen = true"
           class="mt-4 flex w-full items-center justify-center gap-2 rounded-lg
-                 bg-indigo-500/90 px-3 py-2 text-xs font-semibold text-white shadow hover:bg-indigo-600"
+                 bg-blue-500/90 px-3 py-2 text-xs font-semibold text-white shadow hover:bg-blue-600"
         >
           <ArrowLeftOnRectangleIcon class="h-4 w-4" />
           Logout
@@ -63,12 +63,12 @@
             class="group relative flex w-full items-start gap-3 overflow-hidden rounded-lg px-3 sm:px-4 py-3 text-sm font-medium transition"
             :class="[
               (item.id === 'schedules' ? scheduleGroupParent.includes(active) : active === item.id)
-               ? 'text-indigo-800 dark:text-indigo-200'
+               ? 'text-blue-800 dark:text-blue-200'
                : 'text-slate-700 dark:text-slate-300'
             ]"
           >
             <span
-              class="absolute left-0 top-0 h-full w-1 rounded-r bg-indigo-500 transition-transform"
+              class="absolute left-0 top-0 h-full w-1 rounded-r bg-blue-500 transition-transform"
               :class="[
                 (item.id === 'schedules' ? scheduleGroupParent.includes(active) : active === item.id)
                 ? 'translate-x-0'
@@ -77,7 +77,7 @@
               ]"
             />
             <span
-              class="absolute inset-0 z-0 rounded-lg bg-indigo-100/50 dark:bg-white/10 backdrop-blur-sm opacity-0 scale-95 transition-all duration-300"
+              class="absolute inset-0 z-0 rounded-lg bg-blue-100/50 dark:bg-white/10 backdrop-blur-sm opacity-0 scale-95 transition-all duration-300"
               :class="[
                 (item.id === 'schedules' ? scheduleGroupParent.includes(active) : active === item.id)
                 ? 'opacity-100 scale-100'
@@ -89,7 +89,7 @@
               class="relative z-10 h-5 w-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
               :class="[
                 (item.id === 'schedules' ? scheduleGroupParent.includes(active) : active === item.id)
-                ? 'text-indigo-500'
+                ? 'text-blue-500'
                 : '' ]"
             />
             <span class="relative z-10 flex-1 flex items-center justify-between min-w-0">
@@ -114,14 +114,14 @@
             active-class=""
             exact-active-class=""
             class="group relative flex w-auto min-w-[calc(100%-2rem)] items-center gap-3 ml-6 sm:ml-8 rounded-lg px-3 sm:px-4 py-3 text-sm font-medium transition
-                   text-slate-700 dark:text-slate-300 hover:text-indigo-800 dark:hover:text-indigo-200 hover:bg-indigo-50 dark:hover:bg-white/10"
+                   text-slate-700 dark:text-slate-300 hover:text-blue-800 dark:hover:text-blue-200 hover:bg-blue-50 dark:hover:bg-white/10"
             :class="[
               ['scheduleassignments','detailscheduleassignments','bulkassignments'].includes(active)
-              ? 'text-indigo-800 dark:text-indigo-200 bg-indigo-50 dark:bg-white/10'
+              ? 'text-blue-800 dark:text-blue-200 bg-blue-50 dark:bg-white/10'
               : '' ]"
           >
             <span
-              class="absolute left-0 top-3 h-[calc(100%-1.5rem)] w-1 rounded-r bg-indigo-500 transition-transform"
+              class="absolute left-0 top-3 h-[calc(100%-1.5rem)] w-1 rounded-r bg-blue-500 transition-transform"
               :class="[
                 ['scheduleassignments','detailscheduleassignments','bulkassignments'].includes(active)
                 ? 'translate-x-0'
@@ -131,7 +131,7 @@
               class="relative z-10 h-5 w-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
               :class="[
                 ['scheduleassignments','detailscheduleassignments','bulkassignments'].includes(active)
-                ? 'text-indigo-500'
+                ? 'text-blue-500'
                 : 'text-slate-400' ]"
             />
             <span class="relative z-10 truncate">Bulk Assignments</span>
@@ -146,19 +146,19 @@
           active-class=""
           exact-active-class=""
           class="group relative flex w-full items-start gap-3 overflow-hidden rounded-lg px-3 sm:px-4 py-3 text-sm font-medium transition"
-          :class="active === 'settings' ? 'text-indigo-800 dark:text-indigo-200' : 'text-slate-700 dark:text-slate-300'"
+          :class="active === 'settings' ? 'text-blue-800 dark:text-blue-200' : 'text-slate-700 dark:text-slate-300'"
         >
           <span
-            class="absolute left-0 top-0 h-full w-1 rounded-r bg-indigo-500 transition-transform"
+            class="absolute left-0 top-0 h-full w-1 rounded-r bg-blue-500 transition-transform"
             :class="[ active === 'settings' ? 'translate-x-0' : '-translate-x-full', 'group-hover:translate-x-0' ]"
           />
           <span
-            class="absolute inset-0 z-0 rounded-lg bg-indigo-100/50 dark:bg-white/10 backdrop-blur-sm opacity-0 scale-95 transition-all duration-300"
+            class="absolute inset-0 z-0 rounded-lg bg-blue-100/50 dark:bg-white/10 backdrop-blur-sm opacity-0 scale-95 transition-all duration-300"
             :class="active === 'settings' ? 'opacity-100 scale-100' : 'group-hover:opacity-100 group-hover:scale-100'"
           />
           <CogIcon
             class="relative z-10 h-5 w-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
-            :class="active === 'settings' ? 'text-indigo-500' : ''"
+            :class="active === 'settings' ? 'text-blue-500' : ''"
           />
           <span class="relative z-10 flex flex-col min-w-0">
             <span class="truncate">Settings</span>
@@ -194,7 +194,7 @@
         </div>
         <button
           @click="toggleDark()"
-          class="flex items-center gap-1 sm:gap-2 rounded-full px-2 sm:px-3 py-1 hover:bg-indigo-100 dark:hover:bg-white/10"
+          class="flex items-center gap-1 sm:gap-2 rounded-full px-2 sm:px-3 py-1 hover:bg-blue-100 dark:hover:bg-white/10"
         >
           <SunIcon v-if="isDark" class="h-4 w-4 sm:h-5 sm:w-5" />
           <MoonIcon v-else class="h-4 w-4 sm:h-5 sm:w-5" />
@@ -231,7 +231,7 @@
                 <input
                   v-model="editName"
                   type="text"
-                  class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+                  class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"
                 />
               </div>
               <div>
@@ -239,7 +239,7 @@
                 <input
                   v-model="editEmail"
                   type="email"
-                  class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+                  class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"
                 />
               </div>
             </div>
@@ -528,16 +528,16 @@ onMounted(() => {
  ***************************/
 .custom-scroll {
   scrollbar-width: thin;
-  scrollbar-color: theme('colors.indigo.500') transparent;
+  scrollbar-color: theme('colors.blue.500') transparent;
 }
 .custom-scroll::-webkit-scrollbar {
   width: 6px;
 }
 .custom-scroll::-webkit-scrollbar-thumb {
-  background-color: theme('colors.indigo.500');
+  background-color: theme('colors.blue.500');
   border-radius: 8px;
 }
 .custom-scroll:hover::-webkit-scrollbar-thumb {
-  background-color: theme('colors.indigo.600');
+  background-color: theme('colors.blue.600');
 }
 </style>

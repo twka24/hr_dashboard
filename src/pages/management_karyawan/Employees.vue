@@ -18,8 +18,8 @@
           <button
             @click="showAddModal = true"
             class="mt-4 sm:mt-0 inline-flex items-center gap-2
-                   rounded-lg bg-indigo-600 px-4 py-2 text-white font-medium
-                   shadow hover:bg-indigo-700 transform hover:scale-105 transition"
+                   rounded-lg bg-blue-600 px-4 py-2 text-white font-medium
+                   shadow hover:bg-blue-700 transform hover:scale-105 transition"
           >
             <PlusIcon class="h-5 w-5" /> Tambah Karyawan
           </button>
@@ -41,7 +41,7 @@
           placeholder="Cari berdasarkan nama..."
           class="w-full rounded-lg bg-gray-100 dark:bg-gray-700
                  focus:bg-white dark:focus:bg-gray-600
-                 focus:ring-2 focus:ring-indigo-500
+                 focus:ring-2 focus:ring-blue-500
                  placeholder-gray-500 dark:placeholder-gray-400
                  text-gray-900 dark:text-gray-100 pl-10 pr-4 py-2 transition"
         />
@@ -55,7 +55,7 @@
         v-model="dateFrom"
         type="date"
         class="w-full rounded-lg bg-gray-100 dark:bg-gray-700
-               focus:ring-2 focus:ring-indigo-500
+               focus:ring-2 focus:ring-blue-500
                text-gray-900 dark:text-gray-100 px-3 py-2 transition"
       />
     </div>
@@ -67,7 +67,7 @@
         v-model="dateTo"
         type="date"
         class="w-full rounded-lg bg-gray-100 dark:bg-gray-700
-               focus:ring-2 focus:ring-indigo-500
+               focus:ring-2 focus:ring-blue-500
                text-gray-900 dark:text-gray-100 px-3 py-2 transition"
       />
     </div>
@@ -79,7 +79,7 @@
         <select
           v-model="filterPosition"
           class="appearance-none w-full rounded-lg bg-gray-100 dark:bg-gray-700
-                 focus:ring-2 focus:ring-indigo-500
+                 focus:ring-2 focus:ring-blue-500
                  text-gray-900 dark:text-gray-100 pl-4 pr-10 py-2 transition"
         >
           <option value="">— Semua Jabatan —</option>
@@ -132,7 +132,7 @@
       v-model.number="perPage"
       @change="page = 1"
       class="appearance-none rounded-lg bg-gray-100 dark:bg-gray-700
-             focus:ring-2 focus:ring-indigo-500
+             focus:ring-2 focus:ring-blue-500
              text-gray-900 dark:text-gray-100
              pl-3 pr-8 py-2 transition"
     >
@@ -152,7 +152,7 @@
         <!-- Table -->
         <div class="overflow-x-auto p-6 bg-white dark:bg-gray-800">
           <table class="w-full table-auto border-collapse">
-            <thead class="bg-indigo-100 dark:bg-indigo-900">
+            <thead class="bg-blue-100 dark:bg-blue-900">
               <tr>
                 <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-200">Kode</th>
                 <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-200">Nama</th>
@@ -168,7 +168,7 @@
                 v-for="emp in paginated"
                 :key="emp.id"
                 class="border-b even:bg-gray-50 dark:even:bg-gray-700
-                       hover:bg-indigo-50 dark:hover:bg-gray-600 transition-colors"
+                       hover:bg-blue-50 dark:hover:bg-gray-600 transition-colors"
               >
                 <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ emp.employee_code }}</td>
                 <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ emp.name }}</td>
@@ -179,9 +179,9 @@
                 <td class="px-4 py-3 text-center">
                   <button
                     @click="onEdit(emp)"
-                    class="inline-flex items-center p-2 rounded-full hover:bg-indigo-100 dark:hover:bg-gray-700 transition"
+                    class="inline-flex items-center p-2 rounded-full hover:bg-blue-100 dark:hover:bg-gray-700 transition"
                   >
-                    <PencilSquareIcon class="h-5 w-5 text-indigo-600 dark:text-indigo-300" />
+                    <PencilSquareIcon class="h-5 w-5 text-blue-600 dark:text-blue-300" />
                   </button>
                 </td>
               </tr>
@@ -229,14 +229,14 @@
             <div>
               <label class="block text-sm text-gray-700 dark:text-gray-300">Nama</label>
               <input v-model="newEmp.name" type="text" placeholder="John Doe"
-                class="w-full mt-1 rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"/>
+                class="w-full mt-1 rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"/>
             </div>
             <div>
             <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1">Jabatan</label>
             <div class="flex items-center gap-2">
               <select
                 v-model="newEmp.position_code"
-                class="flex-1 rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+                class="flex-1 rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"
               >
                 <option value="">— Pilih Jabatan —</option>
                 <option
@@ -259,17 +259,17 @@
             <div>
               <label class="block text-sm text-gray-700 dark:text-gray-300">Telepon</label>
               <input v-model="newEmp.phone_number" type="text" placeholder="081234567890"
-                class="w-full mt-1 rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"/>
+                class="w-full mt-1 rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"/>
             </div>
             <div>
               <label class="block text-sm text-gray-700 dark:text-gray-300">Email</label>
               <input v-model="newEmp.email" type="email" placeholder="user@company.com"
-                class="w-full mt-1 rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"/>
+                class="w-full mt-1 rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"/>
             </div>
             <div>
               <label class="block text-sm text-gray-700 dark:text-gray-300">Password</label>
               <input v-model="newEmp.password" type="password" placeholder="******"
-                class="w-full mt-1 rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"/>
+                class="w-full mt-1 rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"/>
             </div>
           </div>
           <div class="mt-6 flex justify-end gap-3">
@@ -311,12 +311,12 @@
             <div>
               <label class="block text-sm text-gray-700 dark:text-gray-300">Nama Jabatan</label>
               <input v-model="newPosition.position_name" type="text" placeholder="Manager"
-                class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"/>
+                class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"/>
             </div>
             <div>
               <label class="block text-sm text-gray-700 dark:text-gray-300">Prefix</label>
               <input v-model="newPosition.prefix" type="text" placeholder="MNG"
-                class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"/>
+                class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500"/>
             </div>
           </div>
           <div class="mt-6 flex justify-end gap-3">
@@ -331,7 +331,7 @@
               type="button"
               @click="submitNewPosition"
               :disabled="posSubmitting"
-              class="px-4 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 disabled:opacity-50 transition"
+              class="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:opacity-50 transition"
             >
               Simpan
             </button>
@@ -357,14 +357,14 @@
                 v-model="editEmp.name"
                 type="text"
                 placeholder="Masukkan nama lengkap"
-                class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Jabatan</label>
               <select
                 v-model="editEmp.position_code"
-                class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">— Pilih Jabatan —</option>
                 <option
@@ -382,7 +382,7 @@
                 v-model="editEmp.phone_number"
                 type="text"
                 placeholder="0812xxxxxxx"
-                class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
@@ -391,7 +391,7 @@
                 v-model="editEmp.email"
                 type="email"
                 placeholder="email@domain.com"
-                class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div class="md:col-span-2">
@@ -403,7 +403,7 @@
                   v-model="editEmp.password"
                   type="password"
                   placeholder="••••••••"
-                  class="flex-1 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  class="flex-1 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <button
                   type="button"
@@ -774,7 +774,7 @@ async function deleteEmployee() {
   height: 6px;
 }
 .custom-scroll::-webkit-scrollbar-thumb {
-  background: theme('colors.indigo.400');
+  background: theme('colors.blue.400');
   border-radius: 9999px;
 }
 

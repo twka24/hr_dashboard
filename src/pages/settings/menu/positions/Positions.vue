@@ -19,7 +19,7 @@
           <h1 class="text-2xl font-bold">Settings – Positions</h1>
           <button
             @click="openAdd"
-            class="inline-flex items-center gap-2 bg-indigo-600 px-4 py-2 text-white rounded-lg hover:bg-indigo-700 transition"
+            class="inline-flex items-center gap-2 bg-blue-600 px-4 py-2 text-white rounded-lg hover:bg-blue-700 transition"
           >
             <PlusIcon class="h-5 w-5" /> Tambah Position
           </button>
@@ -31,7 +31,7 @@
           <input
             v-model="filter"
             placeholder="Filter by position name…"
-            class="flex-1 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 pl-3 pr-3 py-2 transition"
+            class="flex-1 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 pl-3 pr-3 py-2 transition"
           />
         </div>
 
@@ -95,7 +95,7 @@
                     v-model="newPos.position_name"
                     type="text"
                     placeholder="Manager"
-                    class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500 transition"
+                    class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500 transition"
                   />
                 </div>
                 <div>
@@ -104,7 +104,7 @@
                     v-model="newPos.prefix"
                     type="text"
                     placeholder="MNG"
-                    class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500 transition"
+                    class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500 transition"
                   />
                 </div>
               </div>
@@ -120,7 +120,7 @@
                   type="button"
                   @click="savePosition"
                   :disabled="loadingAdd"
-                  class="px-5 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 disabled:opacity-50 transition"
+                  class="px-5 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:opacity-50 transition"
                 >
                   {{ loadingAdd ? 'Memproses…' : 'Simpan' }}
                 </button>
