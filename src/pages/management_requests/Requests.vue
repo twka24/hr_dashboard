@@ -168,9 +168,7 @@
                 </span>
               </template>
             </template>
-            <template v-else>
-              <span class="font-semibold">Total list keseluruhan: {{ requests.length }}</span>
-            </template>
+
           </div>
            <div class="relative">
               <select

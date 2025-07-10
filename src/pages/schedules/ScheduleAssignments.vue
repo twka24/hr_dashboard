@@ -47,7 +47,6 @@
       <!-- Summary & Rows-per-page -->
       <div class="flex items-center justify-between mb-4">
         <div class="flex-1 text-center font-bold text-gray-700 dark:text-gray-300">
-          Total keseluruhan: {{ filteredGrouped.length }}
         </div>
         <div class="relative">
           <select
@@ -69,15 +68,15 @@
 
       <!-- Table -->
       <!-- === TABEL === -->
-<div class="overflow-x-auto">
-  <table class="w-full text-left table-auto">
-    <thead>
-      <tr class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
-        <th class="px-4 py-2">Schedule</th>
-        <th class="px-4 py-2">Jabatan</th>
-        <th class="px-4 py-2">Periode</th>
-        <th class="px-4 py-2">Status</th>
-        <th class="px-4 py-2">Aksi</th>
+ <div class="overflow-x-aut bg-white dark:bg-gray-800">
+          <table class="w-full table-auto border-collapse">
+               <thead class="bg-indigo-100 dark:bg-indigo-900">
+      <tr>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-200">Schedule</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-200">Jabatan</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-200">Periode</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-200">Status</th>
+        <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-200">Aksi</th>
       </tr>
     </thead>
 
@@ -104,17 +103,18 @@
       <tr
         v-for="item in paginatedGrouped"
         :key="item.id"
-        class="even:bg-gray-50 dark:even:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
-      >
-        <td class="px-4 py-2">{{ item.schedule_name }}</td>
-        <td class="px-4 py-2">{{ item.position_name }}</td>
-        <td class="px-4 py-2">{{ item.month_year }}</td>
-        <td class="px-4 py-2">
+       class="border-b even:bg-gray-50 dark:even:bg-gray-700
+                       hover:bg-indigo-50 dark:hover:bg-gray-600 transition-colors"
+              >
+        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ item.schedule_name }}</td>
+        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ item.position_name }}</td>
+        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ item.month_year }}</td>
+        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">
           <span :class="item.is_active ? 'text-green-600' : 'text-red-600'">
             {{ item.is_active ? 'Aktif' : 'Nonaktif' }}
           </span>
         </td>
-        <td class="px-4 py-2">
+        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">
           <router-link
             :to="{ name: 'DetailScheduleAssignments', params: { id: item.id } }"
             class="inline-flex items-center p-2 rounded-full hover:bg-blue-100 dark:hover:bg-gray-700 transition"
