@@ -125,12 +125,13 @@
             <LockClosedIcon
               class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400"
             />
-            <input
+           <input
               id="pass"
               v-model="password"
               type="password"
               required
               placeholder="••••••••"
+              @keyup.enter="handleSubmit"
               class="w-full rounded-lg border border-gray-300 py-2 pl-10 pr-4 outline-none focus:border-[#044eb5] focus:ring-1 focus:ring-[#044eb5]"
             />
           </div>
@@ -138,11 +139,11 @@
 
         <!-- Submit -->
        <button
-  type="button"
-  @click.prevent="handleSubmit"
-  :disabled="loading"
-  class="relative w-full overflow-hidden rounded-lg bg-gradient-to-r from-[#0A1128] to-[#d90429] py-3 font-semibold tracking-wide text-white shadow-md transition hover:shadow-xl focus:ring-2 focus:ring-[#d90429] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
->
+             type="submit"
+              @click.prevent="handleSubmit"
+              :disabled="loading"
+              class="relative w-full overflow-hidden rounded-lg bg-gradient-to-r from-[#0A1128] to-[#d90429] py-3 font-semibold tracking-wide text-white shadow-md transition hover:shadow-xl focus:ring-2 focus:ring-[#d90429] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+            >
           <span v-if="!loading">Login</span>
           <svg
             v-else

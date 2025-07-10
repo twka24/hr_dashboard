@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-wrapper p-4 sm:p-6 md:p-10 space-y-6 sm:space-y-8">
+  <div class="dashboard-wrapper container mx-auto px-4 sm:px-6 md:px-10 space-y-6 sm:space-y-8">
     <!-- ===== Header ===== -->
     <div class="flex items-center justify-between">
       <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100">
@@ -10,44 +10,36 @@
     <!-- ===== Ringkasan Organisasi ===== -->
     <section class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
       <motion-div
-        class="summary-card min-h-[120px] flex flex-col justify-between"
+        class="summary-card w-full p-4 sm:p-6 flex flex-col justify-between rounded-2xl shadow bg-white dark:bg-gray-800 min-h-[120px]"
         :initial="{ opacity: 0, y: 20 }"
         :enter="{ opacity: 1, y: 0, transition: { delay: 0.1 } }"
       >
         <p class="summary-label">Total Karyawan</p>
-        <p class="summary-value text-blue-600 dark:text-blue-400">
-          {{ totalEmployees }}
-        </p>
+        <p class="summary-value text-blue-600 dark:text-blue-400">{{ totalEmployees }}</p>
       </motion-div>
 
       <motion-div
-        class="summary-card min-h-[120px] flex flex-col justify-between"
+        class="summary-card w-full p-4 sm:p-6 flex flex-col justify-between rounded-2xl shadow bg-white dark:bg-gray-800 min-h-[120px]"
         :initial="{ opacity: 0, y: 20 }"
         :enter="{ opacity: 1, y: 0, transition: { delay: 0.2 } }"
       >
         <p class="summary-label">Permintaan Pending</p>
-        <p class="summary-value text-yellow-600 dark:text-yellow-400">
-          {{ pendingCount }}
-        </p>
+        <p class="summary-value text-yellow-600 dark:text-yellow-400">{{ pendingCount }}</p>
       </motion-div>
 
       <motion-div
-        class="summary-card min-h-[120px] flex flex-col justify-between"
+        class="summary-card w-full p-4 sm:p-6 flex flex-col justify-between rounded-2xl shadow bg-white dark:bg-gray-800 min-h-[120px]"
         :initial="{ opacity: 0, y: 20 }"
         :enter="{ opacity: 1, y: 0, transition: { delay: 0.3 } }"
       >
         <p class="summary-label">Sedang Cuti/Izin (hari ini)</p>
-        <p class="summary-value text-blue-600 dark:text-blue-400">
-          {{ onLeaveCount }}
-        </p>
+        <p class="summary-value text-blue-600 dark:text-blue-400">{{ onLeaveCount }}</p>
       </motion-div>
     </section>
 
     <!-- ===== Kehadiran Harian ===== -->
     <motion-div
-      class="bg-white dark:bg-gray-800 flex flex-col gap-6
-             p-4 sm:p-6 rounded-2xl shadow ring-1 ring-black/10 dark:ring-white/15
-             md:min-h-[56vh] lg:min-h-[50vh]"
+      class="bg-white dark:bg-gray-800 flex flex-col gap-6 p-4 sm:p-6 md:p-8 rounded-2xl shadow ring-1 ring-black/10 dark:ring-white/15"
       :initial="{ opacity: 0, y: 20 }"
       :enter="{ opacity: 1, y: 0, transition:{ delay:0.4 } }"
     >
@@ -56,8 +48,8 @@
       </h2>
 
       <!-- ===== Bar Ekspor ===== -->
-      <div class="flex flex-wrap gap-3 sm:gap-4">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+      <div class="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
+        <div class="flex-1 sm:flex-none flex flex-col sm:flex-row items-start sm:items-center gap-2">
           <label class="text-sm text-gray-600 dark:text-gray-400">Ekspor Jabatan</label>
           <select
             v-model="exportPosition"
@@ -67,7 +59,7 @@
             <option v-for="pos in positions" :key="pos" :value="pos">{{ pos }}</option>
           </select>
         </div>
-        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+        <div class="flex-1 sm:flex-none flex flex-col sm:flex-row items-start sm:items-center gap-2">
           <label class="text-sm text-gray-600 dark:text-gray-400">Dari</label>
           <input
             type="date"
@@ -75,7 +67,7 @@
             class="w-full sm:w-auto rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 px-3 py-2"
           />
         </div>
-        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+        <div class="flex-1 sm:flex-none flex flex-col sm:flex-row items-start sm:items-center gap-2">
           <label class="text-sm text-gray-600 dark:text-gray-400">Sampai</label>
           <input
             type="date"
@@ -91,9 +83,9 @@
         </button>
       </div>
 
-      <!-- ===== Filter grafik ===== -->
-      <div class="flex flex-wrap gap-3 sm:gap-4">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+      <!-- ===== Filter Grafik ===== -->
+      <div class="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
+        <div class="flex-1 sm:flex-none flex flex-col sm:flex-row items-start sm:items-center gap-2">
           <label class="text-sm text-gray-600 dark:text-gray-400">Jabatan</label>
           <select
             v-model="chartPosition"
@@ -103,8 +95,7 @@
             <option v-for="pos in positions" :key="pos" :value="pos">{{ pos }}</option>
           </select>
         </div>
-
-        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+        <div class="flex-1 sm:flex-none flex flex-col sm:flex-row items-start sm:items-center gap-2">
           <label class="text-sm text-gray-600 dark:text-gray-400">Tanggal</label>
           <input
             type="date"
@@ -120,7 +111,9 @@
           <div class="w-full h-[220px] sm:h-[260px] md:h-[280px] lg:h-[300px] relative">
             <canvas ref="chartRef"></canvas>
           </div>
-          <div class="mt-2 text-center text-sm text-gray-700 dark:text-gray-300 flex flex-wrap justify-center gap-x-3 gap-y-1">
+          <div
+            class="mt-2 text-center text-sm text-gray-700 dark:text-gray-300 flex flex-wrap justify-center gap-x-3 gap-y-1"
+          >
             <span><span class="font-medium">Hadir:</span> {{ dayCounts.hadir }}</span>
             <span><span class="font-medium">Ijin/Cuti:</span> {{ dayCounts.cutiIzin }}</span>
             <span><span class="font-medium">Alpha:</span> {{ dayCounts.alpha }}</span>
@@ -133,7 +126,7 @@
               type="text"
               v-model="searchName"
               placeholder="Cari Karyawan..."
-              class="rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 px-3 py-2 w-full sm:w-auto"
+              class="rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100 px-3 py-2 w-full sm:w-auto"
             />
             <select
               v-model="filterStatus"
@@ -169,10 +162,7 @@
                 <td class="table-cell text-center">{{ row.alpha }}</td>
               </tr>
               <tr v-if="!filteredSummaryPerEmployee.length">
-                <td
-                  colspan="5"
-                  class="px-4 py-4 text-center text-gray-500 dark:text-gray-400"
-                >
+                <td colspan="5" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">
                   Tidak ada data.
                 </td>
               </tr>
@@ -184,8 +174,7 @@
 
     <!-- ===== Requests Hari Ini ===== -->
     <motion-div
-      class="bg-white dark:bg-gray-800 flex flex-col gap-6
-             p-4 sm:p-6 rounded-2xl shadow ring-1 ring-black/10 dark:ring-white/15 mt-6"
+      class="bg-white dark:bg-gray-800 flex flex-col gap-6 p-4 sm:p-6 md:p-8 rounded-2xl shadow ring-1 ring-black/10 dark:ring-white/15 mt-6"
       :initial="{ opacity: 0, y: 20 }"
       :enter="{ opacity: 1, y: 0, transition:{ delay:0.5 } }"
     >
@@ -209,20 +198,16 @@
 
       <!-- Filter & Reset -->
       <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
-        <!-- Search -->
         <input
           v-model="reqSearch"
           type="text"
           placeholder="Cari Karyawan..."
-          class="flex-1 rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500
-                 text-gray-900 dark:text-gray-100 px-3 py-2 w-full sm:w-auto"
+          class="flex-1 rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100 px-3 py-2 w-full sm:w-auto"
         />
-        <!-- Status + Reset -->
         <div class="flex items-center space-x-3 w-full sm:w-auto">
           <select
             v-model="reqStatus"
-            class="w-full sm:w-auto rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500
-                   text-gray-900 dark:text-gray-100 px-3 py-2"
+            class="w-full sm:w-auto rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100 px-3 py-2"
           >
             <option value="">— Semua Status —</option>
             <option v-for="st in reqStatuses" :key="st" :value="st">{{ st }}</option>
@@ -312,11 +297,13 @@
   </div>
 </template>
 
+
 <script setup>
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import { Chart, registerables } from 'chart.js'
 import { useRouter } from 'vue-router'
-import * as XLSX from 'xlsx'
+import ExcelJS from 'exceljs'
+import { saveAs } from 'file-saver'
 import api from '@/services/api'
 import { EyeIcon } from '@heroicons/vue/24/outline'
 Chart.register(...registerables)
@@ -472,58 +459,180 @@ const exportData = computed(() =>
   })
 )
 
-function downloadExcel() {
-  if (!exportData.value.length) return
-  const sm = new Map()
-  exportData.value.forEach(a => {
-    const k = a.employee_code
-    if (!sm.has(k)) sm.set(k, {
-      Kode: k,
-      Nama: a.employee.name,
-      Jabatan: a.employee.position.position_name,
-      Hadir: 0, Alpha: 0, 'Ijin/Cuti': 0,
-      TglAlpha: [], TglIjinCuti: []
-    })
-    const r = sm.get(k)
-    const d = formatDate(a.attendance_date)
-    if (['hadir','late'].includes(a.status))        r.Hadir++
-    else if (['alpha','absent'].includes(a.status)) { r.Alpha++; r.TglAlpha.push(d) }
-    else                                            { r['Ijin/Cuti']++; r.TglIjinCuti.push(d) }
-  })
-  const rows = Array.from(sm.values()).map(r => ({
-    Kode: r.Kode,
-    Nama: r.Nama,
-    Jabatan: r.Jabatan,
-    Hadir: r.Hadir,
-    Alpha: r.Alpha,
-    'Ijin/Cuti': r['Ijin/Cuti'],
-    Total: r.Hadir + r.Alpha + r['Ijin/Cuti'],
-    'Tgl Alpha': r.TglAlpha.join(', '),
-    'Tgl Ijin/Cuti': r.TglIjinCuti.join(', ')
-  }))
-  let period = 'Semua_Periode'
-  if (exportFrom.value || exportTo.value) {
-    const f = exportFrom.value || exportData.value[0].attendance_date
-    const t = exportTo.value   || f
-    period = `${f}_s.d_${t}`
+function colLetter(n) {
+  let s = ''
+  while (n > 0) {
+    const m = (n - 1) % 26
+    s = String.fromCharCode(65 + m) + s
+    n = Math.floor((n - 1) / 26)
   }
-  let title = `Rekap Absensi • ${period.replace(/_/g,' ')}`
-  let fn    = `rekap_absensi_${period}.xlsx`
-  if (exportPosition.value) {
-    title += ` • Jabatan ${exportPosition.value}`
-    fn     = `rekap_${exportPosition.value}_${period}.xlsx`
-  }
-  const ws = XLSX.utils.json_to_sheet(rows, { origin:'A2' })
-  XLSX.utils.sheet_add_aoa(ws, [[title]], { origin:'A1' })
-  ws['!merges'] = [{ s:{r:0,c:0}, e:{r:0,c:Object.keys(rows[0]).length-1} }]
-  ws['!cols']   = Object.keys(rows[0]).map(() => ({ wch:18 }))
-  const wb = XLSX.utils.book_new()
-  XLSX.utils.book_append_sheet(wb, ws, 'Rekap Absensi')
-  XLSX.writeFile(wb, fn)
+  return s
 }
+function posLabel (name) {
+  return name && name !== 'null' ? name : 'Semua Jabatan'
+}
+async function downloadExcel () {
+  if (!exportData.value.length) return
 
-function formatDate(iso) {
-  return new Date(iso).toLocaleDateString('id-ID')
+  // 1️⃣ REKAP DATA per karyawan
+  const summary = new Map()
+  exportData.value.forEach(a => {
+    const key = a.employee_code
+    if (!summary.has(key)) {
+      summary.set(key, {
+        Kode    : a.employee_code,
+        Nama    : a.employee.name,
+        Jabatan : posLabel(a.employee.position.position_name),
+        Hadir   : 0,
+        Alpha   : 0,
+        Cuti    : 0,
+        Izin    : 0,
+        // untuk grid
+        TglHadir : new Set(),
+        TglAlpha : new Set(),
+        TglCuti  : new Set(),
+        TglIzin  : new Set()
+      })
+    }
+    const rec = summary.get(key)
+    const dt  = new Date(a.attendance_date)
+    const day = dt.getDate()  // 1..31
+
+    if (a.status === 'hadir' || a.status === 'late') {
+      rec.Hadir++
+      rec.TglHadir.add(day)
+    } else if (['alpha','absent'].includes(a.status)) {
+      rec.Alpha++
+      rec.TglAlpha.add(day)
+    } else if (a.status === 'cuti') {
+      rec.Cuti++
+      rec.TglCuti.add(day)
+    } else if (a.status === 'izin') {
+      rec.Izin++
+      rec.TglIzin.add(day)
+    }
+  })
+
+  // 2️⃣ Info bulan & daftar karyawan
+  const firstDate   = new Date(exportData.value[0].attendance_date)
+  const year        = firstDate.getFullYear()
+  const month       = firstDate.getMonth() + 1
+  const monthName   = firstDate.toLocaleDateString('id-ID',{ month:'long', year:'numeric' })
+  const daysInMonth = new Date(year, month, 0).getDate()
+  const employees   = Array.from(summary.values())
+
+  // 3️⃣ Siapkan workbook
+  const wb = new ExcelJS.Workbook()
+  wb.creator = 'Aplikasi Absensi'
+  wb.created = new Date()
+
+  // hitung index kolom
+  const idxCode       = 1
+  const idxName       = 2
+  const idxDayStart   = 3
+  const idxDayEnd     = idxDayStart + daysInMonth - 1
+  const idxJumlahHari = idxDayEnd + 1
+  const legendCols    = ['Hadir','Cuti','Izin','Alpha']
+  const idxLegendStart = idxJumlahHari + 1
+  const totalCols     = idxLegendStart + legendCols.length - 1
+
+  const ws = wb.addWorksheet('Absensi Bulanan', {
+    views:[{state:'frozen', ySplit:4}]
+  })
+
+  // 4️⃣ Judul & Periode
+  ws.mergeCells(`A1:${colLetter(totalCols)}1`)
+  ws.getCell('A1').value = `Absensi Karyawan PT Towuti Karya Abadi`
+  ws.getCell('A1').font  = { size:14, bold:true }
+  ws.getCell('A1').alignment = { horizontal:'center', vertical:'middle' }
+  ws.getCell('A2').value = 'Periode :'
+  ws.getCell('B2').value = monthName
+  ws.getRow(2).font = { bold:true }
+
+  // 5️⃣ Group header (baris 3)
+  ws.mergeCells(`C3:${colLetter(idxDayEnd)}3`)
+  ws.getCell('C3').value     = 'Tanggal'
+  ws.getCell('C3').alignment = { horizontal:'center' }
+  ws.getCell('C3').fill      = { type:'pattern',pattern:'solid',fgColor:{argb:'FFB7E1CD'} }
+
+  ws.mergeCells(`${colLetter(idxLegendStart)}3:${colLetter(totalCols)}3`)
+  ws.getCell(colLetter(idxLegendStart)+'3').value     = 'Keterangan'
+  ws.getCell(colLetter(idxLegendStart)+'3').alignment = { horizontal:'center' }
+  ws.getCell(colLetter(idxLegendStart)+'3').fill      = { type:'pattern',pattern:'solid',fgColor:{argb:'FFD9D9D9'} }
+
+  // 6️⃣ Detail header (baris 4)
+  const hdr = ws.getRow(4)
+  hdr.getCell(idxCode).value = 'No. Karyawan'
+  hdr.getCell(idxName).value = 'Nama'
+  // tanggal
+  for(let d=1; d<=daysInMonth; d++){
+    const c = hdr.getCell(idxDayStart + d - 1)
+    c.value     = d
+    c.alignment = { horizontal:'center' }
+    c.fill      = { type:'pattern',pattern:'solid',fgColor:{argb:'FFDFF0D8'} }
+  }
+  // Jumlah Hari
+  const sumHdr = hdr.getCell(idxJumlahHari)
+  sumHdr.value     = 'Jumlah'
+  sumHdr.alignment = { horizontal:'center' }
+  sumHdr.fill      = { type:'pattern',pattern:'solid',fgColor:{argb:'FFF4B084'} }
+
+  // legend
+  const legendColors = { Hadir:'FFB7E1CD', Cuti:'FFCCCCFF', Izin:'FFFFC000', Alpha:'FFFF0000' }
+  legendCols.forEach((lab,i)=>{
+    const c = hdr.getCell(idxLegendStart + i)
+    c.value     = lab
+    c.alignment = { horizontal:'center' }
+    c.fill      = { type:'pattern',pattern:'solid',fgColor:{argb:legendColors[lab]} }
+  })
+  hdr.font   = { bold:true }
+  hdr.height = 25
+
+  // 7️⃣ Data + hitung otomatis
+  employees.forEach((rec, i)=>{
+    const rNum = 5 + i
+    const row  = ws.getRow(rNum)
+    row.getCell(idxCode).value = rec.Kode
+    row.getCell(idxName).value = rec.Nama
+
+    // isi grid tanggal
+    for(let d=1; d<=daysInMonth; d++){
+      const c = row.getCell(idxDayStart + d - 1)
+      if (rec.TglHadir.has(d)) c.value = 'H'
+      else if (rec.TglAlpha.has(d)) c.value = 'A'
+      else if (rec.TglCuti.has(d))  c.value = 'C'
+      else if (rec.TglIzin.has(d))  c.value = 'I'
+      else c.value = ''  // kosong jika tidak ada data
+      c.alignment = { horizontal:'center' }
+    }
+
+    // hitung totals langsung dari summary
+    row.getCell(idxJumlahHari).value = rec.Hadir + rec.Cuti + rec.Izin + rec.Alpha
+
+    // isi kolom legend
+    const vals = [rec.Hadir, rec.Cuti, rec.Izin, rec.Alpha]
+    vals.forEach((v,j)=>{
+      const c = row.getCell(idxLegendStart + j)
+      c.value     = v
+      c.alignment = { horizontal:'center' }
+    })
+
+    row.height = 20
+  })
+
+  // 8️⃣ Kolom widths
+  ws.columns.forEach((c,i)=>{
+    if (i+1 === idxCode)       c.width = 15
+    else if (i+1 === idxName)  c.width = 25
+    else if (i+1 <= idxDayEnd) c.width = 4
+    else                        c.width = 12
+  })
+
+  // 9️⃣ Simpan
+  const buf = await wb.xlsx.writeBuffer()
+  saveAs(new Blob([buf],{
+    type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+  }), `absensi_${monthName.replace(' ','_').toLowerCase()}.xlsx`)
 }
 
 /* — Requests Hari Ini — */
@@ -588,7 +697,7 @@ function viewRequest(r) {
 }
 </script>
 
-<style scoped>
+<style scoped lang="postcss">
 .summary-card {
   @apply bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-2xl shadow
          ring-1 ring-black/10 dark:ring-white/15;
@@ -607,3 +716,4 @@ thead tr {
   z-index: 10;
 }
 </style>
+
