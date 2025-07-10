@@ -240,7 +240,7 @@ async function handleSubmit() {
     // 6) Berhasil: notifikasi & redirect
     successMsg.value = 'Login berhasil! Mengalihkan…'
     await new Promise(resolve => setTimeout(resolve, 1200))
-    window.location.href = '/dashboard'
+    router.push({ name: 'DashboardHome' })
 
   } catch (err) {
     // pesan error

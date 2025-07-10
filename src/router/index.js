@@ -13,7 +13,7 @@ const routes = [
     name: 'DashboardHome',
     component: () => import('@/pages/dashboard/Dashboard.vue'),
     meta: { requiresAuth: true },
-    redirect: { name: 'DashboardHome' },
+    redirect: { name: 'Dashboard' },
     children: [
       {
         path: '',
@@ -129,7 +129,7 @@ const router = createRouter({
 router.beforeEach((to, _from, next) => {
   const token = localStorage.getItem('token')
   if (to.meta.requiresAuth && !token) return next('/login')
-  if (to.meta.guest && token) return next('/dashboard')
+  if (to.meta.guest && token) return next({ name: 'DashboardHome' })
   next()
 })
 
