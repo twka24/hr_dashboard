@@ -33,7 +33,7 @@
         </div>
       </transition>
 
-      <!-- Form: pilih schedule, periode, posisi dynamic -->
+      <!-- Form: pilih schedule, periode, karyawan dynamic -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         <!-- Pilih Schedule -->
         <div>
@@ -65,47 +65,20 @@
           />
         </div>
 
-        <!-- Posisi (dynamic fields with remove) -->
-        <div>
+        <!-- Karyawan (dari response selectedSchedule.employees) -->
+        <div v-if="selectedSchedule">
           <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1">
-            Posisi
+            Karyawan
           </label>
-          <div
-            v-for="(code, idx) in bulk.position_codes"
-            :key="idx"
-            class="flex flex-col sm:flex-row items-stretch sm:items-center mb-2 gap-2"
-          >
-            <select
-              v-model="bulk.position_codes[idx]"
-              :disabled="loading"
-              class="flex-1 rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500"
+          <div class="mt-2 flex flex-wrap gap-2">
+            <span
+              v-for="emp in selectedSchedule.employees"
+              :key="emp.employee_code"
+              class="bg-indigo-100 dark:bg-indigo-700 text-gray-800 dark:text-gray-100 px-3 py-1 rounded-full text-sm"
             >
-              <option value="">Semua Jabatan</option>
-              <option
-                v-for="pos in positions"
-                :key="pos.position_code"
-                :value="pos.position_code"
-              >
-                {{ pos.position_name }}
-              </option>
-            </select>
-            <button
-              @click.prevent="removePosition(idx)"
-              type="button"
-              :disabled="loading"
-              class="text-red-600 hover:underline flex-shrink-0"
-            >
-              Hapus
-            </button>
+              {{ emp.name }}
+            </span>
           </div>
-          <button
-            @click.prevent="addPosition"
-            type="button"
-            :disabled="loading"
-            class="mt-1 text-sm text-blue-600 hover:underline"
-          >
-            + Tambah Posisi
-          </button>
         </div>
       </div>
 
@@ -201,19 +174,15 @@ const router = useRouter()
 
 // form state
 const schedules = ref([])
-const positions = ref([])
-const bulk = reactive({
-  schedule_id: '',
-  position_codes: ['']
-})
-const loading = ref(false)
-const toast = reactive({ show: false, message: '', ok: true })
+const bulk      = reactive({ schedule_id: '' })
+const loading   = ref(false)
+const toast     = reactive({ show: false, message: '', ok: true })
 
 // calendar state
-const calendarRef = ref(null)
-const calendarKey = ref(0)
+const calendarRef     = ref(null)
+const calendarKey     = ref(0)
 const allDatesInMonth = ref([])
-const calendarEvents = ref([])
+const calendarEvents  = ref([])
 
 const calendarOptions = reactive({
   plugins: [dayGridPlugin],
@@ -224,19 +193,10 @@ const calendarOptions = reactive({
   eventDisplay: 'block'
 })
 
-// selected schedule
+// selected schedule detail (harus include `.employees`)
 const selectedSchedule = computed(() =>
   schedules.value.find(s => s.id === bulk.schedule_id)
 )
-
-// reset posisi jika jadwal berubah
-watch(selectedSchedule, sch => {
-  if (sch?.position?.position_code) {
-    bulk.position_codes = [sch.position.position_code]
-  } else {
-    bulk.position_codes = ['']
-  }
-})
 
 // build calendar events saat jadwal berubah
 watch(selectedSchedule, sch => {
@@ -245,19 +205,17 @@ watch(selectedSchedule, sch => {
     return
   }
 
-  // tanggal dalam bulan
+  // tanggal di bulan terpilih
   const [year, month] = sch.month_year.split('-').map(Number)
   const dim = new Date(year, month, 0).getDate()
   allDatesInMonth.value = Array.from({ length: dim }, (_, i) => i + 1)
 
-  // set view ke bulan tsb
   calendarOptions.initialDate = `${sch.month_year}-01`
 
-  // bangun event "Libur" untuk non-working days
+  // event “Libur” utk non-working
   const evs = []
-  const working = sch.working_days || []
   for (let day of allDatesInMonth.value) {
-    if (!working.includes(day)) {
+    if (!sch.working_days.includes(day)) {
       const dd = String(day).padStart(2, '0')
       const mm = String(month).padStart(2, '0')
       evs.push({
@@ -269,10 +227,10 @@ watch(selectedSchedule, sch => {
     }
   }
   calendarEvents.value = evs
-  calendarKey.value++ // rerender
+  calendarKey.value++
 })
 
-// fetch data
+// fetch all schedules (dengan employees di setiap item)
 async function loadSchedules() {
   try {
     const { data: res } = await api.get('/schedules')
@@ -281,51 +239,17 @@ async function loadSchedules() {
     console.error(e)
   }
 }
-async function loadPositions() {
-  try {
-    const { data: res } = await api.get('/positions')
-    positions.value = res.data
-  } catch (e) {
-    console.error(e)
-  }
-}
 
-// utility
-function showToast(msg, ok = true) {
-  toast.message = msg
-  toast.ok = ok
-  toast.show = true
-  setTimeout(() => (toast.show = false), 3000)
-}
-function addPosition() {
-  bulk.position_codes.push('')
-}
-function removePosition(i) {
-  if (bulk.position_codes.length > 1) {
-    bulk.position_codes.splice(i, 1)
-  } else {
-    bulk.position_codes = ['']
-  }
-}
-
-// bulk assign
+// bulk assign hanya kirim schedule_id
 async function bulkAssign() {
   if (!selectedSchedule.value) return
   loading.value = true
   try {
-    const payloadPositions =
-      bulk.position_codes.length === 1 && !bulk.position_codes[0]
-        ? null
-        : bulk.position_codes
-
     await api.post('/schedule-assignments/bulk-assign', {
-      schedule_id: bulk.schedule_id,
-      month_year: selectedSchedule.value.month_year,
-      position_code: payloadPositions
+      schedule_id: bulk.schedule_id
     })
-
     showToast('Bulk assignments berhasil', true)
-    setTimeout(() => router.back(), 2000)
+    setTimeout(() => router.back(), 1000)
   } catch (e) {
     showToast(
       `Gagal bulk assign: ${e.response?.data?.message || e.message}`,
@@ -336,25 +260,23 @@ async function bulkAssign() {
   }
 }
 
+// helper toast
+function showToast(msg, ok = true) {
+  toast.message = msg
+  toast.ok = ok
+  toast.show = true
+  setTimeout(() => (toast.show = false), 3000)
+}
+
 // init
-onMounted(() => {
-  loadSchedules()
-  loadPositions()
-})
+onMounted(loadSchedules)
 </script>
 
 <style scoped>
 /* Animasi toast */
-.slide-fade-enter-active {
-  transition: all 0.3s ease;
-}
-.slide-fade-enter-from {
-  transform: translateY(-8px);
-  opacity: 0;
-}
+.slide-fade-enter-active { transition: all 0.3s ease; }
+.slide-fade-enter-from   { transform: translateY(-8px); opacity: 0; }
 
-/* Pastikan FullCalendar selalu muat di layar kecil */
-:deep(.fc) {
-  font-size: 0.75rem; /* perkecil font untuk mobile */
-}
+/* FullCalendar mobile-friendly */
+:deep(.fc) { font-size: 0.75rem; }
 </style>
