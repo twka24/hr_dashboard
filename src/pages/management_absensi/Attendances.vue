@@ -12,17 +12,6 @@
               Management Absensi
             </h1>
             <!-- Notifikasi -->
-            <div class="flex flex-wrap gap-4 mt-2 text-sm">
-              <div v-if="onLeave.length" class="px-3 py-1 bg-yellow-100 dark:bg-yellow-700 rounded-full">
-                Cuti/Ijin ({{ onLeave.length }}): {{ onLeave.map(a=>a.employee.name).join(', ') }}
-              </div>
-              <div v-if="absentList.length" class="px-3 py-1 bg-red-100 dark:bg-red-700 rounded-full">
-                Absen ({{ absentList.length }}): {{ absentList.map(a=>a.employee.name).join(', ') }}
-              </div>
-              <div v-if="noCheckOut.length" class="px-3 py-1 bg-blue-100 dark:bg-blue-700 rounded-full">
-                Belum Pulang ({{ noCheckOut.length }}): {{ noCheckOut.map(a=>a.employee.name).join(', ') }}
-              </div>
-            </div>
           </div>
           <div class="mt-4 sm:mt-0 inline-flex rounded-lg bg-gray-100 dark:bg-gray-700">
             <button
@@ -292,9 +281,12 @@ import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '@/services/api'
 import { MagnifyingGlassIcon, ChevronDownIcon, EyeIcon } from '@heroicons/vue/24/outline'
-import * as XLSX from 'xlsx'
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
+import ExcelJS from 'exceljs'
+import { saveAs } from 'file-saver'
+// contoh import logo sebagai Base64 (Anda bisa gunakan loader webpack atau fetch)
+const logoUrl = '/logo_twka.jpg'
 
 const router  = useRouter()
 const attendances = ref([])
@@ -475,87 +467,182 @@ const exportData = computed(()=>{
   return list
 })
 
-/* helper sudah dibuat sebelumnya
-   function posLabel(name){ return name && name!=='null' ? name : 'Semua Jabatan' } */
+// helper: angka kolom → huruf Excel (1→A, 27→AA, dst)
+function colLetter(n) {
+  let s = ''
+  while (n > 0) {
+    const m = (n - 1) % 26
+    s = String.fromCharCode(65 + m) + s
+    n = Math.floor((n - 1) / 26)
+  }
+  return s
+}
 
-/* ========================== */
-function downloadExcel () {
+async function downloadExcel () {
   if (!exportData.value.length) return
 
-  /* ==== REKAP & TANGGAL RINCI ==== */
-  const summary = new Map()          // key = employee_code
-
+  // 1️⃣ REKAP DATA per karyawan
+  const summary = new Map()
   exportData.value.forEach(a => {
     const key = a.employee_code
     if (!summary.has(key)) {
       summary.set(key, {
-        Kode        : a.employee_code,
-        Nama        : a.employee.name,
-        Jabatan     : posLabel(a.employee.position.position_name),
-        Hadir       : 0,
-        Alpha       : 0,
-        'Ijin/Cuti' : 0,
-        TglAlpha    : [],
-        TglIjinCuti : []
+        Kode    : a.employee_code,
+        Nama    : a.employee.name,
+        Jabatan : posLabel(a.employee.position.position_name),
+        Hadir   : 0,
+        Alpha   : 0,
+        Cuti    : 0,
+        Izin    : 0,
+        // untuk grid
+        TglHadir : new Set(),
+        TglAlpha : new Set(),
+        TglCuti  : new Set(),
+        TglIzin  : new Set()
       })
     }
-    const rec  = summary.get(key)
-    const dStr = formatDate(a.attendance_date)      // fungsi formatDate sudah ada
+    const rec = summary.get(key)
+    const dt  = new Date(a.attendance_date)
+    const day = dt.getDate()  // 1..31
 
     if (a.status === 'hadir' || a.status === 'late') {
       rec.Hadir++
-    } else if (['alpha', 'absent'].includes(a.status)) {
+      rec.TglHadir.add(day)
+    } else if (['alpha','absent'].includes(a.status)) {
       rec.Alpha++
-      rec.TglAlpha.push(dStr)
-    } else if (['cuti', 'izin'].includes(a.status)) {
-      rec['Ijin/Cuti']++
-      rec.TglIjinCuti.push(dStr)
+      rec.TglAlpha.add(day)
+    } else if (a.status === 'cuti') {
+      rec.Cuti++
+      rec.TglCuti.add(day)
+    } else if (a.status === 'izin') {
+      rec.Izin++
+      rec.TglIzin.add(day)
     }
   })
 
-  const rows = Array.from(summary.values()).map(r => ({
-    Kode        : r.Kode,
-    Nama        : r.Nama,
-    Jabatan     : r.Jabatan,
-    Hadir       : r.Hadir,
-    Alpha       : r.Alpha,
-    'Ijin/Cuti' : r['Ijin/Cuti'],
-    Total       : r.Hadir + r.Alpha + r['Ijin/Cuti'],
-    'Tgl Alpha'     : r.TglAlpha.join(', '),
-    'Tgl Ijin/Cuti' : r.TglIjinCuti.join(', ')
-  }))
+  // 2️⃣ Info bulan & daftar karyawan
+  const firstDate   = new Date(exportData.value[0].attendance_date)
+  const year        = firstDate.getFullYear()
+  const month       = firstDate.getMonth() + 1
+  const monthName   = firstDate.toLocaleDateString('id-ID',{ month:'long', year:'numeric' })
+  const daysInMonth = new Date(year, month, 0).getDate()
+  const employees   = Array.from(summary.values())
 
-  /* ==== JUDUL & NAMA FILE (bulan-tahun) ==== */
-  // asumsikan data dalam bulan yang sama → ambil tanggal pertama
-  let bulanTahun = 'Semua Periode'
-  if (exportData.value.length) {
-    bulanTahun = new Date(exportData.value[0].attendance_date)
-      .toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })   // ex: "Juli 2025"
+  // 3️⃣ Siapkan workbook
+  const wb = new ExcelJS.Workbook()
+  wb.creator = 'Aplikasi Absensi'
+  wb.created = new Date()
+
+  // hitung index kolom
+  const idxCode       = 1
+  const idxName       = 2
+  const idxDayStart   = 3
+  const idxDayEnd     = idxDayStart + daysInMonth - 1
+  const idxJumlahHari = idxDayEnd + 1
+  const legendCols    = ['Hadir','Cuti','Izin','Alpha']
+  const idxLegendStart = idxJumlahHari + 1
+  const totalCols     = idxLegendStart + legendCols.length - 1
+
+  const ws = wb.addWorksheet('Absensi Bulanan', {
+    views:[{state:'frozen', ySplit:4}]
+  })
+
+  // 4️⃣ Judul & Periode
+  ws.mergeCells(`A1:${colLetter(totalCols)}1`)
+  ws.getCell('A1').value = `Absensi Karyawan PT Towuti Karya Abadi`
+  ws.getCell('A1').font  = { size:14, bold:true }
+  ws.getCell('A1').alignment = { horizontal:'center', vertical:'middle' }
+  ws.getCell('A2').value = 'Periode :'
+  ws.getCell('B2').value = monthName
+  ws.getRow(2).font = { bold:true }
+
+  // 5️⃣ Group header (baris 3)
+  ws.mergeCells(`C3:${colLetter(idxDayEnd)}3`)
+  ws.getCell('C3').value     = 'Tanggal'
+  ws.getCell('C3').alignment = { horizontal:'center' }
+  ws.getCell('C3').fill      = { type:'pattern',pattern:'solid',fgColor:{argb:'FFB7E1CD'} }
+
+  ws.mergeCells(`${colLetter(idxLegendStart)}3:${colLetter(totalCols)}3`)
+  ws.getCell(colLetter(idxLegendStart)+'3').value     = 'Keterangan'
+  ws.getCell(colLetter(idxLegendStart)+'3').alignment = { horizontal:'center' }
+  ws.getCell(colLetter(idxLegendStart)+'3').fill      = { type:'pattern',pattern:'solid',fgColor:{argb:'FFD9D9D9'} }
+
+  // 6️⃣ Detail header (baris 4)
+  const hdr = ws.getRow(4)
+  hdr.getCell(idxCode).value = 'No. Karyawan'
+  hdr.getCell(idxName).value = 'Nama'
+  // tanggal
+  for(let d=1; d<=daysInMonth; d++){
+    const c = hdr.getCell(idxDayStart + d - 1)
+    c.value     = d
+    c.alignment = { horizontal:'center' }
+    c.fill      = { type:'pattern',pattern:'solid',fgColor:{argb:'FFDFF0D8'} }
   }
+  // Jumlah Hari
+  const sumHdr = hdr.getCell(idxJumlahHari)
+  sumHdr.value     = 'Jumlah'
+  sumHdr.alignment = { horizontal:'center' }
+  sumHdr.fill      = { type:'pattern',pattern:'solid',fgColor:{argb:'FFF4B084'} }
 
-  let title = `Rekap Absensi • ${bulanTahun}`
-  let fn    = `rekap_absensi_${bulanTahun.replace(' ', '_').toLowerCase()}.xlsx`
+  // legend
+  const legendColors = { Hadir:'FFB7E1CD', Cuti:'FFCCCCFF', Izin:'FFFFC000', Alpha:'FFFF0000' }
+  legendCols.forEach((lab,i)=>{
+    const c = hdr.getCell(idxLegendStart + i)
+    c.value     = lab
+    c.alignment = { horizontal:'center' }
+    c.fill      = { type:'pattern',pattern:'solid',fgColor:{argb:legendColors[lab]} }
+  })
+  hdr.font   = { bold:true }
+  hdr.height = 25
 
-  if (exportFilterType.value === 'employee' && exportCode.value !== 'all') {
-    title += ` • ${rows[0].Nama}`
-    fn     = `rekap_${exportCode.value}_${bulanTahun.replace(' ', '_').toLowerCase()}.xlsx`
-  } else if (exportFilterType.value === 'position' && exportPosition.value !== 'all') {
-    title += ` • Jabatan ${exportPosition.value}`
-    fn     = `rekap_jabatan_${exportPosition.value}_${bulanTahun.replace(' ', '_').toLowerCase()}.xlsx`
-  }
+  // 7️⃣ Data + hitung otomatis
+  employees.forEach((rec, i)=>{
+    const rNum = 5 + i
+    const row  = ws.getRow(rNum)
+    row.getCell(idxCode).value = rec.Kode
+    row.getCell(idxName).value = rec.Nama
 
-  /* ==== TULIS KE EXCEL ==== */
-  const ws = XLSX.utils.json_to_sheet(rows, { origin: 'A2' })
-  XLSX.utils.sheet_add_aoa(ws, [[title]], { origin: 'A1' })
+    // isi grid tanggal
+    for(let d=1; d<=daysInMonth; d++){
+      const c = row.getCell(idxDayStart + d - 1)
+      if (rec.TglHadir.has(d)) c.value = 'H'
+      else if (rec.TglAlpha.has(d)) c.value = 'A'
+      else if (rec.TglCuti.has(d))  c.value = 'C'
+      else if (rec.TglIzin.has(d))  c.value = 'I'
+      else c.value = ''  // kosong jika tidak ada data
+      c.alignment = { horizontal:'center' }
+    }
 
-  const colCount  = Object.keys(rows[0]).length
-  ws['!merges']   = [{ s: { r: 0, c: 0 }, e: { r: 0, c: colCount - 1 } }]
-  ws['!cols']     = Array(colCount).fill({ wch: 18 })
+    // hitung totals langsung dari summary
+    row.getCell(idxJumlahHari).value = rec.Hadir + rec.Cuti + rec.Izin + rec.Alpha
 
-  const wb = XLSX.utils.book_new()
-  XLSX.utils.book_append_sheet(wb, ws, 'Rekap Absensi')
-  XLSX.writeFile(wb, fn)
+    // isi kolom legend
+    const vals = [rec.Hadir, rec.Cuti, rec.Izin, rec.Alpha]
+    vals.forEach((v,j)=>{
+      const c = row.getCell(idxLegendStart + j)
+      c.value     = v
+      c.alignment = { horizontal:'center' }
+    })
+
+    row.height = 20
+  })
+
+  // 8️⃣ Kolom widths
+  ws.columns.forEach((c,i)=>{
+    if (i+1 === idxCode)       c.width = 15
+    else if (i+1 === idxName)  c.width = 25
+    else if (i+1 <= idxDayEnd) c.width = 4
+    else                        c.width = 12
+  })
+
+  // 9️⃣ Simpan
+  const buf = await wb.xlsx.writeBuffer()
+  saveAs(new Blob([buf],{
+    type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+  }), `absensi_${monthName.replace(' ','_').toLowerCase()}.xlsx`)
 }
+
+
 /* ========================== */
 
 
