@@ -344,15 +344,29 @@ function formatTime (value) {
 /* ==================== DATA LOADING ==================== */
 async function loadAttendances(){
   loading.value = true
-  try{
+  try {
     const res = await api.get('/attendances')
-    attendances.value = res.data.data
-  }catch{
+    // 1) Ambil data mentah
+    const raw = res.data.data
+
+    // 2) Saring semua record yang deleted_at-nya bukan null
+    //    dan juga pastikan employee (jika ada) tidak soft-deleted
+    const clean = raw.filter(a =>
+      // jika a.deleted_at ada dan bukan null, buang
+      a.deleted_at === null
+      // jika nested employee.deleted_at ada dan bukan null, buang
+      && (a.employee?.deleted_at ?? null) === null
+    )
+
+    attendances.value = clean
+  } catch {
     error.value = 'Gagal memuat data absensi.'
-  }finally{
+  } finally {
     loading.value = false
   }
 }
+
+
 onMounted(loadAttendances)
 
 /* ==================== CLEAR FILTERS ==================== */

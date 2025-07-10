@@ -57,35 +57,35 @@
 
       <!-- ===== Bar Ekspor ===== -->
       <div class="flex flex-wrap gap-3 sm:gap-4">
-        <div class="flex items-center gap-2">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
           <label class="text-sm text-gray-600 dark:text-gray-400">Ekspor Jabatan</label>
           <select
             v-model="exportPosition"
-            class="rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 pl-3 pr-3 py-2"
+            class="w-full sm:w-auto rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 px-3 py-2"
           >
             <option value="">— Semua Jabatan —</option>
             <option v-for="pos in positions" :key="pos" :value="pos">{{ pos }}</option>
           </select>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
           <label class="text-sm text-gray-600 dark:text-gray-400">Dari</label>
           <input
             type="date"
             v-model="exportFrom"
-            class="rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 pl-3 pr-3 py-2"
+            class="w-full sm:w-auto rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 px-3 py-2"
           />
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
           <label class="text-sm text-gray-600 dark:text-gray-400">Sampai</label>
           <input
             type="date"
             v-model="exportTo"
-            class="rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 pl-3 pr-3 py-2"
+            class="w-full sm:w-auto rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 px-3 py-2"
           />
         </div>
         <button
           @click="downloadExcel"
-          class="px-4 py-2 bg-emerald-500 text-white rounded-full hover:bg-emerald-600 transition-transform hover:scale-105"
+          class="w-full sm:w-auto px-4 py-2 bg-emerald-500 text-white rounded-full hover:bg-emerald-600 transition-transform hover:scale-105"
         >
           Ekspor Excel
         </button>
@@ -93,94 +93,93 @@
 
       <!-- ===== Filter grafik ===== -->
       <div class="flex flex-wrap gap-3 sm:gap-4">
-        <div class="flex items-center gap-2">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
           <label class="text-sm text-gray-600 dark:text-gray-400">Jabatan</label>
           <select
             v-model="chartPosition"
-            class="rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 pl-3 pr-3 py-2"
+            class="w-full sm:w-auto rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 px-3 py-2"
           >
             <option value="">— Semua Jabatan —</option>
             <option v-for="pos in positions" :key="pos" :value="pos">{{ pos }}</option>
           </select>
         </div>
 
-        <div class="flex items-center gap-2">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
           <label class="text-sm text-gray-600 dark:text-gray-400">Tanggal</label>
           <input
             type="date"
             v-model="chartDate"
-            class="rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 pl-3 pr-3 py-2"
+            class="w-full sm:w-auto rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 px-3 py-2"
           />
         </div>
       </div>
 
       <!-- ===== Grafik & Tabel Kehadiran ===== -->
       <div class="flex flex-col lg:flex-row gap-6 flex-1">
-  <div class="w-full lg:w-1/3 xl:w-1/4 flex flex-col items-center">
-    <div class="w-full h-[220px] sm:h-[260px] md:h-[280px] lg:h-[300px] relative">
-      <canvas ref="chartRef"></canvas>
-    </div>
-    <div class="mt-2 text-center text-sm text-gray-700 dark:text-gray-300 flex flex-wrap justify-center gap-x-3 gap-y-1">
-      <span><span class="font-medium">Hadir:</span> {{ dayCounts.hadir }}</span>
-      <span><span class="font-medium">Ijin/Cuti:</span> {{ dayCounts.cutiIzin }}</span>
-      <span><span class="font-medium">Alpha:</span> {{ dayCounts.alpha }}</span>
-    </div>
-  </div>
+        <div class="w-full lg:w-1/3 xl:w-1/4 flex flex-col items-center">
+          <div class="w-full h-[220px] sm:h-[260px] md:h-[280px] lg:h-[300px] relative">
+            <canvas ref="chartRef"></canvas>
+          </div>
+          <div class="mt-2 text-center text-sm text-gray-700 dark:text-gray-300 flex flex-wrap justify-center gap-x-3 gap-y-1">
+            <span><span class="font-medium">Hadir:</span> {{ dayCounts.hadir }}</span>
+            <span><span class="font-medium">Ijin/Cuti:</span> {{ dayCounts.cutiIzin }}</span>
+            <span><span class="font-medium">Alpha:</span> {{ dayCounts.alpha }}</span>
+          </div>
+        </div>
 
-  <div class="flex-1 overflow-x-auto max-h-[45vh]">
-    <div class="flex flex-col sm:flex-row items-center justify-end mb-3 gap-3">
-      <input
-        type="text"
-        v-model="searchName"
-        placeholder="Cari Karyawan..."
-        class="rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 px-3 py-2 w-full sm:w-auto"
-      />
-      <select
-        v-model="filterStatus"
-        class="rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 px-3 py-2 w-full sm:w-auto"
-      >
-        <option value="">— Semua Status —</option>
-        <option value="hadir">Hadir</option>
-        <option value="cutiIzin">Ijin/Cuti</option>
-        <option value="alpha">Alpha</option>
-      </select>
-    </div>
+        <div class="flex-1 overflow-x-auto max-h-[45vh]">
+          <div class="flex flex-col sm:flex-row items-center justify-end mb-3 gap-3">
+            <input
+              type="text"
+              v-model="searchName"
+              placeholder="Cari Karyawan..."
+              class="rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 px-3 py-2 w-full sm:w-auto"
+            />
+            <select
+              v-model="filterStatus"
+              class="rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 px-3 py-2 w-full sm:w-auto"
+            >
+              <option value="">— Semua Status —</option>
+              <option value="hadir">Hadir</option>
+              <option value="cutiIzin">Ijin/Cuti</option>
+              <option value="alpha">Alpha</option>
+            </select>
+          </div>
 
-    <table class="min-w-full text-sm text-gray-700 dark:text-gray-300">
-      <thead class="sticky top-0 bg-gray-100 dark:bg-gray-700">
-        <tr>
-          <th class="table-head">Karyawan</th>
-          <th class="table-head text-center">Hadir</th>
-          <th class="table-head text-center">Cuti</th>
-          <th class="table-head text-center">Izin</th>
-          <th class="table-head text-center">Alpha</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="row in filteredSummaryPerEmployee"
-          :key="row.name"
-          class="border-b border-gray-200 dark:border-gray-600 whitespace-nowrap"
-        >
-          <td class="table-cell">{{ row.name }}</td>
-          <td class="table-cell text-center">{{ row.hadir }}</td>
-          <td class="table-cell text-center">{{ row.cuti }}</td>
-          <td class="table-cell text-center">{{ row.izin }}</td>
-          <td class="table-cell text-center">{{ row.alpha }}</td>
-        </tr>
-        <tr v-if="!filteredSummaryPerEmployee.length">
-          <td
-            colspan="5"
-            class="px-4 py-4 text-center text-gray-500 dark:text-gray-400"
-          >
-            Tidak ada data.
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
+          <table class="min-w-full text-sm text-gray-700 dark:text-gray-300">
+            <thead class="sticky top-0 bg-gray-100 dark:bg-gray-700">
+              <tr>
+                <th class="table-head">Karyawan</th>
+                <th class="table-head text-center">Hadir</th>
+                <th class="table-head text-center">Cuti</th>
+                <th class="table-head text-center">Izin</th>
+                <th class="table-head text-center">Alpha</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="row in filteredSummaryPerEmployee"
+                :key="row.name"
+                class="border-b border-gray-200 dark:border-gray-600 whitespace-nowrap"
+              >
+                <td class="table-cell">{{ row.name }}</td>
+                <td class="table-cell text-center">{{ row.hadir }}</td>
+                <td class="table-cell text-center">{{ row.cuti }}</td>
+                <td class="table-cell text-center">{{ row.izin }}</td>
+                <td class="table-cell text-center">{{ row.alpha }}</td>
+              </tr>
+              <tr v-if="!filteredSummaryPerEmployee.length">
+                <td
+                  colspan="5"
+                  class="px-4 py-4 text-center text-gray-500 dark:text-gray-400"
+                >
+                  Tidak ada data.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </motion-div>
 
     <!-- ===== Requests Hari Ini ===== -->
@@ -216,21 +215,21 @@
           type="text"
           placeholder="Cari Karyawan..."
           class="flex-1 rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500
-                 text-gray-900 dark:text-gray-100 pl-3 pr-3 py-2"
+                 text-gray-900 dark:text-gray-100 px-3 py-2 w-full sm:w-auto"
         />
         <!-- Status + Reset -->
-        <div class="flex items-center space-x-3">
+        <div class="flex items-center space-x-3 w-full sm:w-auto">
           <select
             v-model="reqStatus"
-            class="w-40 rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500
-                   text-gray-900 dark:text-gray-100 pl-4 pr-10 py-2"
+            class="w-full sm:w-auto rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500
+                   text-gray-900 dark:text-gray-100 px-3 py-2"
           >
             <option value="">— Semua Status —</option>
             <option v-for="st in reqStatuses" :key="st" :value="st">{{ st }}</option>
           </select>
           <button
             @click="resetReqFilter"
-            class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+            class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition w-full sm:w-auto"
           >
             Reset
           </button>
@@ -248,10 +247,10 @@
               <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-200">Tipe</th>
               <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-200">Start</th>
               <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-200">End</th>
-              <th class="px-4 py-3 text-left font-semibold text-gray-700 dark;text-gray-200">Alasan</th>
-              <th class="px-4 py-3 text-left font-semibold text-gray-700 dark;text-gray-200">Status</th>
-              <th class="px-4 py-3 text-left font-semibold text-gray-700 dark;text-gray-200">Dibuat</th>
-              <th class="px-4 py-3 text-center font-semibold text-gray-700 dark;text-gray-200">Aksi</th>
+              <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-200">Alasan</th>
+              <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-200">Status</th>
+              <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-200">Dibuat</th>
+              <th class="px-4 py-3 text-center font-semibold text-gray-700 dark:text-gray-200">Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -306,7 +305,7 @@
         <button
           @click="nextPage"
           :disabled="page===totalPageCount"
-          class="px-3 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark;text-gray-200 disabled:opacity-50"
+          class="px-3 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
         >Next</button>
       </div>
     </motion-div>
@@ -316,12 +315,14 @@
 <script setup>
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import { Chart, registerables } from 'chart.js'
+import { useRouter } from 'vue-router'
 import * as XLSX from 'xlsx'
 import api from '@/services/api'
 import { EyeIcon } from '@heroicons/vue/24/outline'
 Chart.register(...registerables)
 
 /* — Kehadiran — */
+const router       = useRouter()
 const positionsList = ref([])
 const employeesList = ref([])
 const leaveRequests  = ref([])
@@ -345,13 +346,31 @@ onMounted(async () => {
     api.get('/leave-requests/all'),
     api.get('/attendances')
   ])
+
   positionsList.value = posRes.data.data
   employeesList.value = empRes.data.data
   leaveRequests.value  = lrRes.data.data
-  attendances.value    = attRes.data.data
+
+  // 1) Ambil raw data
+  const rawAttendances = attRes.data.data
+
+  // 2) Filter out semua entri yang sudah soft-deleted
+  const cleanAttendances = rawAttendances.filter(a =>
+    // root record belum di-soft-delete
+    a.deleted_at === null
+    // employee-nya belum di-soft-delete
+    && (a.employee?.deleted_at ?? null) === null
+    // (opsional) jika ingin ignore juga posisi yang di-soft-delete
+    && (a.employee?.position?.deleted_at ?? null) === null
+  )
+
+  // 3) assign yang sudah dibersihkan
+  attendances.value = cleanAttendances
+
   await nextTick()
   renderChart()
 })
+
 
 const dateOnly = iso => (iso || '').slice(0,10)
 const todayStr = new Date().toISOString().slice(0,10)
@@ -564,7 +583,8 @@ function resetReqFilter() {
 }
 function viewRequest(r) {
   // navigasi detail
-  console.log('View request', r.id)
+    localStorage.setItem('selectedRequest', JSON.stringify(r))
+  router.push({ name: 'RequestDetail', params: { id: r.id } })
 }
 </script>
 

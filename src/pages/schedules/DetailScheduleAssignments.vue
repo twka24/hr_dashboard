@@ -50,23 +50,7 @@
             {{ assignment.schedule.schedule_name }}
           </p>
         </div>
-        <div>
-          <strong class="block text-sm text-gray-700 dark:text-gray-300 mb-1"
-            >Tanggal Penugasan</strong
-          >
-          <p class="text-gray-900 dark:text-gray-100">
-            {{ assignment.assignment_date.slice(0, 10) }}
-          </p>
-        </div>
-        <div>
-          <strong class="block text-sm text-gray-700 dark:text-gray-300 mb-1"
-            >Periode</strong
-          >
-          <p class="text-gray-900 dark:text-gray-100">
-            {{ assignment.month_year }}
-          </p>
-        </div>
-        <div>
+         <div>
           <strong class="block text-sm text-gray-700 dark:text-gray-300 mb-1"
             >Status</strong
           >
@@ -79,6 +63,15 @@
             {{ assignment.is_active ? 'Aktif' : 'Nonaktif' }}
           </p>
         </div>
+        <div>
+          <strong class="block text-sm text-gray-700 dark:text-gray-300 mb-1"
+            >Periode</strong
+          >
+          <p class="text-gray-900 dark:text-gray-100">
+            {{ assignment.month_year }}
+          </p>
+        </div>
+       
       </div>
 
       <!-- Daftar Karyawan -->

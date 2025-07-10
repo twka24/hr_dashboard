@@ -91,7 +91,6 @@
           Detail Jadwal
         </h2>
         <ul class="text-sm space-y-1 text-gray-700 dark:text-gray-300">
-          <li><strong>ID:</strong> {{ selectedSchedule.id }}</li>
           <li><strong>Nama:</strong> {{ selectedSchedule.schedule_name }}</li>
           <li>
             <strong>Waktu:</strong> {{ selectedSchedule.start_time }} –
@@ -102,11 +101,7 @@
             {{ selectedSchedule.break_end }}
           </li>
           <li>
-            <strong>Hari Kerja:</strong>
-            {{ selectedSchedule.working_days.join(', ') }}
-          </li>
-          <li>
-            <strong>Status:</strong>
+            <strong>Status: </strong>
             <span
               :class="
                 selectedSchedule.is_active ? 'text-green-600' : 'text-red-600'
@@ -116,7 +111,9 @@
             </span>
           </li>
         </ul>
-
+        <h1 class="font-medium text-gray-800 dark:text-gray-100">
+          Hari Kerja
+        </h1>
         <!-- Kalender Hari Kerja -->
         <div class="overflow-x-auto">
           <FullCalendar

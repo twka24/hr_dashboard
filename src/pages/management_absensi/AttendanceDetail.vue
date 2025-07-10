@@ -85,7 +85,7 @@
             <div>
               <p class="text-sm text-gray-500 dark:text-gray-400">Tanggal</p>
               <p class="font-medium text-gray-800 dark:text-gray-100">
-                {{ formatDate(attendance.attendance_date) || '-' }}
+                {{ formatDateTime(attendance.attendance_date) || '-' }}
               </p>
             </div>
 
