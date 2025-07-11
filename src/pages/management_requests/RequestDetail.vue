@@ -98,10 +98,9 @@
         </div>
 
         <!-- Footer actions -->
-        <div
+        <!-- <div
           class="flex justify-end gap-2 p-6 border-t border-gray-100 dark:border-gray-700"
         >
-          <!-- Edit – tampil HANYA jika status pending -->
           <button
             v-if="request && request.status === 'pending'"
             @click="openEdit()"
@@ -109,8 +108,6 @@
           >
             <PencilSquareIcon class="h-5 w-5" /> Edit
           </button>
-
-          <!-- Delete (tetap seperti semula) -->
           <button
             v-if="request && request.status === 'pending'"
             @click="openDelete()"
@@ -118,7 +115,7 @@
           >
             <TrashIcon class="h-5 w-5" /> Delete
           </button>
-        </div>
+        </div> -->
       </div>
 
       <!-- Loading Spinner -->

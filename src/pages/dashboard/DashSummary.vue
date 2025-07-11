@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-wrapper container mx-auto px-4 sm:px-6 md:px-10 space-y-6 sm:space-y-8">
     <!-- ===== Header ===== -->
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between mt-10">
       <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100">
         Dashboard Cuti & Kehadiran
       </h1>
