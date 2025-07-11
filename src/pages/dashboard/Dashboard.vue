@@ -16,7 +16,6 @@
     >
       <!-- Brand -->
       <div class="flex items-center gap-3 px-4 sm:px-6 pt-6 pb-4">
-        <span class="text-lg sm:text-xl font-semibold tracking-tight">HRIS</span>
          <img src="https://tkago.abeng.id/assets/images/logo_bengkel/wVlkHBOXDt.png" class="h-10 w-25  ring-blue-500" />
       </div>
 
