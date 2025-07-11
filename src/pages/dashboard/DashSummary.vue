@@ -161,11 +161,24 @@
                 <td class="table-cell text-center">{{ row.izin }}</td>
                 <td class="table-cell text-center">{{ row.alpha }}</td>
               </tr>
-              <tr v-if="!filteredSummaryPerEmployee.length">
-                <td colspan="5" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">
-                  Tidak ada data.
-                </td>
-              </tr>
+             <tr v-if="!filteredSummaryPerEmployee.length">
+              <td colspan="5" class="px-4 py-4">
+                <div class="flex flex-col items-center justify-center">
+                  <DotLottieVue
+                    src="https://lottie.host/8233082d-8b29-498e-b131-f28b2308426d/W90z7Jcizv.json"
+                    autoplay
+                    loop
+                    class="w-34 h-34"              
+                  />
+                  <p class="mt-2 text-gray-500 dark:text-gray-400 text-center">
+                    Tidak ada data Absensi
+                  </p>
+                </div>
+              </td>
+            </tr>
+
+
+
             </tbody>
           </table>
         </div>
@@ -271,10 +284,21 @@
               </td>
             </tr>
             <tr v-if="!pagedRequests.length">
-              <td colspan="10" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">
-                Tidak ada request untuk hari ini.
+              <td colspan="10" class="px-4 py-6">
+                <div class="flex flex-col items-center justify-center">
+                  <DotLottieVue
+                    src="https://lottie.host/0d0b58ce-53fe-47dc-aaa1-51b392330e59/J7lGZekeC3.json"
+                    autoplay
+                    loop
+                    class="w-30 h-30"
+                  />
+                  <p class="mt-2 text-gray-500 dark:text-gray-400 text-center">
+                    Tidak ada request untuk hari ini.
+                  </p>
+                </div>
               </td>
             </tr>
+
           </tbody>
         </table>
       </div>
@@ -305,6 +329,7 @@ import { useRouter } from 'vue-router'
 import ExcelJS from 'exceljs'
 import { saveAs } from 'file-saver'
 import api from '@/services/api'
+import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
 import { EyeIcon } from '@heroicons/vue/24/outline'
 Chart.register(...registerables)
 
