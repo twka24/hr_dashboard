@@ -254,10 +254,21 @@
                   </td>
                 </tr>
                 <tr v-if="!paginated.length">
-                  <td colspan="8" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">
-                    Tidak ada data yang sesuai.
+                  <td colspan="8" class="px-4 py-6">
+                    <div class="flex flex-col items-center justify-center">
+                      <DotLottieVue
+                        src="https://lottie.host/0d0b58ce-53fe-47dc-aaa1-51b392330e59/J7lGZekeC3.json"
+                        autoplay
+                        loop
+                        class="w-34 h-34"
+                      />
+                      <p class="mt-2 text-gray-500 dark:text-gray-400 text-center">
+                        Tidak ada data Management Absensi
+                      </p>
+                    </div>
                   </td>
                 </tr>
+
               </tbody>
             </table>
 
@@ -285,6 +296,7 @@ import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import ExcelJS from 'exceljs'
 import { saveAs } from 'file-saver'
+import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
 // contoh import logo sebagai Base64 (Anda bisa gunakan loader webpack atau fetch)
 const logoUrl = '/logo_twka.jpg'
 

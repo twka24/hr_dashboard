@@ -117,8 +117,18 @@
                 </td>
               </tr>
               <tr v-if="!filteredGrouped.length">
-                <td colspan="5" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">
-                  Tidak ada data.
+                <td colspan="5" class="px-4 py-6">
+                  <div class="flex flex-col items-center justify-center">
+                    <DotLottieVue
+                      src="https://lottie.host/0d0b58ce-53fe-47dc-aaa1-51b392330e59/J7lGZekeC3.json"
+                      autoplay
+                      loop
+                      class="w-34 h-34"
+                    />
+                    <p class="mt-2 text-gray-500 dark:text-gray-400 text-center">
+                      Tidak ada data Bulk Assignments
+                    </p>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -155,6 +165,8 @@
 import { ref, computed, onMounted } from 'vue'
 import api from '@/services/api'
 import { EyeIcon, PlusIcon, ChevronDownIcon } from '@heroicons/vue/24/outline'
+import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
+
 
 const assignments    = ref([])
 const filterSchedule = ref('')

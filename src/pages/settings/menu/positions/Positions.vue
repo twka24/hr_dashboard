@@ -69,10 +69,21 @@
                 </td>
               </tr>
               <tr v-if="!filteredPositions.length">
-                <td colspan="5" class="px-4 py-6 text-center dark:text-gray-400">
-                  Tidak ada data posisi.
+                <td colspan="5" class="px-4 py-6">
+                  <div class="flex flex-col items-center justify-center">
+                    <DotLottieVue
+                      src="https://lottie.host/0d0b58ce-53fe-47dc-aaa1-51b392330e59/J7lGZekeC3.json"
+                      autoplay
+                      loop
+                      class="w-34 h-34"
+                    />
+                    <p class="mt-2 text-gray-500 dark:text-gray-400 text-center">
+                      Tidak ada data posisi.
+                    </p>
+                  </div>
                 </td>
               </tr>
+
             </tbody>
           </table>
         </div>
@@ -144,6 +155,7 @@ import {
   EyeIcon,
   PencilSquareIcon
 } from '@heroicons/vue/24/outline'
+import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
 
 const router     = useRouter()
 const positions  = ref([])
