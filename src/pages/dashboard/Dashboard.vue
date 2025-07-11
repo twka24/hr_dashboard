@@ -184,7 +184,7 @@
             <XMarkIcon  v-else class="h-6 w-6" />
           </button>
           <h2 class="text-base sm:text-lg font-semibold capitalize tracking-tight truncate max-w-[60vw]">
-            {{ active.replace('-', ' ') }}
+           {{ route.meta.title || active.replace('-', ' ') }}
           </h2>
         </div>
         <div class="text-center flex-1 order-last md:order-none">
