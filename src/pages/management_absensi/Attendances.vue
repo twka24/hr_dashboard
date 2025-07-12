@@ -329,7 +329,14 @@ const calendarInitialView   = 'dayGridMonth'
 const calendarHeaderToolbar = { left:'prev,next today', center:'title', right:'' }
 
 /* ==================== FORMATTERS ==================== */
-function formatDate(iso){ return new Date(iso).toLocaleDateString() }
+function formatDate(dateStr) {
+  return new Date(dateStr).toLocaleDateString('id-ID', {
+    day:   'numeric',
+    month: 'long',
+    year:  'numeric'
+  })
+}
+
 function formatTime (value) {
   if (!value) return '-'
 

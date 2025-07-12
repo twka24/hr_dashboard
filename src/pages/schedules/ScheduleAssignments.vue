@@ -101,7 +101,7 @@
               >
                 <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ item.schedule_name }}</td>
                 <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ item.position_name }}</td>
-                <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ item.month_year }}</td>
+                <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ formatMonthYear(item.month_year) }}</td>
                 <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">
                   <span :class="item.is_active ? 'text-green-600' : 'text-red-600'">
                     {{ item.is_active ? 'Aktif' : 'Nonaktif' }}
@@ -173,6 +173,14 @@ const filterSchedule = ref('')
 const filterActive   = ref('')
 const perPage        = ref(10)
 const page           = ref(1)
+
+// Fungsi baru, hanya untuk format “Juli 2025” (bulan – tahun)
+function formatMonthYear(dateStr) {
+  return new Date(dateStr).toLocaleDateString('id-ID', {
+    month: 'long',
+    year:  'numeric'
+  })
+}
 
 // muat data assignments
 const loading = ref(true)

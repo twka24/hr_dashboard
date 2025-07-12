@@ -218,8 +218,8 @@
                   <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ req.employee.name }}</td>
                   <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ req.position_name }}</td>
                   <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ req.type }}</td>
-                  <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ req.start_date }}</td>
-                  <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ req.end_date }}</td>
+                  <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ formatDate(req.start_date) }}</td>
+                  <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ formatDate(req.end_date) }}</td>
                   <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100 truncate">{{ req.reason }}</td>
                   <td class="px-4 py-3 text-sm">
                     <span
@@ -231,7 +231,7 @@
                     >{{ req.status }}</span>
                   </td>
                   <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
-                    {{ new Date(req.created_at).toLocaleDateString() }}
+                    {{ formatDate(req.created_at) }}
                   </td>
                   <td class="px-4 py-3 text-center">
                     <button
@@ -309,6 +309,14 @@ const perPage      = ref(10)
 const exportFilterType = ref('all')
 const exportCode       = ref('all')
 const exportPosition   = ref('all')
+
+function formatDate(dateStr) {
+  return new Date(dateStr).toLocaleDateString('id-ID', {
+    day:   'numeric',
+    month: 'long',
+    year:  'numeric'
+  })
+}
 
 onMounted(async () => {
   loading.value = true

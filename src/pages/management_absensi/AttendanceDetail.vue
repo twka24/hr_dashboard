@@ -85,7 +85,7 @@
             <div>
               <p class="text-sm text-gray-500 dark:text-gray-400">Tanggal</p>
               <p class="font-medium text-gray-800 dark:text-gray-100">
-                {{ formatDateTime(attendance.attendance_date) || '-' }}
+                {{ formatDateID(attendance.attendance_date) || '-' }}
               </p>
             </div>
 
@@ -172,7 +172,14 @@
                 </p>
               </template>
             </div>
-
+            <div
+              v-if="leaveInfo"
+              class="px-4 py-2 bg-yellow-100 dark:bg-yellow-700 rounded-lg text-sm text-gray-800 dark:text-gray-100 mb-4"
+            >
+              Karyawan ini sedang <span class="font-semibold">{{ attendance.status }}</span>
+              dari {{ formatDateID(leaveInfo.start) }}
+               sampai {{ formatDateID(leaveInfo.end) }}.
+            </div>
             <!-- Status -->
             <div>
               <p class="text-sm text-gray-500 dark:text-gray-400">Status</p>
@@ -220,12 +227,12 @@
             </div>
 
             <!-- Dibuat -->
-            <div>
+            <!-- <div>
               <p class="text-sm text-gray-500 dark:text-gray-400">Dibuat</p>
               <p class="font-medium text-gray-600 dark:text-gray-400">
                 {{ formatDateTime(attendance.created_at) }}
               </p>
-            </div>
+            </div> -->
           </div>
         </div>
 
@@ -318,9 +325,8 @@ import api from '@/services/api'
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 
-const router = useRouter()
 const route  = useRoute()
-
+const leaveInfo = ref(null)
 const attendance = ref(null)
 const loading    = ref(true)
 const error      = ref('')
@@ -336,6 +342,14 @@ const form = reactive({
   notes:       ''
 })
 
+function formatDateID(dateStr) {
+  return new Date(dateStr).toLocaleDateString('id-ID', {
+    day:   'numeric',
+    month: 'long',
+    year:  'numeric'
+  })
+}
+
 // FullCalendar setup
 const calendarEvents  = ref([])
 const calendarOptions = reactive({
@@ -346,6 +360,7 @@ const calendarOptions = reactive({
   eventDisplay:'block',
   height:      'auto',
 })
+
 
 function formatDate(iso) {
   return new Date(iso).toLocaleDateString()
@@ -430,41 +445,107 @@ async function saveEdit() {
 onMounted(async () => {
   loading.value = true
   try {
-    // 1) ambil detail
+    // 1) ambil detail absensi yang dipilih
     const { data: d1 } = await api.get(`/attendances/${route.params.id}`)
     attendance.value   = d1.data
 
-    // 2) atur kalender ke bulan dari attendance_date
-    const base = new Date(attendance.value.attendance_date)
-    const Y    = base.getFullYear()
-    const M    = String(base.getMonth()+1).padStart(2,'0')
-    calendarOptions.initialDate = `${Y}-${M}-01`
-
-    // 3) ambil semua & filter milik karyawan ini
-    const respAll = await api.get('/attendances')
-    const all     = respAll.data.data
-    const code    = attendance.value.employee.employee_code
-    const myRecs  = all.filter(a => a.employee_code === code)
-
-    // 4) kumpulkan tanggal hadir
-    const hadirSet = new Set(myRecs.map(a => a.attendance_date.substr(0,10)))
-
-    // 5) tentukan first & last day di bulan tersebut
-    const first = new Date(Y, base.getMonth(),   1)
-    const last  = new Date(Y, base.getMonth()+1, 0)
-
-    // 6) bangun events
-    const evs = []
-    for (let d = new Date(first); d <= last; d.setDate(d.getDate()+1)) {
-      const key = d.toISOString().substr(0,10)
-      if (hadirSet.has(key)) {
-        const rec = myRecs.find(a => a.attendance_date.substr(0,10) === key)
-         evs.push({ start: key, allDay: true, display:'background', backgroundColor:'white' })
-        
-      } else {
-        evs.push({ title: 'Libur', start: key, allDay: true, color:'red' })
+    // — Tambahan: cek leave-requests jika status cuti/izin/ijin —
+    const st = (attendance.value.status || '').toLowerCase().trim()
+    if (['cuti','izin','ijin'].includes(st)) {
+      const { data: lr } = await api.get('/leave-requests/all')
+      const match = lr.data.find(r =>
+        r.employee_code === attendance.value.employee.employee_code &&
+        r.type          === st &&
+        r.status        === 'approved'
+      )
+      if (match) {
+        leaveInfo.value = {
+          start: match.start_date,
+          end:   match.end_date
+        }
       }
     }
+
+    // 2) set calendar ke bulan attendance_date
+    const base  = new Date(attendance.value.attendance_date)
+    const year  = base.getFullYear()
+    const month = base.getMonth()           // 0–11
+    const MM    = String(month + 1).padStart(2, '0')
+    calendarOptions.initialDate = `${year}-${MM}-01`
+
+    // 3) ambil semua attendance & filter utk karyawan ini
+    const { data: allData } = await api.get('/attendances')
+    const myRecs = allData.data.filter(a =>
+      a.employee_code === attendance.value.employee.employee_code
+    )
+
+    // 4) build Map tanggal → status (lowercase+trim)
+    const recMap = new Map()
+    myRecs.forEach(a => {
+      const key = a.attendance_date.substr(0,10)        // "YYYY-MM-DD"
+      recMap.set(key, (a.status||'').toLowerCase().trim())
+    })
+
+    // 5) definisi array status
+    const holidayStatuses = ['cuti','izin','ijin']
+    const alphaStatuses   = ['alpha','alfa']
+
+    // 6) helper format Date → "YYYY-MM-DD" (tanpa timezone shift)
+    function fmt(d) {
+      const Y  = d.getFullYear()
+      const M2 = String(d.getMonth()+1).padStart(2,'0')
+      const D2 = String(d.getDate()).padStart(2,'0')
+      return `${Y}-${M2}-${D2}`
+    }
+
+    // 7) tentukan rentang tanggal bulan itu
+    const first = new Date(year, month,     1)
+    const last  = new Date(year, month + 1, 0)
+
+    // 8) bangun events
+    const evs = []
+    for (let d = new Date(first); d <= last; d.setDate(d.getDate()+1)) {
+      const key = fmt(d)
+
+      if (recMap.has(key)) {
+        const st = recMap.get(key)
+        if (holidayStatuses.includes(st)) {
+          // Cuti / Izin
+          evs.push({
+            title: st.charAt(0).toUpperCase() + st.slice(1),
+            start: key,
+            allDay: true,
+            color: 'orange'
+          })
+        } else if (alphaStatuses.includes(st)) {
+          // Alpha
+          evs.push({
+            title: 'Alfa',
+            start: key,
+            allDay: true,
+            color: 'gray'
+          })
+        } else {
+          // Hadir atau status lainnya
+          evs.push({
+            title: 'Hadir',
+            start: key,
+            allDay: true,
+            color: 'green'
+          })
+        }
+      } else {
+        // Libur (tidak ada record sama sekali)
+        evs.push({
+          title: 'Libur',
+          start: key,
+          allDay: true,
+          color: 'red'
+        })
+      }
+    }
+
+    // 9) assign ke FullCalendar
     calendarEvents.value = evs
 
   } catch (e) {
@@ -474,6 +555,8 @@ onMounted(async () => {
     loading.value = false
   }
 })
+
+
 </script>
 
 <style scoped>

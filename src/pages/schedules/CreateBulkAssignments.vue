@@ -59,11 +59,15 @@
           </label>
           <input
             type="text"
-            :value="selectedSchedule?.month_year || '—'"
+            :value="selectedSchedule
+              ? formatMonthYear(selectedSchedule.month_year)
+              : '—'"
             disabled
-            class="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
+            class="w-full rounded-lg border border-gray-300 px-3 py-2
+                  bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
           />
         </div>
+
 
         <!-- Karyawan (dari response selectedSchedule.employees) -->
         <div v-if="selectedSchedule">
@@ -169,6 +173,7 @@ import api from '@/services/api'
 
 const router = useRouter()
 
+
 // form state
 const schedules = ref([])
 const bulk      = reactive({ schedule_id: '' })
@@ -180,6 +185,15 @@ const calendarRef     = ref(null)
 const calendarKey     = ref(0)
 const allDatesInMonth = ref([])
 const calendarEvents  = ref([])
+
+// Fungsi baru, hanya untuk format “Juli 2025” (bulan – tahun)
+function formatMonthYear(dateStr) {
+  return new Date(dateStr).toLocaleDateString('id-ID', {
+    month: 'long',
+    year:  'numeric'
+  })
+}
+
 
 const calendarOptions = reactive({
   plugins: [dayGridPlugin],
