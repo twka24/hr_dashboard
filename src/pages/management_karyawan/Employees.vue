@@ -185,7 +185,7 @@
                   </button>
                 </td>
               </tr>
-              <<tr v-if="!paginated.length">
+              <tr v-if="!paginated.length">
                 <td colspan="7" class="px-4 py-6">
                   <div class="flex flex-col items-center justify-center">
                     <DotLottieVue
