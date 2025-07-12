@@ -109,13 +109,14 @@
 
         <!-- Export & Import -->
         <div class="flex items-center justify-start gap-3 px-6 pb-4">
+          Ekspor:
   <button
     @click="exportExcel"
     class="px-4 py-2 bg-emerald-500 text-white rounded-full hover:bg-emerald-600 transition"
   >
     Excel
   </button>
-  <label
+  <!-- <label
     class="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 cursor-pointer transition"
   >
     Import
@@ -125,7 +126,7 @@
       @change="importExcel"
       class="hidden"
     />
-  </label>
+  </label> -->
   <!-- Rows per page selector moved to the rightmost -->
   <div class="ml-auto relative">
     <select
