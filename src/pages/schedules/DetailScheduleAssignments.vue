@@ -68,7 +68,7 @@
             >Periode</strong
           >
           <p class="text-gray-900 dark:text-gray-100">
-            {{ assignment.month_year }}
+            {{ formatMonthYear(assignment.month_year) }}
           </p>
         </div>
        
@@ -172,6 +172,14 @@ const assignment = ref(null)
 const allAssignments = ref([])
 const loading = ref(false)
 const error = ref('')
+
+// Fungsi baru, hanya untuk format “Juli 2025” (bulan – tahun)
+function formatMonthYear(dateStr) {
+  return new Date(dateStr).toLocaleDateString('id-ID', {
+    month: 'long',
+    year:  'numeric'
+  })
+}
 
 const toast = reactive({
   show: false,

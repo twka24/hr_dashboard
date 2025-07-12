@@ -57,7 +57,7 @@
                 <td class="px-4 py-2 text-sm dark:text-gray-100">{{ pos.position_name }}</td>
                 <td class="px-4 py-2 text-sm dark:text-gray-100">{{ pos.prefix }}</td>
                 <td class="px-4 py-2 text-sm dark:text-gray-400">
-                  {{ new Date(pos.created_at).toLocaleDateString() }}
+                  {{ formatDate(pos.created_at) }}
                 </td>
                 <td class="px-4 py-2 text-center space-x-2">
                   <button
@@ -163,6 +163,15 @@ const filter     = ref('')
 const showAdd    = ref(false)
 const newPos     = ref({ position_name:'', prefix:'' })
 const loadingAdd = ref(false)
+
+function formatDate(iso) {
+  return new Date(iso).toLocaleDateString('id-ID', {
+    day:   'numeric',
+    month: 'long',
+    year:  'numeric'
+  })
+}
+
 
 const filteredPositions = computed(() =>
   filter.value

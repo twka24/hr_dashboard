@@ -175,7 +175,7 @@
                 <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ emp.position.position_name }}</td>
                 <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100 truncate">{{ emp.email }}</td>
                 <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">{{ emp.phone_number }}</td>
-                <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{{ new Date(emp.created_at).toLocaleDateString() }}</td>
+                <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{{ formatDate(emp.created_at) }}</td>
                 <td class="px-4 py-3 text-center">
                   <button
                     @click="onEdit(emp)"
@@ -555,6 +555,16 @@ const deleting         = ref(false)
 const toastShow        = ref(false)
 const toastMsg         = ref('')
 const toastOk          = ref(true)
+
+function formatDate(dateStr) {
+  return new Date(dateStr).toLocaleDateString('id-ID', {
+    day:   'numeric',
+    month: 'long',
+    year:  'numeric'
+  })
+}
+
+
 function showToast(msg, ok = true) {
   toastMsg.value = msg
   toastOk.value  = ok

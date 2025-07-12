@@ -128,7 +128,7 @@
                   {{ sched.position?.position_name || 'Semua Jabatan' }}
                 </td>
                 <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">
-                  {{ sched.month_year }}
+                  {{ formatMonthYear(sched.month_year) }}
                 </td>
                 <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">
                   {{ sched.start_time }} – {{ sched.end_time }}
@@ -221,6 +221,24 @@ const filterActive   = ref('')
 const perPage        = ref(10)
 const page           = ref(1)
 
+// Fungsi untuk format “11 Juli 2025” (tanggal – bulan – tahun)
+function formatDate(iso) {
+  return new Date(iso).toLocaleDateString('id-ID', {
+    day:   'numeric',
+    month: 'long',
+    year:  'numeric'
+  })
+}
+
+// Fungsi baru, hanya untuk format “Juli 2025” (bulan – tahun)
+function formatMonthYear(dateStr) {
+  return new Date(dateStr).toLocaleDateString('id-ID', {
+    month: 'long',
+    year:  'numeric'
+  })
+}
+
+
 // load data
 async function loadPositions() {
   const { data: res } = await api.get('/positions')
@@ -274,14 +292,6 @@ function editSchedule(id) {
 function prevPage() { if (page.value > 1) page.value-- }
 function nextPage() { if (page.value < totalPages.value) page.value++ }
 
-// format date
-function formatDate(iso) {
-  return new Date(iso).toLocaleDateString('id-ID', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit'
-  })
-}
 </script>
 
 <style scoped>
