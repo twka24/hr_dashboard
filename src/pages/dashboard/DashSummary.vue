@@ -8,182 +8,222 @@
     </div>
 
     <!-- ===== Ringkasan Organisasi ===== -->
-    <section class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-      <motion-div
-        class="summary-card w-full p-4 sm:p-6 flex flex-col justify-between rounded-2xl shadow bg-white dark:bg-gray-800 min-h-[120px]"
-        :initial="{ opacity: 0, y: 20 }"
-        :enter="{ opacity: 1, y: 0, transition: { delay: 0.1 } }"
-      >
-        <p class="summary-label">Total Karyawan</p>
-        <p class="summary-value text-blue-600 dark:text-blue-400">{{ totalEmployees }}</p>
-      </motion-div>
+    <section class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  <motion-div
+    class="group relative w-full p-6 flex flex-col justify-between rounded-2xl shadow-lg bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-700 min-h-[140px] overflow-hidden transition-transform transform hover:-translate-y-1 hover:shadow-2xl border border-transparent dark:border-transparent"
+    :initial="{ opacity: 0, y: 20 }"
+    :enter="{ opacity: 1, y: 0, transition: { delay: 0.1 } }"
+  >
+    <!-- Icon -->
+    <div class="absolute top-4 right-4 text-3xl opacity-20 group-hover:opacity-30 transition-opacity">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0z" />
+        <path d="M12 14c-4.418 0-8 1.79-8 4v2h16v-2c0-2.21-3.582-4-8-4z" />
+      </svg>
+    </div>
 
-      <motion-div
-        class="summary-card w-full p-4 sm:p-6 flex flex-col justify-between rounded-2xl shadow bg-white dark:bg-gray-800 min-h-[120px]"
-        :initial="{ opacity: 0, y: 20 }"
-        :enter="{ opacity: 1, y: 0, transition: { delay: 0.2 } }"
-      >
-        <p class="summary-label">Permintaan Pending</p>
-        <p class="summary-value text-yellow-600 dark:text-yellow-400">{{ pendingCount }}</p>
-      </motion-div>
+    <div>
+      <p class="text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+        Total Karyawan
+      </p>
+      <p class="mt-2 text-3xl font-bold text-green-600 dark:text-green-400">
+        {{ totalEmployees }}
+      </p>
+    </div>
+  </motion-div>
 
-      <motion-div
-        class="summary-card w-full p-4 sm:p-6 flex flex-col justify-between rounded-2xl shadow bg-white dark:bg-gray-800 min-h-[120px]"
-        :initial="{ opacity: 0, y: 20 }"
-        :enter="{ opacity: 1, y: 0, transition: { delay: 0.3 } }"
-      >
-        <p class="summary-label">Sedang Cuti/Izin (hari ini)</p>
-        <p class="summary-value text-blue-600 dark:text-blue-400">{{ onLeaveCount }}</p>
+  <motion-div
+    class="group relative w-full p-6 flex flex-col justify-between rounded-2xl shadow-lg bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-700 min-h-[140px] overflow-hidden transition-transform transform hover:-translate-y-1 hover:shadow-2xl border border-transparent dark:border-transparent"
+    :initial="{ opacity: 0, y: 20 }"
+    :enter="{ opacity: 1, y: 0, transition: { delay: 0.2 } }"
+  >
+    <!-- Icon -->
+    <div class="absolute top-4 right-4 text-3xl opacity-20 group-hover:opacity-30 transition-opacity">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path d="M5 13l4 4L19 7" />
+      </svg>
+    </div>
+
+    <div>
+      <p class="text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+        Permintaan Pending
+      </p>
+      <p class="mt-2 text-3xl font-bold text-yellow-600 dark:text-yellow-400">
+        {{ pendingCount }}
+      </p>
+    </div>
+  </motion-div>
+
+  <motion-div
+    class="group relative w-full p-6 flex flex-col justify-between rounded-2xl shadow-lg bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-700 min-h-[140px] overflow-hidden transition-transform transform hover:-translate-y-1 hover:shadow-2xl border border-transparent dark:border-transparent"
+    :initial="{ opacity: 0, y: 20 }"
+    :enter="{ opacity: 1, y: 0, transition: { delay: 0.3 } }"
+  >
+    <!-- Icon -->
+    <div class="absolute top-4 right-4 text-3xl opacity-20 group-hover:opacity-30 transition-opacity">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2v-7H3v7a2 2 0 002 2z" />
+      </svg>
+    </div>
+
+        <div>
+          <p class="text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+            Sedang Cuti/Izin (hari ini)
+          </p>
+          <p class="mt-2 text-3xl font-bold text-blue-600 dark:text-blue-400">
+            {{ onLeaveCount }}
+          </p>
+        </div>
       </motion-div>
     </section>
 
+
     <!-- ===== Kehadiran Harian ===== -->
+  <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow ring-1 ring-black/10 dark:ring-white/15">
     <motion-div
-      class="bg-white dark:bg-gray-800 flex flex-col gap-6 p-4 sm:p-6 md:p-8 rounded-2xl shadow ring-1 ring-black/10 dark:ring-white/15"
+      class="transition-transform transform hover:-translate-y-1 hover:shadow-lg"
       :initial="{ opacity: 0, y: 20 }"
       :enter="{ opacity: 1, y: 0, transition:{ delay:0.4 } }"
     >
-      <h2 class="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-100">
-        Kehadiran Harian – Rekap per Tanggal
-      </h2>
-
-      <!-- ===== Bar Ekspor ===== -->
-      <div class="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
-        <div class="flex-1 sm:flex-none flex flex-col sm:flex-row items-start sm:items-center gap-2">
-          <label class="text-sm text-gray-600 dark:text-gray-400">Ekspor Jabatan</label>
+      <!-- HEADER + EXPORT CONTROLS INLINE -->
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-4">
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">
+          Kehadiran Harian – Rekap per Tanggal
+        </h2>
+        <div class="flex flex-wrap items-center gap-2">
           <select
             v-model="exportPosition"
-            class="w-full sm:w-auto rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 px-3 py-2"
+            class="text-xs bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-indigo-500"
           >
             <option value="">— Semua Jabatan —</option>
             <option v-for="pos in positions" :key="pos" :value="pos">{{ pos }}</option>
           </select>
-        </div>
-        <div class="flex-1 sm:flex-none flex flex-col sm:flex-row items-start sm:items-center gap-2">
-          <label class="text-sm text-gray-600 dark:text-gray-400">Dari</label>
           <input
             type="date"
             v-model="exportFrom"
-            class="w-full sm:w-auto rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 px-3 py-2"
+            class="text-xs bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-indigo-500"
           />
-        </div>
-        <div class="flex-1 sm:flex-none flex flex-col sm:flex-row items-start sm:items-center gap-2">
-          <label class="text-sm text-gray-600 dark:text-gray-400">Sampai</label>
           <input
             type="date"
             v-model="exportTo"
-            class="w-full sm:w-auto rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 px-3 py-2"
+            class="text-xs bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-indigo-500"
           />
-        </div>
-        <button
-          @click="downloadExcel"
-          class="w-full sm:w-auto px-4 py-2 bg-emerald-500 text-white rounded-full hover:bg-emerald-600 transition-transform hover:scale-105"
-        >
-          Ekspor Excel
-        </button>
-      </div>
-
-      <!-- ===== Filter Grafik ===== -->
-      <div class="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
-        <div class="flex-1 sm:flex-none flex flex-col sm:flex-row items-start sm:items-center gap-2">
-          <label class="text-sm text-gray-600 dark:text-gray-400">Jabatan</label>
-          <select
-            v-model="chartPosition"
-            class="w-full sm:w-auto rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 px-3 py-2"
+          <button
+            @click="downloadExcel"
+            class="flex items-center space-x-1 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-medium rounded px-3 py-1 transition-transform hover:scale-105 focus:outline-none focus:ring-1 focus:ring-emerald-400"
           >
-            <option value="">— Semua Jabatan —</option>
-            <option v-for="pos in positions" :key="pos" :value="pos">{{ pos }}</option>
-          </select>
-        </div>
-        <div class="flex-1 sm:flex-none flex flex-col sm:flex-row items-start sm:items-center gap-2">
-          <label class="text-sm text-gray-600 dark:text-gray-400">Tanggal</label>
-          <input
-            type="date"
-            v-model="chartDate"
-            class="w-full sm:w-auto rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 px-3 py-2"
-          />
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+            </svg>
+            <span>Ekspor</span>
+          </button>
         </div>
       </div>
 
-      <!-- ===== Grafik & Tabel Kehadiran ===== -->
-      <div class="flex flex-col lg:flex-row gap-6 flex-1">
-        <div class="w-full lg:w-1/3 xl:w-1/4 flex flex-col items-center">
-          <div class="w-full h-[220px] sm:h-[260px] md:h-[280px] lg:h-[300px] relative">
+      <hr class="border-gray-200 dark:border-gray-600 mb-4" />
+
+      <!-- INLINE FILTERS -->
+      <div class="flex flex-wrap items-center gap-2 mb-4">
+        <select
+          v-model="chartPosition"
+          class="text-xs bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+        >
+          <option value="">— Semua Jabatan —</option>
+          <option v-for="pos in positions" :key="pos" :value="pos">{{ pos }}</option>
+        </select>
+        <input
+          type="date"
+          v-model="chartDate"
+          class="text-xs bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+        />
+      </div>
+
+       <!-- ==== Chart & Table ==== -->
+      <div class="mt-8 grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <!-- Chart Card -->
+        <div class="lg:col-span-1 bg-gray-50 dark:bg-gray-700 p-4 rounded-xl shadow-sm flex flex-col">
+          <div class="w-full h-56 sm:h-64">
             <canvas ref="chartRef"></canvas>
           </div>
-          <div
-            class="mt-2 text-center text-sm text-gray-700 dark:text-gray-300 flex flex-wrap justify-center gap-x-3 gap-y-1"
-          >
-            <span><span class="font-medium">Hadir:</span> {{ dayCounts.hadir }}</span>
-            <span><span class="font-medium">Ijin/Cuti:</span> {{ dayCounts.cutiIzin }}</span>
-            <span><span class="font-medium">Alpha:</span> {{ dayCounts.alpha }}</span>
+          <div class="mt-4 text-sm text-gray-700 dark:text-gray-300 flex flex-wrap justify-center gap-4">
+            <span><span class="font-semibold">Hadir:</span> {{ dayCounts.hadir }}</span>
+            <span><span class="font-semibold">Ijin/Cuti:</span> {{ dayCounts.cutiIzin }}</span>
+            <span><span class="font-semibold">Alpha:</span> {{ dayCounts.alpha }}</span>
           </div>
         </div>
 
-        <div class="flex-1 overflow-x-auto max-h-[45vh]">
-          <div class="flex flex-col sm:flex-row items-center justify-end mb-3 gap-3">
-            <input
-              type="text"
-              v-model="searchName"
-              placeholder="Cari Karyawan..."
-              class="rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100 px-3 py-2 w-full sm:w-auto"
-            />
-            <select
-              v-model="filterStatus"
-              class="rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 px-3 py-2 w-full sm:w-auto"
-            >
-              <option value="">— Semua Status —</option>
-              <option value="hadir">Hadir</option>
-              <option value="cutiIzin">Ijin/Cuti</option>
-              <option value="alpha">Alpha</option>
-            </select>
-          </div>
-
-          <table class="min-w-full text-sm text-gray-700 dark:text-gray-300">
-            <thead class="sticky top-0 bg-gray-100 dark:bg-gray-700">
-              <tr>
-                <th class="table-head">Karyawan</th>
-                <th class="table-head text-center">Hadir</th>
-                <th class="table-head text-center">Cuti</th>
-                <th class="table-head text-center">Izin</th>
-                <th class="table-head text-center">Alpha</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="row in filteredSummaryPerEmployee"
-                :key="row.name"
-                class="border-b border-gray-200 dark:border-gray-600 whitespace-nowrap"
+        <!-- Table Card -->
+        <div class="lg:col-span-3 bg-gray-50 dark:bg-gray-700 p-4 rounded-xl shadow-sm flex flex-col">
+          <!-- Search & Filter -->
+          <div class="flex flex-wrap items-center justify-end gap-2 mb-2">
+              <div class="relative flex-1 sm:flex-none">
+                <input
+                  type="text"
+                  v-model="searchName"
+                  placeholder="Cari..."
+                  class="w-full text-xs rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 px-2 py-1 pr-7"
+                />
+                <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path d="M21 21l-4.35-4.35M16 10a6 6 0 11-12 0 6 6 0 0112 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                </svg>
+              </div>
+              <select
+                v-model="filterStatus"
+                class="text-xs rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 px-2 py-1"
               >
-                <td class="table-cell">{{ row.name }}</td>
-                <td class="table-cell text-center">{{ row.hadir }}</td>
-                <td class="table-cell text-center">{{ row.cuti }}</td>
-                <td class="table-cell text-center">{{ row.izin }}</td>
-                <td class="table-cell text-center">{{ row.alpha }}</td>
-              </tr>
-             <tr v-if="!filteredSummaryPerEmployee.length">
-              <td colspan="5" class="px-4 py-4">
-                <div class="flex flex-col items-center justify-center">
-                  <DotLottieVue
-                    src="https://lottie.host/8233082d-8b29-498e-b131-f28b2308426d/W90z7Jcizv.json"
-                    autoplay
-                    loop
-                    class="w-34 h-34"              
-                  />
-                  <p class="mt-2 text-gray-500 dark:text-gray-400 text-center">
-                    Tidak ada data Absensi
-                  </p>
-                </div>
-              </td>
-            </tr>
+                <option value="">— Semua Status —</option>
+                <option value="hadir">Hadir</option>
+                <option value="cutiIzin">Ijin/Cuti</option>
+                <option value="alpha">Alpha</option>
+              </select>
+            </div>
 
-
-
-            </tbody>
-          </table>
+          <!-- Tabel Kehadiran -->
+          <div class="overflow-x-auto">
+            <table class="min-w-full table-auto divide-y divide-gray-200 dark:divide-gray-600">
+              <thead class="bg-white dark:bg-gray-800">
+                <tr>
+                  <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Karyawan</th>
+                  <th class="px-4 py-2 text-center text-sm font-medium text-gray-600 dark:text-gray-300">Hadir</th>
+                  <th class="px-4 py-2 text-center text-sm font-medium text-gray-600 dark:text-gray-300">Cuti</th>
+                  <th class="px-4 py-2 text-center text-sm font-medium text-gray-600 dark:text-gray-300">Izin</th>
+                  <th class="px-4 py-2 text-center text-sm font-medium text-gray-600 dark:text-gray-300">Alpha</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
+                <tr
+                  v-for="row in filteredSummaryPerEmployee"
+                  :key="row.name"
+                  class="hover:bg-gray-100 dark:hover:bg-gray-600 transition"
+                >
+                  <td class="px-4 py-2 text-sm text-gray-800 dark:text-gray-100">{{ row.name }}</td>
+                  <td class="px-4 py-2 text-center text-sm">{{ row.hadir }}</td>
+                  <td class="px-4 py-2 text-center text-sm">{{ row.cuti }}</td>
+                  <td class="px-4 py-2 text-center text-sm">{{ row.izin }}</td>
+                  <td class="px-4 py-2 text-center text-sm">{{ row.alpha }}</td>
+                </tr>
+                <tr v-if="!filteredSummaryPerEmployee.length">
+                  <td colspan="5" class="py-8">
+                    <div class="flex flex-col items-center justify-center">
+                      <DotLottieVue
+                        src="https://lottie.host/8233082d-8b29-498e-b131-f28b2308426d/W90z7Jcizv.json"
+                        autoplay
+                        loop
+                        class="w-32 h-32"
+                      />
+                      <p class="mt-4 text-gray-500 dark:text-gray-400 text-center">Tidak ada data Absensi</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </motion-div>
+  </div>
+
+
 
     <!-- ===== Requests Hari Ini ===== -->
     <motion-div
