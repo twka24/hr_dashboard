@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-wrapper container mx-auto px-4 sm:px-6 md:px-10 space-y-6 sm:space-y-8">
+  <div class="dashboard-wrapper container mx-auto px-4 sm:px-6 md:px-10 space-y-6 sm:space-y-8 pb-12">
     <!-- ===== Header ===== -->
     <div class="flex items-center justify-between mt-10">
       <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100">
@@ -187,10 +187,10 @@
 
     <!-- ===== Requests Hari Ini ===== -->
     <motion-div
-      class="bg-white dark:bg-gray-800 flex flex-col gap-6 p-4 sm:p-6 md:p-8 rounded-2xl shadow ring-1 ring-black/10 dark:ring-white/15 mt-6"
+     class="bg-white dark:bg-gray-800 flex flex-col gap-6 p-4 sm:p-6 md:p-8 rounded-2xl shadow ring-1 ring-black/10 dark:ring-white/15 mt-6 mb-8"
       :initial="{ opacity: 0, y: 20 }"
       :enter="{ opacity: 1, y: 0, transition:{ delay:0.5 } }"
-    >
+      >
       <!-- Header + Badges -->
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4">
         <h2 class="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-100">
